@@ -14,6 +14,7 @@ setClass('Annotation',
            parameters = 'AnnotationParameters',
            correlations = 'tbl_df',
            relationships = 'tbl_df',
-           annotations = 'tbl_df',
-           results = 'tbl_df'
+           addIsoAssign = 'list',
+           transAssign = 'list',
+           assignments  = 'tbl_df'
          ))

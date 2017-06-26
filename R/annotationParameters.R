@@ -10,7 +10,7 @@ annotationParameters <- function(technique = NULL){
   if (technique == 'FIE') {
     new('AnnotationParameters',
         technique = 'FIE',
-        ppm = 5,
+        ppm = 6,
         limit = 0.001,
         adducts = list(n = c("[M-H]1-", "[M+Cl]1-", "[M+K-2H]1-", 
                              "[M-2H]2-", "[M+Cl37]1-","[M+K41-2H]1-",
