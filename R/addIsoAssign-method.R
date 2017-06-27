@@ -3,7 +3,7 @@ setMethod('addIsoAssign',signature = 'Annotation',
           function(x){
             parameters <- x@parameters
             rel <- x@relationships %>% 
-              filter(is.na(Transformation1) & is.na(Transformation2) & Isotope1 %in% c(NA,parameters@isotopes) & Isotope2 %in% c(NA,parameters@isotopes) & r > 0)
+              filter(is.na(Transformation1) & is.na(Transformation2) & r > 0)
             
             M <- bind_rows(select(rel,mz = mz1,Isotope = Isotope1, Adduct = Adduct1),
                            select(rel,mz = mz2,Isotope = Isotope2, Adduct = Adduct2)) %>%
