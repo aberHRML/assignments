@@ -6,7 +6,8 @@ assignMFs <- function(correlations,parameters) {
       parameters = parameters,
       correlations = correlations,
       relationships = tibble(),
-      annotations = tibble(),
-      results = tibble()
+      addIsoAssign = list(),
+      transAssign = list(),
+      assignments  = tibble()
       )
 }

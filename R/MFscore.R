@@ -1,81 +1,86 @@
 #' @importFrom CHNOSZ makeup
 
 MFscore <- function(mf){
-  eleFreq <- makeup(mf)
-
-  eleRatios <- list(
-    `H/C` = if ('H' %in% names(eleFreq) & 'C' %in% names(eleFreq)) {
-      round(eleFreq['H']/eleFreq['C'],2)
+  eleFreq <- as.vector(makeup(mf))
+  ele <- names(makeup(mf))
+  colnames(eleFreq) <- NULL
+  
+  eleRatios <- c(
+    `H/C` = if ('H' %in% ele & 'C' %in% ele) {
+      eleFreq[ele == 'H']/eleFreq[ele == 'C']
     },
-    `N/C` = if ('N' %in% names(eleFreq) & 'C' %in% names(eleFreq)) {
-      round(eleFreq['N']/eleFreq['C'],2)
+    `N/C` = if ('N' %in% ele & 'C' %in% ele) {
+      eleFreq[ele == 'N']/eleFreq[ele == 'C']
     },
-    `O/C` = if ('O' %in% names(eleFreq) & 'C' %in% names(eleFreq)) {
-      round(eleFreq['O']/eleFreq['C'],2)
+    `O/C` = if ('O' %in% ele & 'C' %in% ele) {
+      eleFreq[ele == 'O']/eleFreq[ele == 'C']
     },
-    `P/C` = if ('P' %in% names(eleFreq) & 'C' %in% names(eleFreq)) {
-      round(eleFreq['P']/eleFreq['C'],2)
+    `P/C` = if ('P' %in% ele & 'C' %in% ele) {
+      eleFreq[ele == 'P']/eleFreq[ele == 'C']
     },
-    `S/C` = if ('S' %in% names(eleFreq) & 'C' %in% names(eleFreq)) {
-      round(eleFreq['S']/eleFreq['C'],2)
+    `S/C` = if ('S' %in% ele & 'C' %in% ele) {
+      eleFreq[ele == 'S']/eleFreq[ele == 'C']
     },
-    `N/O` = if ('N' %in% names(eleFreq) & 'O' %in% names(eleFreq)) {
-      round(eleFreq['N']/eleFreq['O'],2)
+    `N/O` = if ('N' %in% ele & 'O' %in% ele) {
+      eleFreq[ele == 'N']/eleFreq[ele == 'O']
     },
-    `P/O` = if ('P' %in% names(eleFreq) & 'O' %in% names(eleFreq)) {
-      round(eleFreq['P']/eleFreq['O'],2)
+    `P/O` = if ('P' %in% ele & 'O' %in% ele) {
+      eleFreq[ele == 'P']/eleFreq[ele == 'O']
     },
-    `S/O` = if ('S' %in% names(eleFreq) & 'O' %in% names(eleFreq)) {
-      round(eleFreq['S']/eleFreq['O'],2)
+    `S/O` = if ('S' %in% ele & 'O' %in% ele) {
+      eleFreq[ele == 'S']/eleFreq[ele == 'O']
     },
-    `O/P` = if ('O' %in% names(eleFreq) & 'P' %in% names(eleFreq)) {
-      round(eleFreq['O']/eleFreq['P'],2)
+    `O/P` = if ('O' %in% ele & 'P' %in% ele) {
+      eleFreq[ele == 'O']/eleFreq[ele == 'P']
     },
-    `S/P` = if ('S' %in% names(eleFreq) & 'P' %in% names(eleFreq)) {
-      round(eleFreq['S']/eleFreq['P'],2)
+    `S/P` = if ('S' %in% ele & 'P' %in% ele) {
+      eleFreq[ele == 'S']/eleFreq[ele == 'P']
     }
   )
-  eleRatios <- as.data.frame(eleRatios[!sapply(eleRatios,is.null)])
-  score <- data.frame(MF = mf,eleRatios)
-  if ('H.C' %in% colnames(score)) {
-    score$H.C <- abs(score$H.C - 1.6)
+  if (!is.null(eleRatios)) {
+    if ('H/C' %in% names(eleRatios)) {
+      eleRatios['H/C'] <- abs(eleRatios['H/C'] - 1.6)
+    }
+    if ('O/C' %in% names(eleRatios)) {
+      eleRatios['O/C'] <- abs(eleRatios['O/C'] - 0.3)
+    }
+    if  (is.nan(eleRatios['N/O'])) {
+      eleRatios['N/O'] <- 0
+    }
+    if (is.infinite(eleRatios['N/O'])) {
+      eleRatios['N/O'] <- eleFreq[ele == 'N']
+    }
+    if (is.nan(eleRatios['P/O'])) {
+      eleRatios['P/O'] <- 0
+    }
+    if (is.infinite(eleRatios['P/O'])) {
+      eleRatios['P/O'] <- eleFreq[ele == 'P']
+    }
+    if (is.nan(eleRatios['S/O'])) {
+      eleRatios['S/O'] <- 0
+    }
+    if (is.infinite(eleRatios['S/O'])) {
+      eleRatios['S/O'] <- eleFreq[ele == 'S']
+    }
+    if (is.nan(eleRatios['O/P'])) {
+      eleRatios['O/P'] <- 0
+    }
+    if ('O/P' %in% names(eleRatios) & eleRatios['O/P'] >= 3) {
+      eleRatios['O/P'] <- 0
+    }
+    if (is.nan(eleRatios['P/S'])) {
+      eleRatios['P/S'] <- 0
+    }
+    if (is.nan(eleRatios['S/P'])) {
+      eleRatios['S/P'] <- 0
+    }
+    if (is.infinite(eleRatios['S/P'])) {
+      eleRatios['S/P'] <- eleFreq[ele == 'S']
+    }
+    score <- sum(eleRatios) 
+  } else {
+    score <- NA
   }
-  if ('O.C' %in% colnames(score)) {
-    score$O.C <- abs(score$O.C - 0.3)
-  }
-  if  (T %in% is.nan(score$N.O)) {
-    score$N.O[which(is.nan(score$N.O))] <- 0
-  }
-  if (T %in% is.infinite(score$N.O)) {
-    score$N.O[which(is.infinite(score$N.O))] <- eleFreq['N'][which(is.infinite(score$N.O))]
-  }
-  if (T %in% is.nan(score$P.O)) {
-    score$P.O[which(is.nan(score$P.O))] <- 0
-  }
-  if (T %in% is.infinite(score$P.O)) {
-    score$P.O[which(is.infinite(score$P.O))] <- eleFreq['P'][which(is.infinite(score$P.O))]
-  }
-  if (T %in% is.nan(score$S.O)) {
-    score$S.O[which(is.nan(score$S.O))] <- 0
-  }
-  if (T %in% is.infinite(score$S.O)) {
-    score$S.O[which(is.infinite(score$S.O))] <- eleFreq['S'][which(is.infinite(score$S.O))]
-  }
-  if (T %in% is.nan(score$O.P)) {
-    score$O.P[which(is.nan(score$O.P))] <- 0
-  }
-  if ('O.P' %in% colnames(score)) {
-    score$O.P[which(score$O.P >= 3)] <- 0
-  }
-  if (T %in% is.nan(score$P.S)) {
-    score$P.S[which(is.nan(score$P.S))] <- 0
-  }
-  if (T %in% is.nan(score$S.P)) {
-    score$S.P[which(is.nan(score$S.P))] <- 0
-  }
-  if (T %in% is.infinite(score$S.P)) {
-    score$S.P[which(is.infinite(score$S.P))] <- eleFreq['S'][which(is.infinite(score$S.P))]
-  }
-  score <- data.frame(score,Score = apply(score[,2:ncol(score)],1,sum))
-  return(score$Score[1])
+  
+  return(score)
 }

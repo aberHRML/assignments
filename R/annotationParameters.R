@@ -12,6 +12,7 @@ annotationParameters <- function(technique = NULL){
         technique = 'FIE',
         ppm = 6,
         limit = 0.001,
+        isotopes = c('C13','O18','2C13'),
         adducts = list(n = c("[M-H]1-", "[M+Cl]1-", "[M+K-2H]1-", 
                              "[M-2H]2-", "[M+Cl37]1-","[M+K41-2H]1-",
                              "[M+Na-2H]1-","[2M-H]1-","[3M-H]1-",

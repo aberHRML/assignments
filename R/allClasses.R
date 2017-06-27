@@ -4,6 +4,7 @@ setClass('AnnotationParameters',
            technique = 'character',
            ppm = 'numeric',
            limit = 'numeric',
+           isotopes = 'character',
            adducts = 'list',
            nCores = 'numeric'
          ))
