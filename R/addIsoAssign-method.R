@@ -3,7 +3,9 @@ setMethod('addIsoAssign',signature = 'Annotation',
           function(x){
             parameters <- x@parameters
             rel <- x@relationships %>% 
-              filter(is.na(Transformation1) & is.na(Transformation2) & r > 0)
+              filter(is.na(Transformation1) & is.na(Transformation2) & r > 0) %>%
+              filter(!(is.na(Isotope1) & !is.na(Isotope2) & Adduct1 == Adduct2 & log2IntensityRatio < 0)) %>%
+              filter(!(!is.na(Isotope1) & is.na(Isotope2) & Adduct1 == Adduct2)) 
             
             M <- bind_rows(select(rel,mz = mz1,Isotope = Isotope1, Adduct = Adduct1),
                            select(rel,mz = mz2,Isotope = Isotope2, Adduct = Adduct2)) %>%
@@ -11,11 +13,13 @@ setMethod('addIsoAssign',signature = 'Annotation',
               arrange(mz) %>%
               rowwise() %>%
               mutate(M = calcM(mz,Isotope,Adduct)) %>% 
-              arrange(M)
+              arrange(M) %>%
+              filter(M <= parameters@maxM)
             
             clus <- makeCluster(parameters@nCores)
             clusterExport(clus,c('MFgen','generateMF','mutate','parameters'))
-            MF <- rowwise(M) %>% 
+            MF <- sample_n(M,nrow(M)) %>%
+              rowwise() %>% 
               parApply(cl = clus,1,function(x){MFgen(as.numeric(x[4]),as.numeric(x[1]),ppm = parameters@ppm)}) %>% 
               bind_rows() %>%
               tbl_df() %>% 
@@ -24,25 +28,11 @@ setMethod('addIsoAssign',signature = 'Annotation',
               mutate(`Theoretical m/z` = calcMZ(`Theoretical M`,Isotope,Adduct), `PPM Error` = round((`Measured m/z` - `Theoretical m/z`)/`Theoretical m/z` * 10^6,5)) %>%
               select(MF,Isotope,Adduct,`Theoretical M`,`Measured M`,`Theoretical m/z`,`Measured m/z`, `PPM Error`) %>%
               rowwise() %>%
-              mutate(Score = MFscore(MF))
+              mutate(Score = MFscore(MF)) %>%
+              filter(Score <= parameters@maxMFscore)
             stopCluster(clus)
             
-            MFs <- select(MF,MF,Isotope,Adduct,`Measured m/z`,)
-            
-            rel <- filter(rel, mz1 %in% MF$`Measured m/z`,mz2 %in% MF$`Measured m/z`) %>%
-              left_join(MFs,by = c('mz1' = 'Measured m/z')) %>%
-              rename(MF1 = MF)
-            rel[is.na(rel)] <- ''
-            rel <- filter(rel,Isotope1 == Isotope & Adduct1 == Adduct) %>%
-              select(mz1:MF1) %>%
-              left_join(MFs,by = c('mz2' = 'Measured m/z')) %>%
-              rename(MF2 = MF)
-            rel[is.na(rel)] <- ''
-            rel <- filter(rel,Isotope2 == Isotope & Adduct2 == Adduct) %>%
-              filter(MF1 == MF2) %>%
-              select(mz1:Isotope2,Adduct1:MF1) %>%
-              rename(MF = MF1)
-            rel[rel == ''] <- NA
+            rel <- addMFs(rel,MF)
             
             MFs <- bind_rows(select(rel,mz = mz1,Isotope = Isotope1, Adduct = Adduct1, MF = MF),
                              select(rel,mz = mz2,Isotope = Isotope2, Adduct = Adduct2,MF = MF)) %>%
@@ -51,43 +41,61 @@ setMethod('addIsoAssign',signature = 'Annotation',
             
             MF <- semi_join(MF,MFs,by = c('MF' = 'MF','Isotope' = 'Isotope','Adduct' = 'Adduct','Measured m/z' = 'mz'))
             
-            Nodes <- suppressWarnings(group_by(MF,MF)) %>%
-              summarise(Nodes = n())
-            Edges <- group_by(rel,MF) %>%
-              summarise(Edges = n(),EdgeWeight = mean(r))
+           MF <- calcNetwork(MF,rel)
             
-            MFs <- inner_join(Nodes,Edges, by = c('MF' = 'MF')) %>%
-              mutate(Connectivity = Nodes * Edges)
+            filteredMF <- group_by(MF,Cluster) %>% 
+              filter(Score == min(Score)) %>%
+              group_by(`Measured m/z`) %>% 
+              filter(Connectivity == max(Connectivity))
             
-            MF <- inner_join(MF,MFs, by = c('MF' = 'MF')) %>% 
-              arrange(desc(Connectivity),desc(Edges),MF) %>%
-              mutate(Cluster = NA)
+            filteredRel <- semi_join(rel,filteredMF,by = c('MF' = 'MF','Isotope1' = 'Isotope','Isotope2' = 'Isotope','Adduct1' = 'Adduct','Adduct2' = 'Adduct','mz1' = 'Measured m/z','mz2' = 'Measured m/z'))
             
-            for (i in 1:length(unique(MF$MF))) {
-              mf <- filter(MF,MF == unique(MF)[i])
-              clus <- filter(MF,`Measured m/z` %in% mf$`Measured m/z` & 
-                               Isotope %in% mf$Isotope & 
-                               Adduct %in% mf$Adduct &
-                               `Measured M` %in% mf$`Measured M` &
-                               Nodes %in% mf$Nodes &
-                               Edges %in% mf$Edges &
-                               Connectivity %in% mf$Connectivity)
-              if (NA %in% clus$Cluster) {
-                MF <- mutate(MF,Cluster = ifelse(`Measured m/z` %in% clus$`Measured m/z` & 
-                                                   Isotope %in% clus$Isotope & 
-                                                   Adduct %in% clus$Adduct &
-                                                   `Measured M` %in% clus$`Measured M` &
-                                                   Nodes %in% clus$Nodes &
-                                                   Edges %in% clus$Edges &
-                                                   Connectivity %in% clus$Connectivity,i,Cluster))
-              }
-            }
-            cl <- group_by(MF,Cluster) %>% group_indices()
-            MF <- mutate(MF,Cluster = cl) %>%
-              arrange(Cluster)
+            filteredMF <- calcNetwork(filteredMF,filteredRel) %>% 
+              filter(Connectivity > 1) %>%
+              group_by(`Measured m/z`) %>% 
+              filter(Connectivity == max(Connectivity)) 
             
-            filteredMF <- group_by(MF,Cluster) %>% filter(Score == max(Score))
-            filteredMF <- group_by(MF,`Measured m/z`) %>% filter(Connectivity == max(Connectivity))
+            addIsoScores <- filteredMF %>%
+              group_by(Cluster) %>% 
+              summarise(AddIsoScore = addIsoScore(Adduct,Isotope,addRank = parameters@adducts,isoRank = parameters@isotopes))
+           
+            filteredMF <- inner_join(filteredMF,addIsoScores,by = c('Cluster' = 'Cluster')) 
+            
+            filteredMF <- filteredMF %>%
+              group_by(`Measured m/z`) %>%
+              filter(AddIsoScore == max(AddIsoScore))
+            
+            filteredRel <- semi_join(filteredRel,filteredMF,by = c('MF' = 'MF','Isotope1' = 'Isotope','Isotope2' = 'Isotope','Adduct1' = 'Adduct','Adduct2' = 'Adduct','mz1' = 'Measured m/z','mz2' = 'Measured m/z'))
+            
+            filteredMF <- calcNetwork(filteredMF,filteredRel) %>%
+              filter(Connectivity > 1) 
+            
+            addIsoScores <- filteredMF %>%
+              group_by(Cluster) %>% 
+              summarise(AddIsoScore = addIsoScore(Adduct,Isotope,addRank = parameters@adducts,isoRank = parameters@isotopes))
+            
+            filteredMF <- inner_join(filteredMF,addIsoScores,by = c('Cluster' = 'Cluster')) 
+            
+            filteredMF <- filteredMF %>%
+              group_by(`Measured m/z`) %>% 
+              filter(Score == min(Score)) %>%
+              mutate(absPPM = abs(`PPM Error`)) %>%
+              filter(absPPM == min(absPPM)) %>% 
+              select(MF:AddIsoScore)
+            
+            filteredMF <- calcNetwork(filteredMF,filteredRel) %>%
+              filter(Connectivity > 1)
+            
+            adducts <- lapply(parameters@adducts,function(y){tibble(Adduct = y)})
+            adducts <- bind_rows(adducts,.id = 'Mode')
+            
+            assigned <- select(filteredMF,MF:Score) %>%
+              inner_join(adducts,c('Adduct' = 'Adduct')) %>%
+              arrange(`MF`)
+            
+            x@assignments <- assigned
+            x@addIsoAssign <- list(MFs = MF, relationships = rel, filteredMFs = filteredMF, filteredRelationships = filteredRel)
+            return(x)
           })
 
 

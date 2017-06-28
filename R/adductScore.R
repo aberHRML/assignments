@@ -1,4 +1,0 @@
-
-adductScore <- function(adducts,rank) {
-  
-}

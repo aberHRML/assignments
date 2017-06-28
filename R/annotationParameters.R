@@ -10,6 +10,8 @@ annotationParameters <- function(technique = NULL){
   if (technique == 'FIE') {
     new('AnnotationParameters',
         technique = 'FIE',
+        maxM = 400,
+        maxMFscore = 5,
         ppm = 6,
         limit = 0.001,
         isotopes = c('C13','O18','2C13'),

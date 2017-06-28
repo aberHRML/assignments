@@ -2,6 +2,8 @@
 setClass('AnnotationParameters',
          slots = list(
            technique = 'character',
+           maxM = 'numeric',
+           maxMFscore = 'numeric',
            ppm = 'numeric',
            limit = 'numeric',
            isotopes = 'character',
