@@ -4,6 +4,12 @@ Version: 0.0.0.9000
 Authors@R: person("Jasen", "Finch", email = "jsf9@aber.ac.uk", role = c("aut", "cre"))
 Description: Molecular formula assignment for high resolution metabolomics.
 Depends: R (>= 3.4.0)
+Imports: CHNOSZ,
+    dplyr,
+    magrittr,
+    mzAnnotation,
+    stringr,
+    tibble
 License: GPL (>= 2)
 Encoding: UTF-8
 LazyData: true
@@ -19,3 +25,6 @@ Collate:
         'MFscore.R'
         'calcM.R'
         'calcMZ.R'
+        'addIsoScore.R'
+        'addMFs.R'
+        'calcNetwork.R'
