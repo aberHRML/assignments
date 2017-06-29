@@ -8,7 +8,8 @@ setClass('AnnotationParameters',
            limit = 'numeric',
            isotopes = 'character',
            adducts = 'list',
-           nCores = 'numeric'
+           nCores = 'numeric',
+           clusterType = 'character'
          ))
 
 #' @export

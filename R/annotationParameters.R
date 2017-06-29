@@ -21,7 +21,8 @@ annotationParameters <- function(technique = NULL){
                              "[M-3H]3-"),
                        p = c('[M+K]1+','[M+H]1+','[M+Na]1+','[M+K41]1+',
                               '[M+NH4]1+','[M+2H]2+','[2M+H]1+','[M+3H]3+')),
-        nCores = detectCores()
+        nCores = detectCores(),
+        clusterType = 'FORK'
         )
   }
 } 
