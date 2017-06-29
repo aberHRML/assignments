@@ -1,3 +1,4 @@
+#' @importFrom mzAnnotation generateMF
 
 MFgen <- function(M,mz,ppm = 6){
   carb <- round(M/12)

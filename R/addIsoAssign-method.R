@@ -1,3 +1,4 @@
+#' @importFrom dplyr arrange rowwise sample_n left_join
 
 setMethod('addIsoAssign',signature = 'Annotation',
           function(x){
@@ -17,7 +18,6 @@ setMethod('addIsoAssign',signature = 'Annotation',
               filter(M <= parameters@maxM)
             
             clus <- makeCluster(parameters@nCores)
-            clusterExport(clus,c('MFgen','generateMF','mutate','parameters'))
             MF <- sample_n(M,nrow(M)) %>%
               rowwise() %>% 
               parApply(cl = clus,1,function(x){MFgen(as.numeric(x[4]),as.numeric(x[1]),ppm = parameters@ppm)}) %>% 

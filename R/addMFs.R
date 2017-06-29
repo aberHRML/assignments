@@ -1,3 +1,4 @@
+#' @importFrom dplyr rename
 
 addMFs <- function(rel,MF){
   MFs <- select(MF,MF,Isotope,Adduct,`Measured m/z`,)

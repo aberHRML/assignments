@@ -1,3 +1,4 @@
+#' @importFrom dplyr group_by summarise group_indices
 
 calcNetwork <- function(MF,rel) {
   MF <- tbl_df(select(MF,MF:Score))
