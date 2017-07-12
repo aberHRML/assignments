@@ -28,3 +28,4 @@ Collate:
         'addIsoScore.R'
         'addMFs.R'
         'calcNetwork.R'
+        'assignMethods.R'
