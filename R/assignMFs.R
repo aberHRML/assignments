@@ -1,5 +1,5 @@
-#' @export
 #' @importFrom tibble tibble
+#' @export
 
 assignMFs <- function(correlations,parameters) {
   annotation <- new('Annotation',

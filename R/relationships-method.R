@@ -20,9 +20,9 @@ setMethod('relationships',signature = 'Annotation',
                      Feature2 = as.numeric(str_replace_all(Feature2,'[:alpha:]',''))
               )
             clus <- makeCluster(parameters@nCores,type = parameters@clusterType)
-            rel <- parApply(clus,select(cors,Feature1,Feature2),1,function(y,limit){
-              mzAnnotation::relationshipPredictor(y,mode = c('n','p'),limit = limit)
-            },limit = parameters@limit)
+            rel <- parApply(clus,select(cors,Feature1,Feature2),1,function(y,limit,add){
+              mzAnnotation::relationshipPredictor(y,mode = c('n','p'),limit = limit,add = add)
+            },limit = parameters@limit, add = unlist(parameters@adducts))
             stopCluster(clus)
             
             rel <- suppressWarnings(bind_rows(rel)) %>% 
