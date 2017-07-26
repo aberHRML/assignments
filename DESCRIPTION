@@ -29,4 +29,5 @@ Collate:
         'addMFs.R'
         'calcNetwork.R'
         'assignMethods.R'
-Suggests: testthat
+Suggests: testthat,
+    covr

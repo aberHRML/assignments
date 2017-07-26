@@ -1,4 +1,5 @@
 #' @importFrom mzAnnotation generateMF
+#' @importFrom tibble as_tibble
 
 MFgen <- function(M,mz,ppm = 6){
   carb <- round(M/12)
@@ -44,5 +45,6 @@ MFgen <- function(M,mz,ppm = 6){
   res$`m/z` <- round(as.numeric(res$`m/z`),5) 
   colnames(res)[2] <- 'Theoretical M'
   res <- mutate(res, 'Measured M' = M, `Measured m/z` = mz)
+  res <- as_tibble(res)
   return(res)
 }
