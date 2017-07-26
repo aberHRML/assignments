@@ -1,4 +1,16 @@
+#' AssignmentParameters
+#' @description An S4 class to store assignment parameters.
+#' @slot technique assignment technique to use
+#' @slot maxM maximum M for which to assign molecular formulas
+#' @slot maxMFscore threshold for molecular formula score
+#' @slot ppm ppm threshold
+#' @slot limit amu deviation limit for relationship prediction
+#' @slot isotopes character vector of isotopes to use
+#' @slot adducts named list of character vectors containing the adducuts to use for each mode
+#' @slot nCores number of cores to use for parallisation
+#' @slot clusterType cluster type to use for parallisation
 #' @export
+
 setClass('AssignmentParameters',
          slots = list(
            technique = 'character',
@@ -12,7 +24,16 @@ setClass('AssignmentParameters',
            clusterType = 'character'
          ))
 
+#' Assignment
+#' @description An S4 class to store assignment results
+#' @slot parameters An S4 object of class AssignmentParameters containing the assignment parameters
+#' @slot correlations A tibble containing the correlations
+#' @slot relationships A tibble containing the predicted relationships
+#' @slot addIsoAssign A list containing the results of the adduct and isotope assignment
+#' @slot transAssign A list containing the results of the transformation assignment
+#' @slot assignments A tibble containing the assigned molecular formulas
 #' @export
+
 setClass('Assignment',
          slots = list(
            parameters = 'AssignmentParameters',

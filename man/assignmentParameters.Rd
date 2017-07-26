@@ -6,6 +6,9 @@
 \usage{
 assignmentParameters(technique = NULL)
 }
+\arguments{
+\item{technique}{technique to use for assignment. \code{NULL} prints available techniques}
+}
 \description{
-annotationParameters
+Return assignment parameters for a specified technique.
 }

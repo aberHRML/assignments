@@ -1,5 +1,8 @@
 #' annotationParameters
+#' @description Return assignment parameters for a specified technique.
+#' @param technique technique to use for assignment. \code{NULL} prints available techniques
 #' @importFrom parallel detectCores
+#' @importFrom methods new
 #' @export
 
 assignmentParameters <- function(technique = NULL){
