@@ -2,7 +2,7 @@
 #' @export
 
 assignMFs <- function(correlations,parameters) {
-  annotation <- new('Annotation',
+  assignment <- new('Assignment',
       parameters = parameters,
       correlations = correlations,
       relationships = tibble(),
@@ -10,7 +10,7 @@ assignMFs <- function(correlations,parameters) {
       transAssign = list(),
       assignments  = tibble()
       )
-  method <- assignMethods(annotation@parameters@technique)
-  annotation <- method(annotation)
-  return(annotation)
+  method <- assignMethods(assignment@parameters@technique)
+  assignment <- method(assignment)
+  return(assignment)
 }

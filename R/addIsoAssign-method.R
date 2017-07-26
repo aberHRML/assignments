@@ -1,6 +1,6 @@
 #' @importFrom dplyr arrange rowwise sample_n left_join
 
-setMethod('addIsoAssign',signature = 'Annotation',
+setMethod('addIsoAssign',signature = 'Assignment',
           function(x){
             parameters <- x@parameters
             rel <- x@relationships %>% 

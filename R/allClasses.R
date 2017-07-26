@@ -1,5 +1,5 @@
 #' @export
-setClass('AnnotationParameters',
+setClass('AssignmentParameters',
          slots = list(
            technique = 'character',
            maxM = 'numeric',
@@ -13,9 +13,9 @@ setClass('AnnotationParameters',
          ))
 
 #' @export
-setClass('Annotation',
+setClass('Assignment',
          slots = list(
-           parameters = 'AnnotationParameters',
+           parameters = 'AssignmentParameters',
            correlations = 'tbl_df',
            relationships = 'tbl_df',
            addIsoAssign = 'list',

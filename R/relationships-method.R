@@ -6,7 +6,7 @@
 #' @importFrom magrittr %>%
 #' @importFrom tibble tibble
 
-setMethod('relationships',signature = 'Annotation',
+setMethod('relationships',signature = 'Assignment',
           function(x){
             parameters <- x@parameters
             

@@ -2,13 +2,13 @@
 #' @importFrom parallel detectCores
 #' @export
 
-annotationParameters <- function(technique = NULL){
+assignmentParameters <- function(technique = NULL){
   if (is.null(technique)) {
     cat('\nAvailable Techniques:','\t FIE')
   }
   
   if (technique == 'FIE') {
-    new('AnnotationParameters',
+    new('AssignmentParameters',
         technique = 'FIE',
         maxM = 400,
         maxMFscore = 5,
