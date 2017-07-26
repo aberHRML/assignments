@@ -14,12 +14,12 @@ License: GPL (>= 2)
 Encoding: UTF-8
 LazyData: true
 RoxygenNote: 6.0.1
-Collate: 
+Collate:
         'allGenerics.R'
         'allClasses.R'
         'addIsoAssign-method.R'
         'relationships-method.R'
-        'annotationParameters.R'
+        'assignmentParameters.R'
         'assignMFs.R'
         'MFgen.R'
         'MFscore.R'
@@ -29,3 +29,4 @@ Collate:
         'addMFs.R'
         'calcNetwork.R'
         'assignMethods.R'
+Suggests: testthat
