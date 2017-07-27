@@ -3,6 +3,10 @@
 #' @param correlations table containing correlations of m/z to assign molecular formulas
 #' @param parameters an S4 object of class AssignmentParamters containing the parameters for molecular formula assignment
 #' @importFrom tibble tibble
+#' @examples 
+#' \dontrun{
+#' res <- assignMFs(correlations,assignmentParameters('FIE'))
+#' }
 #' @export
 
 assignMFs <- function(correlations,parameters) {

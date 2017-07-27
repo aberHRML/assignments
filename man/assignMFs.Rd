@@ -14,3 +14,8 @@ assignMFs(correlations, parameters)
 \description{
 assign molecular formulas to a set of given m/z.
 }
+\examples{
+\dontrun{
+res <- assignMFs(correlations[20000:21000,],assignmentParameters('FIE'))
+}
+}
