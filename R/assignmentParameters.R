@@ -15,7 +15,7 @@ assignmentParameters <- function(technique = NULL){
         technique = 'FIE',
         maxM = 400,
         maxMFscore = 5,
-        ppm = 6,
+        ppm = 5,
         limit = 0.001,
         isotopes = c('C13','O18','2C13'),
         adducts = list(n = c("[M-H]1-", "[M+Cl]1-", "[M+K-2H]1-", 
