@@ -1,8 +1,15 @@
 #' @importFrom CHNOSZ makeup
 
 MFscore <- function(mf){
+  elements <- c('C','H','N','O','P','S')
   eleFreq <- as.vector(makeup(mf))
   ele <- names(makeup(mf))
+  
+  if (length(which(!(elements %in% ele))) > 0) {
+    eleFreq <- c(eleFreq,rep(0,length(which(!(elements %in% ele)))))
+    ele <- c(ele,elements[!(elements %in% ele)])
+  }
+  
   colnames(eleFreq) <- NULL
   
   eleRatios <- c(
