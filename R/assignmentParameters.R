@@ -19,11 +19,9 @@ assignmentParameters <- function(technique = NULL){
         limit = 0.001,
         isotopes = c('C13','O18','2C13'),
         adducts = list(n = c("[M-H]1-", "[M+Cl]1-", "[M+K-2H]1-", 
-                             "[M-2H]2-", "[M+Cl37]1-","[M+K41-2H]1-",
-                             "[M+Na-2H]1-","[2M-H]1-","[3M-H]1-",
-                             "[M-3H]3-"),
+                             "[M-2H]2-", "[M+Cl37]1-","[2M-H]1-"),
                        p = c('[M+K]1+','[M+H]1+','[M+Na]1+','[M+K41]1+',
-                              '[M+NH4]1+','[M+2H]2+','[2M+H]1+','[M+3H]3+')),
+                              '[M+NH4]1+','[M+2H]2+','[2M+H]1+')),
         nCores = detectCores(),
         clusterType = 'FORK'
         )
