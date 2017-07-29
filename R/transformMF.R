@@ -1,5 +1,5 @@
 #' @importFrom tidyr gather
-#' @importFrom str_c str_replace
+#' @importFrom stringr str_c str_replace
 
 transformMF <- function(MF,transformation){
   if (!is.na(transformation)) {
@@ -26,9 +26,10 @@ transformMF <- function(MF,transformation){
       MF <- MF %>%
         filter(Frequency > 0)
       
+      MF$Frequency[MF$Frequency == 1] <- ''
+      
       MF <- str_c(MF$Element,MF$Frequency) %>%
-        str_c(collapse = '') %>%
-        str_replace('1','')
+        str_c(collapse = '') 
     }
   }
   return(MF)

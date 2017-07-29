@@ -41,7 +41,7 @@ setMethod('addIsoAssign',signature = 'Assignment',
             
             MF <- semi_join(MF,MFs,by = c('MF' = 'MF','Isotope' = 'Isotope','Adduct' = 'Adduct','Measured m/z' = 'mz'))
             
-           MF <- calcNetwork(MF,rel)
+            MF <- calcNetwork(MF,rel)
             
             filteredMF <- group_by(MF,Cluster) %>% 
               filter(Score == min(Score)) %>%
@@ -58,12 +58,12 @@ setMethod('addIsoAssign',signature = 'Assignment',
             addIsoScores <- filteredMF %>%
               group_by(Cluster) %>% 
               summarise(AddIsoScore = addIsoScore(Adduct,Isotope,addRank = parameters@adducts,isoRank = parameters@isotopes))
-           
+            
             filteredMF <- inner_join(filteredMF,addIsoScores,by = c('Cluster' = 'Cluster')) 
             
             filteredMF <- filteredMF %>%
               group_by(`Measured m/z`) %>%
-              filter(AddIsoScore == max(AddIsoScore))
+              filter(AddIsoScore == min(AddIsoScore))
             
             filteredRel <- semi_join(filteredRel,filteredMF,by = c('MF' = 'MF','Isotope1' = 'Isotope','Isotope2' = 'Isotope','Adduct1' = 'Adduct','Adduct2' = 'Adduct','mz1' = 'Measured m/z','mz2' = 'Measured m/z'))
             
@@ -94,7 +94,7 @@ setMethod('addIsoAssign',signature = 'Assignment',
               arrange(`MF`)
             
             x@assignments <- assigned
-            x@addIsoAssign <- list(MFs = MF, relationships = rel, filteredMFs = filteredMF, filteredRelationships = filteredRel)
+            x@addIsoAssign <- list(MFs = MF, relationships = rel, filteredMFs = filteredMF, filteredRelationships = filteredRel,assigned = assigned)
             return(x)
           })
 

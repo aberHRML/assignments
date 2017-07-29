@@ -5,3 +5,7 @@ setGeneric("relationships", function(x) {
 setGeneric("addIsoAssign", function(x) {
   standardGeneric("addIsoAssign")
 })
+
+setGeneric("transformationAssign", function(x) {
+  standardGeneric("transformationAssign")
+})

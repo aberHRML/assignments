@@ -19,6 +19,7 @@ Collate:
         'allGenerics.R'
         'allClasses.R'
         'addIsoAssign-method.R'
+        'transformationAssign-method.R'
         'relationships-method.R'
         'assignmentParameters.R'
         'assignMFs.R'
@@ -31,5 +32,7 @@ Collate:
         'calcNetwork.R'
         'assignMethods.R'
         'correlations.R'
+        'calcNetworktrans.R'
+        'transformMF.R'
 Suggests: testthat,
     covr
