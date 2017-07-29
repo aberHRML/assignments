@@ -7,5 +7,5 @@ An R package for molecular formula assignment in high resolution metabolomics
 ### Installation
 
 ``` r
-devtools::install_github('jasenfinch/MFassign)
+devtools::install_github('jasenfinch/MFassign')
 ```
