@@ -63,7 +63,7 @@ setMethod('addIsoAssign',signature = 'Assignment',
             
             filteredMF <- filteredMF %>%
               group_by(`Measured m/z`) %>%
-              filter(AddIsoScore == max(AddIsoScore))
+              filter(AddIsoScore == min(AddIsoScore))
             
             filteredRel <- semi_join(filteredRel,filteredMF,by = c('MF' = 'MF','Isotope1' = 'Isotope','Isotope2' = 'Isotope','Adduct1' = 'Adduct','Adduct2' = 'Adduct','mz1' = 'Measured m/z','mz2' = 'Measured m/z'))
             
@@ -94,7 +94,7 @@ setMethod('addIsoAssign',signature = 'Assignment',
               arrange(`MF`)
             
             x@assignments <- assigned
-            x@addIsoAssign <- list(MFs = MF, relationships = rel, filteredMFs = filteredMF, filteredRelationships = filteredRel)
+            x@addIsoAssign <- list(MFs = MF, relationships = rel, filteredMFs = filteredMF, filteredRelationships = filteredRel,assigned = assigned)
             return(x)
           })
 
