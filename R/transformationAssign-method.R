@@ -30,7 +30,6 @@ setMethod('transformationAssign',signature = 'Assignment',
               filter(!(mz %in% assigned$`Measured m/z`))
             
             clus <- makeCluster(parameters@nCores)
-            clusterExport(clus,c('parameters','MFgen','MFscore','calcMZ','generateMF','mutate','as_tibble','makeup'))
             MF <- sample_n(M,nrow(M)) %>%
               rowwise() %>% 
               parApply(cl = clus,1,function(x){MFgen(as.numeric(x[4]),as.numeric(x[1]),ppm = parameters@ppm)}) %>% 
