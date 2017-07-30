@@ -10,7 +10,8 @@ Imports: CHNOSZ,
     mzAnnotation,
     stringr,
     tibble,
-    methods
+    methods,
+    tidyr
 License: GPL (>= 3)
 Encoding: UTF-8
 LazyData: true
@@ -19,6 +20,7 @@ Collate:
         'allGenerics.R'
         'allClasses.R'
         'addIsoAssign-method.R'
+        'transformationAssign-method.R'
         'relationships-method.R'
         'assignmentParameters.R'
         'assignMFs.R'
@@ -31,5 +33,7 @@ Collate:
         'calcNetwork.R'
         'assignMethods.R'
         'correlations.R'
+        'calcNetworktrans.R'
+        'transformMF.R'
 Suggests: testthat,
     covr
