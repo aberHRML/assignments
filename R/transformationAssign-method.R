@@ -1,4 +1,5 @@
 #' @importFrom stringr str_c
+#' @importFrom dplyr full_join
 
 setMethod('transformationAssign',signature = 'Assignment',
           function(x){
@@ -146,7 +147,7 @@ setMethod('transformationAssign',signature = 'Assignment',
             if (count == 0) {
               x@transAssign <- list(`1` = list(MFs = MF, relationships = rel, filteredMFs = filteredMF, filteredRelationships = filteredRel,assigned = assigned))
             } else {
-              x@transAssign <- list(x@transAssign,list(MFs = MF, relationships = rel, filteredMFs = filteredMF, filteredRelationships = filteredRel,assigned = assigned))
+              x@transAssign <- c(x@transAssign,list(list(MFs = MF, relationships = rel, filteredMFs = filteredMF, filteredRelationships = filteredRel,assigned = assigned)))
               names(x@transAssign)[count + 1] <- count + 1
             }
             return(x)
