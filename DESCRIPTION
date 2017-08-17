@@ -10,8 +10,7 @@ Imports: CHNOSZ,
     mzAnnotation,
     stringr,
     tibble,
-    methods,
-    tidyr
+    methods
 License: GPL (>= 3)
 Encoding: UTF-8
 LazyData: true
@@ -26,14 +25,11 @@ Collate:
         'assignMFs.R'
         'MFgen.R'
         'MFscore.R'
-        'calcM.R'
-        'calcMZ.R'
         'addIsoScore.R'
         'addMFs.R'
         'calcNetwork.R'
         'assignMethods.R'
         'correlations.R'
         'calcNetworktrans.R'
-        'transformMF.R'
 Suggests: testthat,
     covr
