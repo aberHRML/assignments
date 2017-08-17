@@ -16,13 +16,14 @@ An S4 class to store assignment parameters.
 
 \item{\code{maxMFscore}}{threshold for molecular formula score}
 
-\item{\code{ppm}}{ppm threshold}
+\item{\code{ppm}}{ppm threshold
+#' @slot adducts named list of character vectors containing the adducuts to use for each mode}
 
 \item{\code{limit}}{amu deviation limit for relationship prediction}
 
 \item{\code{isotopes}}{character vector of isotopes to use}
 
-\item{\code{adducts}}{named list of character vectors containing the adducuts to use for each mode}
+\item{\code{transformations}}{character vector of transformations to use}
 
 \item{\code{nCores}}{number of cores to use for parallisation}
 

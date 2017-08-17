@@ -20,20 +20,20 @@ setMethod('relationships',signature = 'Assignment',
                      Feature2 = as.numeric(str_replace_all(Feature2,'[:alpha:]',''))
               )
             clus <- makeCluster(parameters@nCores,type = parameters@clusterType)
-            rel <- parApply(clus,select(cors,Feature1,Feature2),1,function(y,limit,add,iso){
-              mzAnnotation::relationshipPredictor(y,mode = c('n','p'),limit = limit,add = add,iso = iso)
-            },limit = parameters@limit, add = unlist(parameters@adducts), iso = parameters@isotopes)
+            rel <- parApply(clus,select(cors,Feature1,Feature2),1,function(y,limit,add,iso,trans){
+              mzAnnotation::relationshipPredictor(y,limit = limit,adducts = add,isotopes = iso,transformations = trans)
+            },limit = parameters@limit, add = unlist(parameters@adducts), iso = parameters@isotopes,trans = parameters@transformations)
             stopCluster(clus)
             
             rel <- suppressWarnings(bind_rows(rel)) %>% 
               tbl_df() %>% 
               mutate(Error = as.numeric(Error)) %>%
               filter(Adduct1 %in% adducts$Adduct, Adduct2 %in% adducts$Adduct) %>%
-              inner_join(cors,by = c('mz1' = 'Feature1','mz2' = 'Feature2')) %>%
+              inner_join(cors,by = c('m/z1' = 'Feature1','m/z2' = 'Feature2')) %>%
               semi_join(adducts,by = c('Mode1' = 'Mode', 'Adduct1' = 'Adduct')) %>%
               semi_join(adducts,by = c('Mode2' = 'Mode', 'Adduct2' = 'Adduct')) %>% 
               filter(Isotope1 %in% c(NA,parameters@isotopes) & Isotope2 %in% c(NA,parameters@isotopes)) %>%
-              select(mz1:r)
+              select(`m/z1`:r)
             
             x@relationships <- rel
             

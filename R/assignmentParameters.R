@@ -22,6 +22,7 @@ assignmentParameters <- function(technique = NULL){
                              "[M-2H]2-", "[M+Cl37]1-","[2M-H]1-"),
                        p = c('[M+K]1+','[M+H]1+','[M+Na]1+','[M+K41]1+',
                               '[M+NH4]1+','[M+2H]2+','[2M+H]1+')),
+        transformations = mzAnnotation::Transformations$`MF Change`,
         nCores = detectCores(),
         clusterType = 'FORK'
         )

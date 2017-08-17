@@ -4,9 +4,10 @@
 #' @slot maxM maximum M for which to assign molecular formulas
 #' @slot maxMFscore threshold for molecular formula score
 #' @slot ppm ppm threshold
+#' #' @slot adducts named list of character vectors containing the adducuts to use for each mode
 #' @slot limit amu deviation limit for relationship prediction
 #' @slot isotopes character vector of isotopes to use
-#' @slot adducts named list of character vectors containing the adducuts to use for each mode
+#' @slot transformations character vector of transformations to use
 #' @slot nCores number of cores to use for parallisation
 #' @slot clusterType cluster type to use for parallisation
 #' @export
@@ -18,8 +19,9 @@ setClass('AssignmentParameters',
            maxMFscore = 'numeric',
            ppm = 'numeric',
            limit = 'numeric',
-           isotopes = 'character',
            adducts = 'list',
+           isotopes = 'character',
+           transformations = 'character',
            nCores = 'numeric',
            clusterType = 'character'
          ))
