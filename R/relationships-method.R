@@ -21,8 +21,7 @@ setMethod('relationships',signature = 'Assignment',
               )
             clus <- makeCluster(parameters@nCores,type = parameters@clusterType)
             rel <- parApply(clus,select(cors,Feature1,Feature2,Mode1,Mode2),1,function(y,limit,add,iso,trans){
-              add <- unlist(add[names(add) %in% y[3:4]])
-              mzAnnotation::relationshipPredictor(as.numeric(y[1:2]),limit = limit,adducts = add,isotopes = iso,transformations = trans)
+              mzAnnotation::relationshipPredictor(as.numeric(y[1:2]),limit = limit,modes = y[3:4],adducts = add,isotopes = iso,transformations = trans)
             },limit = parameters@limit, add = parameters@adducts, iso = parameters@isotopes,trans = parameters@transformations)
             stopCluster(clus)
             
