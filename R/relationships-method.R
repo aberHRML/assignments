@@ -20,9 +20,10 @@ setMethod('relationships',signature = 'Assignment',
                      Feature2 = as.numeric(str_replace_all(Feature2,'[:alpha:]',''))
               )
             clus <- makeCluster(parameters@nCores,type = parameters@clusterType)
-            rel <- parApply(clus,select(cors,Feature1,Feature2),1,function(y,limit,add,iso,trans){
-              mzAnnotation::relationshipPredictor(y,limit = limit,adducts = add,isotopes = iso,transformations = trans)
-            },limit = parameters@limit, add = unlist(parameters@adducts), iso = parameters@isotopes,trans = parameters@transformations)
+            rel <- parApply(clus,select(cors,Feature1,Feature2,Mode1,Mode2),1,function(y,limit,add,iso,trans){
+              add <- unlist(add[names(add) %in% y[3:4]])
+              mzAnnotation::relationshipPredictor(as.numeric(y[1:2]),limit = limit,adducts = add,isotopes = iso,transformations = trans)
+            },limit = parameters@limit, add = parameters@adducts, iso = parameters@isotopes,trans = parameters@transformations)
             stopCluster(clus)
             
             rel <- suppressWarnings(bind_rows(rel)) %>% 
