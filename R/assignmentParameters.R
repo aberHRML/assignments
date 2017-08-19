@@ -17,7 +17,7 @@ assignmentParameters <- function(technique = NULL){
         maxMFscore = 5,
         ppm = 5,
         limit = 0.001,
-        isotopes = c('C13','O18','2C13'),
+        isotopes = c('13C','18O','13C2'),
         adducts = list(n = c("[M-H]1-", "[M+Cl]1-", "[M+K-2H]1-", 
                              "[M-2H]2-", "[M+Cl37]1-","[2M-H]1-"),
                        p = c('[M+H]1+','[M+K]1+','[M+Na]1+','[M+K41]1+',
