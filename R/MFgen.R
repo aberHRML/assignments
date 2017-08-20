@@ -8,24 +8,11 @@ MFgen <- function(M,mz,ppm = 6){
   PS <- round(carb / 4)
   
   maxi <- c(C = carb,
-            iC = 0,
             H = Hs,
-            iH = 0,
             N = NO,
-            iN = 0,
             O = NO,
-            iO = 0,
-            F = 0 ,
-            Na = 0,
-            Si = 0,
             P = PS,
-            S = PS,
-            Cl = 0,
-            iCl = 0,
-            Br = 0,
-            iBr = 0,
-            K = 0,
-            iK = 0)
+            S = PS)
   
   if (M < 100) {
     ppm <- 10
@@ -41,10 +28,8 @@ MFgen <- function(M,mz,ppm = 6){
     gr <- T
   }
   
-  res <- generateMF(M,ppm = ppm,charge = 0,applygr = gr,composition = maxi)
-  res$`m/z` <- round(as.numeric(res$`m/z`),5) 
-  colnames(res)[2] <- 'Theoretical M'
-  res <- mutate(res, 'Measured M' = M, `Measured m/z` = mz)
-  res <- as_tibble(res)
+  res <- generateMF(M,ppm = ppm,charge = 0,validation = gr,composition = maxi) %>% 
+    rename(`Theoretical M` = Mass) %>%
+    mutate(`Measured M` = M, `Measured m/z` = mz)
   return(res)
 }

@@ -1,4 +1,5 @@
 #' @importFrom dplyr arrange rowwise sample_n left_join
+#' @importFrom mzAnnotation calcM calcMZ ppmError
 
 setMethod('addIsoAssign',signature = 'Assignment',
           function(x){
@@ -13,7 +14,7 @@ setMethod('addIsoAssign',signature = 'Assignment',
               filter(!duplicated(.)) %>%
               arrange(mz) %>%
               rowwise() %>%
-              mutate(M = calcM(mz,Isotope,Adduct)) %>% 
+              mutate(M = calcM(mz,adduct = Adduct,isotope = Isotope)) %>% 
               arrange(M) %>%
               filter(M <= parameters@maxM)
             
@@ -22,10 +23,10 @@ setMethod('addIsoAssign',signature = 'Assignment',
               rowwise() %>% 
               parApply(cl = clus,1,function(x){MFgen(as.numeric(x[4]),as.numeric(x[1]),ppm = parameters@ppm)}) %>% 
               bind_rows() %>%
-              tbl_df() %>% 
               left_join(M,by = c('Measured M' = 'M','Measured m/z' = 'mz')) %>% 
               rowwise() %>%
-              mutate(`Theoretical m/z` = calcMZ(`Theoretical M`,Isotope,Adduct), `PPM Error` = round((`Measured m/z` - `Theoretical m/z`)/`Theoretical m/z` * 10^6,5)) %>%
+              mutate(`Theoretical m/z` = calcMZ(`Theoretical M`,Adduct,Isotope), 
+                     `PPM Error` = ppmError(`Measured m/z`,`Theoretical m/z`)) %>%
               select(MF,Isotope,Adduct,`Theoretical M`,`Measured M`,`Theoretical m/z`,`Measured m/z`, `PPM Error`) %>%
               rowwise() %>%
               mutate(Score = MFscore(MF)) %>%
