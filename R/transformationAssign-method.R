@@ -1,5 +1,5 @@
 #' @importFrom stringr str_c
-#' @importFrom dplyr full_join
+#' @importFrom dplyr full_join select
 
 setMethod('transformationAssign',signature = 'Assignment',
           function(x){
@@ -10,21 +10,21 @@ setMethod('transformationAssign',signature = 'Assignment',
             rel <- x@relationships %>%
               filter((`m/z1` %in% assigned$`Measured m/z` | (`m/z2` %in% assigned$`Measured m/z`)) & !(`m/z1` %in% assigned$`Measured m/z` & (`m/z2` %in% assigned$`Measured m/z`)))
             
-            `m/z1` <- rel %>%
-              semi_join(assigned,by = c('`m/z1`' = 'Measured m/z', 'Adduct1' = 'Adduct', 'Isotope1' = 'Isotope')) %>%
+            mz1 <- rel %>%
+              semi_join(assigned,by = c('m/z1' = 'Measured m/z', 'Adduct1' = 'Adduct', 'Isotope1' = 'Isotope')) %>%
               filter(is.na(Transformation1))
-            `m/z2` <- rel %>%
-              semi_join(assigned,by = c('`m/z2`' = 'Measured m/z', 'Adduct2' = 'Adduct', 'Isotope2' = 'Isotope')) %>%
+            mz2 <- rel %>%
+              semi_join(assigned,by = c('m/z2' = 'Measured m/z', 'Adduct2' = 'Adduct', 'Isotope2' = 'Isotope')) %>%
               filter(is.na(Transformation2))
             
-            rel <- bind_rows(`m/z1`,`m/z2`)
+            rel <- bind_rows(mz1,mz2)
             
             M <- bind_rows(select(rel,mz = `m/z1`,Isotope = Isotope1, Adduct = Adduct1),
                            select(rel,mz = `m/z2`,Isotope = Isotope2, Adduct = Adduct2)) %>%
               filter(!duplicated(.)) %>%
               arrange(mz) %>%
               rowwise() %>%
-              mutate(M = calcM(mz,Isotope,Adduct)) %>% 
+              mutate(M = calcM(mz,Adduct,Isotope)) %>% 
               arrange(M) %>%
               filter(M <= parameters@maxM) %>%
               filter(!(mz %in% assigned$`Measured m/z`))
@@ -34,10 +34,9 @@ setMethod('transformationAssign',signature = 'Assignment',
               rowwise() %>% 
               parApply(cl = clus,1,function(x){MFgen(as.numeric(x[4]),as.numeric(x[1]),ppm = parameters@ppm)}) %>% 
               bind_rows() %>%
-              tbl_df() %>% 
               left_join(M,by = c('Measured M' = 'M','Measured m/z' = 'mz')) %>% 
               rowwise() %>%
-              mutate(`Theoretical m/z` = calcMZ(`Theoretical M`,Isotope,Adduct), `PPM Error` = round((`Measured m/z` - `Theoretical m/z`)/`Theoretical m/z` * 10^6,5)) %>%
+              mutate(`Theoretical m/z` = calcMZ(`Theoretical M`,Adduct,Isotope), `PPM Error` = round((`Measured m/z` - `Theoretical m/z`)/`Theoretical m/z` * 10^6,5)) %>%
               select(MF,Isotope,Adduct,`Theoretical M`,`Measured M`,`Theoretical m/z`,`Measured m/z`, `PPM Error`) %>%
               rowwise() %>%
               mutate(Score = MFscore(MF)) %>%
@@ -49,14 +48,14 @@ setMethod('transformationAssign',signature = 'Assignment',
             
             
             rel <- filter(rel, `m/z1` %in% MF$`Measured m/z` | `m/z2` %in% MF$`Measured m/z`) %>%
-              left_join(MFs,by = c('`m/z1`' = 'Measured m/z')) %>%
+              left_join(MFs,by = c('m/z1' = 'Measured m/z')) %>%
               rename(MF1 = MF)
             rel[is.na(rel)] <- ''
             
             
             rel <- filter(rel,Isotope1 == Isotope & Adduct1 == Adduct) %>%
               select(`m/z1`:MF1) %>%
-              left_join(MFs,by = c('`m/z2`' = 'Measured m/z')) %>%
+              left_join(MFs,by = c('m/z2' = 'Measured m/z')) %>%
               rename(MF2 = MF)
             rel[is.na(rel)] <- ''
             
@@ -93,8 +92,8 @@ setMethod('transformationAssign',signature = 'Assignment',
               group_by(`Measured m/z`) %>% 
               filter(Connectivity == max(Connectivity))
             
-            filteredRel1 <- semi_join(rel,filteredMF,by = c('MF1' = 'MF','Isotope1' = 'Isotope','Adduct1' = 'Adduct','`m/z1`' = 'Measured m/z'))
-            filteredRel2 <- semi_join(rel,filteredMF,by = c('MF2' = 'MF','Isotope2' = 'Isotope','Adduct2' = 'Adduct','`m/z2`' = 'Measured m/z'))
+            filteredRel1 <- semi_join(rel,filteredMF,by = c('MF1' = 'MF','Isotope1' = 'Isotope','Adduct1' = 'Adduct','m/z1' = 'Measured m/z'))
+            filteredRel2 <- semi_join(rel,filteredMF,by = c('MF2' = 'MF','Isotope2' = 'Isotope','Adduct2' = 'Adduct','m/z2' = 'Measured m/z'))
             filteredRel <- bind_rows(filteredRel1,filteredRel2) %>%
               select(`m/z1`:MF2)
             
@@ -112,8 +111,8 @@ setMethod('transformationAssign',signature = 'Assignment',
               group_by(`Measured m/z`) %>%
               filter(AddIsoScore == min(AddIsoScore))
             
-            filteredRel1 <- semi_join(rel,filteredMF,by = c('MF1' = 'MF','Isotope1' = 'Isotope','Adduct1' = 'Adduct','`m/z1`' = 'Measured m/z'))
-            filteredRel2 <- semi_join(rel,filteredMF,by = c('MF2' = 'MF','Isotope2' = 'Isotope','Adduct2' = 'Adduct','`m/z2`' = 'Measured m/z'))
+            filteredRel1 <- semi_join(rel,filteredMF,by = c('MF1' = 'MF','Isotope1' = 'Isotope','Adduct1' = 'Adduct','m/z1' = 'Measured m/z'))
+            filteredRel2 <- semi_join(rel,filteredMF,by = c('MF2' = 'MF','Isotope2' = 'Isotope','Adduct2' = 'Adduct','m/z2' = 'Measured m/z'))
             filteredRel <- bind_rows(filteredRel1,filteredRel2) 
             
             filteredMF <- calcNetworktrans(filteredMF,filteredRel)
