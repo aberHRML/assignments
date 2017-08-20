@@ -6,6 +6,7 @@
 #' @slot ppm ppm threshold
 #' #' @slot adducts named list of character vectors containing the adducuts to use for each mode
 #' @slot limit amu deviation limit for relationship prediction
+#' @slot adducts list of character vectors containing the adducts to use. List element names should denote ionisation mode.
 #' @slot isotopes character vector of isotopes to use
 #' @slot transformations character vector of transformations to use
 #' @slot nCores number of cores to use for parallisation
