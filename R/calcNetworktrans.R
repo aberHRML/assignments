@@ -1,4 +1,5 @@
 #' @importFrom dplyr group_by summarise group_indices
+#' @importFrom tidyr gather
 
 calcNetworktrans <- function(MF,rel) {
   MF <- tbl_df(select(MF,MF:Score))
