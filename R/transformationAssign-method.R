@@ -1,5 +1,6 @@
 #' @importFrom stringr str_c
 #' @importFrom dplyr full_join select
+#' @importFrom mzAnnotation transformMF
 
 setMethod('transformationAssign',signature = 'Assignment',
           function(x){
