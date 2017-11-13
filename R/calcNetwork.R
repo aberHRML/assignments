@@ -1,21 +1,27 @@
 #' @importFrom dplyr group_by summarise group_indices
 
 calcNetwork <- function(MF,rel) {
-  MF <- tbl_df(select(MF,MF:Score))
-  Nodes <- suppressWarnings(group_by(MF,MF)) %>%
-    summarise(Nodes = n())
-  Edges <- group_by(rel,MF) %>%
+  MF <- MF %>%
+    tbl_df() %>%
+    select(rt:Score)
+  Nodes <- suppressWarnings( MF 
+                             %>%
+                              group_by(MF) %>%
+                              summarise(Nodes = n()))
+  Edges <- rel %>%
+    group_by(MF) %>%
     summarise(Edges = n(),EdgeWeight = mean(r))
   
   MFs <- inner_join(Nodes,Edges, by = c('MF' = 'MF')) %>%
     mutate(Connectivity = Nodes * Edges)
   
   MF <- inner_join(MF,MFs, by = c('MF' = 'MF')) %>% 
-    arrange(desc(Connectivity),desc(Edges),MF) %>%
+  arrange(desc(Connectivity),desc(Edges),MF) %>%
     mutate(Cluster = NA)
   
   for (i in 1:length(unique(MF$MF))) {
-    mf <- filter(MF,MF == unique(MF)[i])
+    mf <- MF %>% 
+      filter(MF == unique(MF)[i])
     clus <- filter(MF,`Measured m/z` %in% mf$`Measured m/z` & 
                      Isotope %in% mf$Isotope & 
                      Adduct %in% mf$Adduct &
