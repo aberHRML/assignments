@@ -1,24 +1,42 @@
 
 assignMethods <- function(method = NULL) {
   methods <- list(
-    FIE = function(annotation) {
-      annotation <- annotation %>% 
-        prepCorrelations() %>%
+    FIE = function(assignment) {
+      assignment <- assignment %>% 
+        prepCorrelations()
         relationships() %>% 
         addIsoAssign()
       count <- 0
       while (T) {
         count <- count + 1
-        annotation <- suppressWarnings(transformationAssign(annotation))
-        if (nrow(annotation@transAssign[[count]]$assigned) == 0) {
-          annotation@transAssign <- annotation@transAssign[-count] 
+        assignment <- suppressWarnings(transformationAssign(assignment))
+        if (nrow(assignment@transAssign[[count]]$assigned) == 0) {
+          assignment@transAssign <- assignment@transAssign[-count] 
           break()
         }
       }
-    `RP-LC` = function(annotation){
-      
+    `RP-LC` = function(assignment){
+      assignment@correlations <- assignment@correlations %>%
+        mutate( rt1 = str_split_fixed(Feature1,'@',2) %>% 
+                  as_tibble() %>% 
+                  select(V2) %>%
+                  unlist() %>%
+                  as.numeric(),
+                rt2 = str_split_fixed(Feature2,'@',2) %>% 
+                  as_tibble() %>% 
+                  select(V2) %>%
+                  unlist() %>%
+                  as.numeric(),
+                rtDiff = abs(rt1 - rt2)
+        ) %>%
+        filter(rtDiff <= parameters@RTwindow) %>%
+        select(Feature1:r)
+      assignment <- assignment %>%
+        prepCorrelations() %>%
+        relationships() %>%
+        addIsoAssign()
     }
-      return(annotation)
+      return(assignment)
     }
   )
   
