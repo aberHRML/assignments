@@ -10,9 +10,6 @@ setMethod('relationships',signature = 'Assignment',
           function(assignment){
             parameters <- assignment@parameters
             
-            adducts <- lapply(parameters@adducts,function(y){tibble(Adduct = y)})
-            adducts <- bind_rows(adducts,.id = 'Mode')
-            
             cors <- assignment@correlations
             
             clus <- makeCluster(parameters@nCores,type = parameters@clusterType)
