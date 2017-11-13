@@ -14,7 +14,9 @@ assignMethods <- function(method = NULL) {
           break()
         }
       }
+    `RP-LC` = function(annotation){
       
+    }
       return(annotation)
     }
   )

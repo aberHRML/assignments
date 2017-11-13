@@ -6,25 +6,45 @@
 #' @export
 
 assignmentParameters <- function(technique = NULL){
+  availTechniques <- c('FIE','RP-LC')
   if (is.null(technique)) {
-    cat('\nAvailable Techniques:','\t FIE')
-  }
-  
-  if (technique == 'FIE') {
-    new('AssignmentParameters',
-        technique = 'FIE',
-        maxM = 400,
-        maxMFscore = 5,
-        ppm = 5,
-        limit = 0.001,
-        isotopes = c('13C','18O','13C2'),
-        adducts = list(n = c("[M-H]1-", "[M+Cl]1-", "[M+K-2H]1-", 
-                             "[M-2H]2-", "[M+Cl37]1-","[2M-H]1-"),
-                       p = c('[M+H]1+','[M+K]1+','[M+Na]1+','[M+K41]1+',
-                              '[M+NH4]1+','[M+2H]2+','[2M+H]1+')),
-        transformations = mzAnnotation::Transformations$`MF Change`,
-        nCores = detectCores(),
-        clusterType = 'FORK'
-        )
+    cat('\nAvailable Techniques:',str_c('\n\t\t\t',str_c(availTechniques,collapse = '\n\t\t\t'),'\n'))
+  } else {
+    if (technique == 'FIE') {
+      new('AssignmentParameters',
+          technique = 'FIE',
+          maxM = 400,
+          maxMFscore = 5,
+          ppm = 5,
+          limit = 0.001,
+          RTwindow = numeric(),
+          isotopes = c('13C','18O','13C2'),
+          adducts = list(n = c("[M-H]1-", "[M+Cl]1-", "[M+K-2H]1-", 
+                               "[M-2H]2-", "[M+Cl37]1-","[2M-H]1-"),
+                         p = c('[M+H]1+','[M+K]1+','[M+Na]1+','[M+K41]1+',
+                               '[M+NH4]1+','[M+2H]2+','[2M+H]1+')),
+          transformations = mzAnnotation::Transformations$`MF Change`,
+          nCores = detectCores(),
+          clusterType = 'FORK'
+      )
+    }
+    if (technique == 'RP-LC') {
+      new('AssignmentParameters',
+          technique = 'FIE',
+          maxM = 800,
+          maxMFscore = 5,
+          ppm = 5,
+          limit = 0.001,
+          RTwindow = 2/60,
+          isotopes = c('13C','18O','13C2','13C3'),
+          adducts = list(n = c("[M-H]1-", "[M+Cl]1-", "[M+K-2H]1-", 
+                               "[M-2H]2-", "[M+Cl37]1-","[2M-H]1-"),
+                         p = c('[M+H]1+','[M+K]1+','[M+Na]1+','[M+K41]1+',
+                               '[M+NH4]1+','[M+2H]2+','[2M+H]1+')),
+          transformations = mzAnnotation::Transformations$`MF Change`,
+          nCores = detectCores(),
+          clusterType = 'FORK'
+      )
+    }
   }
 } 
