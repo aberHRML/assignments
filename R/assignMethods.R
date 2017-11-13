@@ -3,6 +3,7 @@ assignMethods <- function(method = NULL) {
   methods <- list(
     FIE = function(annotation) {
       annotation <- annotation %>% 
+        prepCorrelations() %>%
         relationships() %>% 
         addIsoAssign()
       count <- 0
