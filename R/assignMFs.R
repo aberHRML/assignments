@@ -10,6 +10,7 @@
 #' @export
 
 assignMFs <- function(correlations,parameters) {
+  options(digits = 10)
   assignment <- new('Assignment',
       parameters = parameters,
       correlations = correlations,
