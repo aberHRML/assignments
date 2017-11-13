@@ -2,9 +2,9 @@
 #' @importFrom mzAnnotation calcM calcMZ ppmError
 
 setMethod('addIsoAssign',signature = 'Assignment',
-          function(x){
-            parameters <- x@parameters
-            rel <- x@relationships %>% 
+          function(assignment){
+            parameters <- assignment@parameters
+            rel <- assignment@relationships %>% 
               filter(is.na(Transformation1) & is.na(Transformation2) & r > 0) %>%
               filter(!(is.na(Isotope1) & !is.na(Isotope2) & Adduct1 == Adduct2 & log2IntensityRatio < 0)) %>%
               filter(!(!is.na(Isotope1) & is.na(Isotope2) & Adduct1 == Adduct2)) 
@@ -94,9 +94,9 @@ setMethod('addIsoAssign',signature = 'Assignment',
               inner_join(adducts,c('Adduct' = 'Adduct')) %>%
               arrange(`MF`)
             
-            x@assignments <- assigned
-            x@addIsoAssign <- list(MFs = MF, relationships = rel, filteredMFs = filteredMF, filteredRelationships = filteredRel,assigned = assigned)
-            return(x)
+            assignment@assignments <- assigned
+            assignment@addIsoAssign <- list(MFs = MF, relationships = rel, filteredMFs = filteredMF, filteredRelationships = filteredRel,assigned = assigned)
+            return(assignment)
           })
 
 

@@ -7,13 +7,13 @@
 #' @importFrom tibble tibble
 
 setMethod('relationships',signature = 'Assignment',
-          function(x){
-            parameters <- x@parameters
+          function(assignment){
+            parameters <- assignment@parameters
             
             adducts <- lapply(parameters@adducts,function(y){tibble(Adduct = y)})
             adducts <- bind_rows(adducts,.id = 'Mode')
             
-            cors <- x@correlations
+            cors <- assignment@correlations
             
             clus <- makeCluster(parameters@nCores,type = parameters@clusterType)
             rel <- parApply(clus,select(cors,`m/z1`,`m/z2`,Mode1,Mode2),1,function(y,limit,add,iso,trans){
@@ -26,7 +26,7 @@ setMethod('relationships',signature = 'Assignment',
               
             stopCluster(clus)
             
-            x@relationships <- rel
+            assignment@relationships <- rel
             
-            return(x)
+            return(assignment)
           })

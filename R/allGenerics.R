@@ -1,11 +1,15 @@
-setGeneric("relationships", function(x) {
+setGeneric('prepCorrelations', function(assignment){
+  standardGeneric('prepCorrelations')
+})
+
+setGeneric("relationships", function(assignment) {
   standardGeneric("relationships")
 })
 
-setGeneric("addIsoAssign", function(x) {
+setGeneric("addIsoAssign", function(assignment) {
   standardGeneric("addIsoAssign")
 })
 
-setGeneric("transformationAssign", function(x) {
+setGeneric("transformationAssign", function(assignment) {
   standardGeneric("transformationAssign")
 })

@@ -3,12 +3,12 @@
 #' @importFrom mzAnnotation transformMF
 
 setMethod('transformationAssign',signature = 'Assignment',
-          function(x){
-            parameters <- x@parameters
+          function(assignment){
+            parameters <- assignment@parameters
             
-            assigned <- x@assignments
+            assigned <- assignment@assignments
             
-            rel <- x@relationships %>%
+            rel <- assignment@relationships %>%
               filter((`m/z1` %in% assigned$`Measured m/z` | (`m/z2` %in% assigned$`Measured m/z`)) & !(`m/z1` %in% assigned$`Measured m/z` & (`m/z2` %in% assigned$`Measured m/z`)))
             
             mz1 <- rel %>%
@@ -140,16 +140,16 @@ setMethod('transformationAssign',signature = 'Assignment',
               inner_join(adducts,c('Adduct' = 'Adduct')) %>%
               arrange(`MF`)
             
-            x@assignments <- bind_rows(x@assignments,assigned)
+            assignment@assignments <- bind_rows(assignment@assignments,assigned)
             
-            count <- length(x@transAssign)
+            count <- length(assignment@transAssign)
             if (count == 0) {
-              x@transAssign <- list(`1` = list(MFs = MF, relationships = rel, filteredMFs = filteredMF, filteredRelationships = filteredRel,assigned = assigned))
+              assignment@transAssign <- list(`1` = list(MFs = MF, relationships = rel, filteredMFs = filteredMF, filteredRelationships = filteredRel,assigned = assigned))
             } else {
-              x@transAssign <- c(x@transAssign,list(list(MFs = MF, relationships = rel, filteredMFs = filteredMF, filteredRelationships = filteredRel,assigned = assigned)))
-              names(x@transAssign)[count + 1] <- count + 1
+              assignment@transAssign <- c(assignment@transAssign,list(list(MFs = MF, relationships = rel, filteredMFs = filteredMF, filteredRelationships = filteredRel,assigned = assigned)))
+              names(assignment@transAssign)[count + 1] <- count + 1
             }
-            return(x)
+            return(assignment)
           }
 )
             
