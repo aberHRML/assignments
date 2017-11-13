@@ -20,8 +20,8 @@ setMethod('transformationAssign',signature = 'Assignment',
             
             rel <- bind_rows(mz1,mz2)
             
-            M <- bind_rows(select(rel,mz = `m/z1`,Isotope = Isotope1, Adduct = Adduct1),
-                           select(rel,mz = `m/z2`,Isotope = Isotope2, Adduct = Adduct2)) %>%
+            M <- bind_rows(select(rel,RetentionTIme = RetentionTIme1,mz = `m/z1`,Isotope = Isotope1, Adduct = Adduct1),
+                           select(rel,RetentionTIme = RetentionTIme2,mz = `m/z2`,Isotope = Isotope2, Adduct = Adduct2)) %>%
               filter(!duplicated(.)) %>%
               arrange(mz) %>%
               rowwise() %>%
