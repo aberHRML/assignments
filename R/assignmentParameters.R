@@ -9,9 +9,10 @@ assignmentParameters <- function(technique = NULL){
   availTechniques <- c('FIE','RP-LC')
   if (is.null(technique)) {
     cat('\nAvailable Techniques:',str_c('\n\t\t\t',str_c(availTechniques,collapse = '\n\t\t\t'),'\n'))
+    p <- NULL
   } else {
     if (technique == 'FIE') {
-      new('AssignmentParameters',
+      p <- new('AssignmentParameters',
           technique = 'FIE',
           maxM = 400,
           maxMFscore = 5,
@@ -29,7 +30,7 @@ assignmentParameters <- function(technique = NULL){
       )
     }
     if (technique == 'RP-LC') {
-      new('AssignmentParameters',
+      p <- new('AssignmentParameters',
           technique = 'FIE',
           maxM = 600,
           maxMFscore = 5,
@@ -47,4 +48,5 @@ assignmentParameters <- function(technique = NULL){
       )
     }
   }
+  return(p)
 } 

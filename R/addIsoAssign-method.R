@@ -33,11 +33,13 @@ setMethod('addIsoAssign',signature = 'Assignment',
               filter(Score <= parameters@maxMFscore)
             stopCluster(clus)
             
-            rel <- addMFs(rel,MF)
+            rel <- rel %>% addMFs(MF) %>%
+              mutate(rt1 = as.numeric(rt1),rt2 = as.numeric(rt2))
             
             MFs <- bind_rows(select(rel,mz = `m/z1`,rt = rt1,Isotope = Isotope1, Adduct = Adduct1, MF = MF),
                              select(rel,mz = `m/z2`,rt = rt2,Isotope = Isotope2, Adduct = Adduct2,MF = MF)) %>%
               filter(!duplicated(.)) %>%
+              mutate(rt = as.numeric(rt)) %>%
               arrange(mz)
             
             MF <- semi_join(MF,MFs,by = c('rt' = 'rt','MF' = 'MF','Isotope' = 'Isotope','Adduct' = 'Adduct','Measured m/z' = 'mz'))

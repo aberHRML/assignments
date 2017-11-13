@@ -3,7 +3,7 @@ assignMethods <- function(method = NULL) {
   methods <- list(
     FIE = function(assignment) {
       assignment <- assignment %>% 
-        prepCorrelations()
+        prepCorrelations() %>%
         relationships() %>% 
         addIsoAssign()
       count <- 0
