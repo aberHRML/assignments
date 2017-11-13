@@ -91,7 +91,7 @@ setMethod('transformationAssign',signature = 'Assignment',
             filteredMF <- group_by(MF,Cluster) %>% 
               filter(Score == min(Score)) %>%
               group_by(`Measured m/z`) %>% 
-              filter(Connectivity == max(Connectivity))
+              filter(Degree == max(Degree))
             
             filteredRel1 <- semi_join(rel,filteredMF,by = c('MF1' = 'MF','Isotope1' = 'Isotope','Adduct1' = 'Adduct','m/z1' = 'Measured m/z'))
             filteredRel2 <- semi_join(rel,filteredMF,by = c('MF2' = 'MF','Isotope2' = 'Isotope','Adduct2' = 'Adduct','m/z2' = 'Measured m/z'))
@@ -100,7 +100,7 @@ setMethod('transformationAssign',signature = 'Assignment',
             
             filteredMF <- calcNetworktrans(filteredMF,filteredRel) %>%
               group_by(`Measured m/z`) %>% 
-              filter(Connectivity == max(Connectivity))
+              filter(Degree == max(Degree))
             
             addIsoScores <- filteredMF %>%
               group_by(Cluster) %>% 

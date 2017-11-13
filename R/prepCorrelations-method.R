@@ -27,18 +27,18 @@ setMethod('prepCorrelations',signature = 'Assignment',
                        unlist() %>% 
                        str_replace_all('[:alpha:]','') %>% 
                        as.numeric(),
-                     rt1 = str_split_fixed(Feature1,'@',2) %>% 
+                     RetentionTime1 = str_split_fixed(Feature1,'@',2) %>% 
                        as_tibble() %>% 
                        select(V2) %>%
                        unlist() %>%
                        as.numeric(),
-                     rt2 = str_split_fixed(Feature2,'@',2) %>% 
+                     RetentionTime2 = str_split_fixed(Feature2,'@',2) %>% 
                        as_tibble() %>% 
                        select(V2) %>%
                        unlist() %>%
                        as.numeric()
               ) %>%
-              select(Feature1,Feature2,Mode1:rt2,log2IntensityRatio,r)
+              select(Feature1,Feature2,Mode1:RetentionTime2,log2IntensityRatio,r)
             
             assignment@correlations <- correlations
             return(assignment)
