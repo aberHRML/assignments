@@ -1,5 +1,6 @@
 
 LCassignment <- function(assignment){
+  parameters <- assignment@parameters
     assignment@correlations <- assignment@correlations %>%
       mutate( rt1 = str_split_fixed(Feature1,'@',2) %>% 
                 as_tibble() %>% 
