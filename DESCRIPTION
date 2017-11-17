@@ -33,5 +33,6 @@ Collate:
         'assignMethods.R'
         'correlations.R'
         'calcNetworktrans.R'
+        'LCassignment.R'
 Suggests: testthat,
     covr

@@ -19,6 +19,6 @@ LCassignment <- function(assignment){
       prepCorrelations() %>%
       relationships() %>%
       addIsoAssign()
-  }
+    
   return(assignment)
 }
