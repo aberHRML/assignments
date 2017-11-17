@@ -32,7 +32,7 @@ assignmentParameters <- function(technique = NULL){
     if (technique == 'RP-LC') {
       p <- new('AssignmentParameters',
           technique = 'FIE',
-          maxM = 600,
+          maxM = 500,
           maxMFscore = 5,
           ppm = 5,
           limit = 0.001,
@@ -50,7 +50,7 @@ assignmentParameters <- function(technique = NULL){
     if (technique == 'NP-LC') {
       p <- new('AssignmentParameters',
                technique = 'FIE',
-               maxM = 600,
+               maxM = 500,
                maxMFscore = 5,
                ppm = 5,
                limit = 0.001,
