@@ -21,6 +21,8 @@ An S4 class to store assignment parameters.
 
 \item{\code{limit}}{amu deviation limit for relationship prediction}
 
+\item{\code{RTwindow}}{retention time window for chromatographic associations}
+
 \item{\code{adducts}}{list of character vectors containing the adducts to use. List element names should denote ionisation mode.}
 
 \item{\code{isotopes}}{character vector of isotopes to use}

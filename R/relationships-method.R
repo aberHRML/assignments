@@ -7,35 +7,24 @@
 #' @importFrom tibble tibble
 
 setMethod('relationships',signature = 'Assignment',
-          function(x){
-            parameters <- x@parameters
+          function(assignment){
+            parameters <- assignment@parameters
             
-            adducts <- lapply(parameters@adducts,function(y){tibble(Adduct = y)})
-            adducts <- bind_rows(adducts,.id = 'Mode')
+            cors <- assignment@correlations
             
-            cors <- x@correlations %>%
-              mutate(Mode1 = str_sub(Feature1,1,1),
-                     Mode2 = str_sub(Feature2,1,1),
-                     Feature1 = as.numeric(str_replace_all(Feature1,'[:alpha:]','')), 
-                     Feature2 = as.numeric(str_replace_all(Feature2,'[:alpha:]',''))
-              )
             clus <- makeCluster(parameters@nCores,type = parameters@clusterType)
-            rel <- parApply(clus,select(cors,Feature1,Feature2,Mode1,Mode2),1,function(y,limit,add,iso,trans){
+            rel <- parApply(clus,select(cors,`m/z1`,`m/z2`,Mode1,Mode2),1,function(y,limit,add,iso,trans){
               mzAnnotation::relationshipPredictor(as.numeric(y[1:2]),limit = limit,modes = y[3:4],adducts = add,isotopes = iso,transformations = trans)
-            },limit = parameters@limit, add = parameters@adducts, iso = parameters@isotopes,trans = parameters@transformations)
+            },limit = parameters@limit, add = parameters@adducts, iso = parameters@isotopes,trans = parameters@transformations) %>%
+              bind_rows() %>%
+              as_tibble() %>%
+              inner_join(cors,by = c('m/z1' = 'm/z1','m/z2' = 'm/z2')) %>%
+              select(Feature1:Mode2,`m/z1`,`m/z2`,RetentionTime1,RetentionTime2,Adduct1:Transformation2,log2IntensityRatio,r,Error) %>%
+              mutate(RetentionTime1 = as.numeric(RetentionTime1),RetentionTime2 = as.numeric(RetentionTime2))
+              
             stopCluster(clus)
             
-            rel <- suppressWarnings(bind_rows(rel)) %>% 
-              tbl_df() %>% 
-              mutate(Error = as.numeric(Error)) %>%
-              filter(Adduct1 %in% adducts$Adduct, Adduct2 %in% adducts$Adduct) %>%
-              inner_join(cors,by = c('m/z1' = 'Feature1','m/z2' = 'Feature2')) %>%
-              semi_join(adducts,by = c('Mode1' = 'Mode', 'Adduct1' = 'Adduct')) %>%
-              semi_join(adducts,by = c('Mode2' = 'Mode', 'Adduct2' = 'Adduct')) %>% 
-              filter(Isotope1 %in% c(NA,parameters@isotopes) & Isotope2 %in% c(NA,parameters@isotopes)) %>%
-              select(`m/z1`:r)
+            assignment@relationships <- rel
             
-            x@relationships <- rel
-            
-            return(x)
+            return(assignment)
           })

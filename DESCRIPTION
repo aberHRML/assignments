@@ -1,6 +1,6 @@
 Package: MFassign
 Title: Molecular formula assignment for high resolution metabolomics
-Version: 0.0.0.9000
+Version: 0.2.0
 Authors@R: person("Jasen", "Finch", email = "jsf9@aber.ac.uk", role = c("aut", "cre"))
 Description: Molecular formula assignment for high resolution metabolomics.
 Depends: R (>= 3.4.0)
@@ -19,6 +19,7 @@ RoxygenNote: 6.0.1
 Collate:
         'allGenerics.R'
         'allClasses.R'
+        'prepCorrelations-method.R'
         'addIsoAssign-method.R'
         'transformationAssign-method.R'
         'relationships-method.R'
@@ -32,5 +33,6 @@ Collate:
         'assignMethods.R'
         'correlations.R'
         'calcNetworktrans.R'
+        'LCassignment.R'
 Suggests: testthat,
     covr

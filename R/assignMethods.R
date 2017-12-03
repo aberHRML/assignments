@@ -1,22 +1,24 @@
 
 assignMethods <- function(method = NULL) {
   methods <- list(
-    FIE = function(annotation) {
-      annotation <- annotation %>% 
+    FIE = function(assignment) {
+      assignment <- assignment %>% 
+        prepCorrelations() %>%
         relationships() %>% 
         addIsoAssign()
       count <- 0
       while (T) {
         count <- count + 1
-        annotation <- suppressWarnings(transformationAssign(annotation))
-        if (nrow(annotation@transAssign[[count]]$assigned) == 0) {
-          annotation@transAssign <- annotation@transAssign[-count] 
+        assignment <- suppressWarnings(transformationAssign(assignment))
+        if (nrow(assignment@transAssign[[count]]$assigned) == 0) {
+          assignment@transAssign <- assignment@transAssign[-count] 
           break()
         }
       }
-      
-      return(annotation)
-    }
+      return(assignment)
+    },
+    `RP-LC` = LCassignment,
+    `NP-LC` = LCassignment
   )
   
   if (is.null(method)) {
