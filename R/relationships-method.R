@@ -14,7 +14,15 @@ setMethod('relationships',signature = 'Assignment',
             
             clus <- makeCluster(parameters@nCores,type = parameters@clusterType)
             rel <- parApply(clus,select(cors,`m/z1`,`m/z2`,Mode1,Mode2),1,function(y,limit,add,iso,trans){
-              mzAnnotation::relationshipPredictor(as.numeric(y[1:2]),limit = limit,modes = y[3:4],adducts = add,isotopes = iso,transformations = trans)
+              mzAnnotation::relationshipPredictor(as.numeric(y[1:2]),
+                                                  limit = limit,
+                                                  modes = y[3:4],
+                                                  adducts = add,
+                                                  isotopes = iso,
+                                                  transformations = trans,
+                                                  adductTable = Adducts,
+                                                  isotopeTable = Isotopes,
+                                                  transformationTable = Transformations)
             },limit = parameters@limit, add = parameters@adducts, iso = parameters@isotopes,trans = parameters@transformations) %>%
               bind_rows() %>%
               as_tibble() %>%
