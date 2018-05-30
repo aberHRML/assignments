@@ -1,14 +1,23 @@
 # R for travis: see documentation at https://docs.travis-ci.com/user/languages/r
 
 language: R
-sudo: false
+sudo: true
 cache: packages
 bioc_required: true
 warnings_are_errors: true
 
+r:
+  - release
+  - devel
+  
+apt_packages:
+ - default-jre
+ - default-jdk
+ - libopenbabel-dev
+ 
 r_github_packages:
     - jasenfinch/mzAnnotation
-
+ 
 notifications:
     email:
     on_success: change

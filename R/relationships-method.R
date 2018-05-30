@@ -2,7 +2,7 @@
 #' @importFrom dplyr mutate bind_rows tbl_df filter
 #' @importFrom dplyr inner_join semi_join select
 #' @importFrom stringr str_sub str_replace_all
-#' @importFrom mzAnnotation relationshipPredictor
+#' @importFrom mzAnnotation relationshipCalculator
 #' @importFrom magrittr %>%
 #' @importFrom tibble tibble
 
@@ -14,7 +14,7 @@ setMethod('relationships',signature = 'Assignment',
             
             clus <- makeCluster(parameters@nCores,type = parameters@clusterType)
             rel <- parApply(clus,select(cors,`m/z1`,`m/z2`,Mode1,Mode2),1,function(y,limit,add,iso,trans){
-              mzAnnotation::relationshipPredictor(as.numeric(y[1:2]),
+              mzAnnotation::relationshipCalculator(as.numeric(y[1:2]),
                                                   limit = limit,
                                                   modes = y[3:4],
                                                   adducts = add,
