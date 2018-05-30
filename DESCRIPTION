@@ -34,5 +34,6 @@ Collate:
         'correlations.R'
         'calcNetworktrans.R'
         'LCassignment.R'
+        'MFassign.R'
 Suggests: testthat,
     covr
