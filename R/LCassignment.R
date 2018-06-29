@@ -1,7 +1,7 @@
 
 LCassignment <- function(element){
   methods <- list(
-    prepCorrelations = function(assignment){
+    `prepare correlations` = function(assignment){
       parameters <- assignment@parameters
       assignment@correlations <- assignment@correlations %>%
         mutate( rt1 = str_split_fixed(Feature1,'@',2) %>% 
@@ -25,13 +25,13 @@ LCassignment <- function(element){
       assignment %>% 
         relationships()
     },
-    adductIsotopeAssignment = function(assignment){
+    `adduct and isotope assignment` = function(assignment){
       assignment %>%
         addIsoAssign()
     }
   )
   
-  if (!is.null(elements)) {
+  if (!is.null(element)) {
     return(methods[[element]])
   } else {
     return(methods) 

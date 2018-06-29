@@ -1,7 +1,7 @@
 
 FIEassignment <- function(element = NULL) {
   methods <- list(
-    prepCorrelations = function(assignment){
+    `prepare correlations = function(assignment){
       assignment %>%
         prepCorrelations()
     },
@@ -9,11 +9,11 @@ FIEassignment <- function(element = NULL) {
       assignment %>% 
         relationships()
     },
-    adductIsotopeAssignment = function(assignment){
+    `adduct and isotope assignment` = function(assignment){
       assignment %>%
         addIsoAssign()
     },
-    transformationAssignment = function(assignment){
+    `transformation assignment` = function(assignment){
       count <- 0
       while (T) {
         count <- count + 1
@@ -27,7 +27,7 @@ FIEassignment <- function(element = NULL) {
     }
   )
   
-  if (!is.null(elements)) {
+  if (!is.null(element)) {
     return(methods[[element]])
   } else {
     return(methods) 
