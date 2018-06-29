@@ -14,6 +14,7 @@ assignMFs <- function(correlations,parameters) {
   options(digits = 10)
   
   assignment <- new('Assignment',
+                    flags = character(),
                     parameters = parameters,
                     correlations = correlations,
                     relationships = tibble(),

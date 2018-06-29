@@ -41,6 +41,7 @@ setClass('AssignmentParameters',
 
 setClass('Assignment',
          slots = list(
+           flags = 'character',
            parameters = 'AssignmentParameters',
            correlations = 'tbl_df',
            relationships = 'tbl_df',
