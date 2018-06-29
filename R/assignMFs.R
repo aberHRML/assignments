@@ -23,7 +23,16 @@ assignMFs <- function(correlations,parameters) {
                     assignments  = tibble()
   )
   
-  method <- assignMethods(assignment@parameters@technique)
-  assignment <- method(assignment)
+  assignmentMethod <- assignMethods(assignment@parameters@technique)
+  
+  elements <- names(assignmentMethod())
+  
+  for(i in elements){
+    method <- assignmentMethod(i)
+    try({
+      assignment <- method(assignment)
+      assignment@flags <- c(assignment@flags,i)
+    })
+  }
   return(assignment)
 }
