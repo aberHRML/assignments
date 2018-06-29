@@ -28,7 +28,8 @@ FIEassignment <- function(element = NULL) {
   )
   
   if (!is.null(elements)) {
-    method <- methods[[element]]
-  } 
-  return(method)
+    return(methods[[element]])
+  } else {
+    return(methods) 
+  }
 }
