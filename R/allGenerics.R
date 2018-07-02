@@ -13,3 +13,7 @@ setGeneric("addIsoAssign", function(assignment) {
 setGeneric("transformationAssign", function(assignment) {
   standardGeneric("transformationAssign")
 })
+
+setGeneric('doAssignment',function(assignment){
+  standardGeneric('doAssignment')
+})

@@ -36,5 +36,7 @@ Collate:
         'LCassignment.R'
         'MFassign.R'
         'FIEassignment.R'
+        'doAssignment-method.R'
+        'continueAssignment.R'
 Suggests: testthat,
     covr

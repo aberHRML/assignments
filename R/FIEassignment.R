@@ -1,7 +1,7 @@
 
 FIEassignment <- function(element = NULL) {
   methods <- list(
-    `prepare correlations = function(assignment){
+    `prepare correlations` = function(assignment){
       assignment %>%
         prepCorrelations()
     },
