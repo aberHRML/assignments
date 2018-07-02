@@ -10,6 +10,8 @@ An S4 class to store assignment results
 \section{Slots}{
 
 \describe{
+\item{\code{log}}{list containing assignment logs}
+
 \item{\code{flags}}{charactor vector containing completed assignment elements}
 
 \item{\code{parameters}}{An S4 object of class AssignmentParameters containing the assignment parameters}

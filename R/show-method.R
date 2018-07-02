@@ -3,6 +3,7 @@
 #' @param object S4 object of class AssignmentParameters
 #' @importFrom methods show
 #' @importFrom crayon yellow
+#' @importFrom purrr map
 #' @export
 
 setMethod('show',signature = 'AssignmentParameters',
@@ -42,6 +43,7 @@ setMethod('show',signature = 'AssignmentParameters',
 #' @param object S4 object of class Assignment
 #' @importFrom crayon blue red green
 #' @importFrom purrr map_dbl
+#' @importFrom utils packageVersion
 #' @export
 
 setMethod('show',signature = 'Assignment',

@@ -8,6 +8,12 @@
 
 setMethod('relationships',signature = 'Assignment',
           function(assignment){
+            
+            if (assignment@log$verbose == T) {
+              startTime <- proc.time()
+              cat(blue('Calculating relationships '),cli::symbol$continue,'\r',sep = '')
+            }
+            
             parameters <- assignment@parameters
             
             cors <- assignment@correlations
@@ -33,6 +39,16 @@ setMethod('relationships',signature = 'Assignment',
             stopCluster(clus)
             
             assignment@relationships <- rel
+            
+            if (assignment@log$verbose == T) {
+              endTime <- proc.time()
+              elapsed <- {endTime - startTime} %>%
+                .[3] %>%
+                round(1) %>%
+                seconds_to_period() %>%
+                str_c('[',.,']')
+              cat(blue('Calculating relationships '),'\t',green(cli::symbol$tick),' ',elapsed,'\n',sep = '')
+            }
             
             return(assignment)
           })

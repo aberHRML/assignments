@@ -31,6 +31,7 @@ setClass('AssignmentParameters',
 
 #' Assignment
 #' @description An S4 class to store assignment results
+#' @slot log list containing assignment logs
 #' @slot flags charactor vector containing completed assignment elements
 #' @slot parameters An S4 object of class AssignmentParameters containing the assignment parameters
 #' @slot correlations A tibble containing the correlations
@@ -42,6 +43,7 @@ setClass('AssignmentParameters',
 
 setClass('Assignment',
          slots = list(
+           log = 'list',
            flags = 'character',
            parameters = 'AssignmentParameters',
            correlations = 'tbl_df',

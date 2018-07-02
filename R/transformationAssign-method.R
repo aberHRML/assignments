@@ -4,6 +4,12 @@
 
 setMethod('transformationAssign',signature = 'Assignment',
           function(assignment){
+            
+            if (assignment@log$verbose == T) {
+              startTime <- proc.time()
+              cat(blue('Transformation assignment '),cli::symbol$continue,'\r',sep = '')
+            }
+            
             parameters <- assignment@parameters
             count <- length(assignment@transAssign)
             assigned <- assignment@assignments
@@ -157,6 +163,17 @@ setMethod('transformationAssign',signature = 'Assignment',
               
             }
             names(assignment@transAssign)[count + 1] <- count + 1
+            
+            if (assignment@log$verbose == T) {
+              endTime <- proc.time()
+              elapsed <- {endTime - startTime} %>%
+                .[3] %>%
+                round(1) %>%
+                seconds_to_period() %>%
+                str_c('[',.,']')
+              cat(blue('Transformation assignment '),'\t',green(cli::symbol$tick),' ',elapsed,'\n',sep = '')
+            }
+            
             return(assignment)
           }
 )
