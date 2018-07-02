@@ -11,7 +11,8 @@ Imports: CHNOSZ,
     stringr,
     tibble,
     methods,
-    tidyr
+    tidyr,
+    crayon
 License: GPL (>= 3)
 Encoding: UTF-8
 LazyData: true
@@ -38,5 +39,6 @@ Collate:
         'FIEassignment.R'
         'doAssignment-method.R'
         'continueAssignment.R'
+        'show-method.R'
 Suggests: testthat,
     covr
