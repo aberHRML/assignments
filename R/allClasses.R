@@ -31,6 +31,7 @@ setClass('AssignmentParameters',
 
 #' Assignment
 #' @description An S4 class to store assignment results
+#' @slot flags charactor vector containing completed assignment elements
 #' @slot parameters An S4 object of class AssignmentParameters containing the assignment parameters
 #' @slot correlations A tibble containing the correlations
 #' @slot relationships A tibble containing the predicted relationships

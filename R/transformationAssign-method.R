@@ -34,7 +34,7 @@ setMethod('transformationAssign',signature = 'Assignment',
               clus <- makeCluster(parameters@nCores)
               MF <- sample_n(M,nrow(M)) %>%
                 rowwise() %>% 
-                parApply(cl = clus,1,function(x,ppm){MFassign:::MFgen(as.numeric(x[5]),as.numeric(x[1]),ppm)},ppm = parameters@ppm) %>% 
+                parApply(cl = clus,1,function(x,ppm){MFgen(as.numeric(x[5]),as.numeric(x[1]),ppm)},ppm = parameters@ppm) %>% 
                 bind_rows() %>%
                 left_join(M,by = c('Measured M' = 'M','Measured m/z' = 'mz')) %>% 
                 rowwise() %>%
