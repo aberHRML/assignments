@@ -148,9 +148,9 @@ setMethod('transformationAssign',signature = 'Assignment',
               assignment@assignments <- bind_rows(assignment@assignments,assignments)
               
               if (count == 0) {
-                assignment@transAssign <- list(`1` = list(MFs = MF, relationships = rel, filteredMFs = filteredMF, filteredRelationships = filteredRel,assigned = assigned))
+                assignment@transAssign <- list(`1` = list(MFs = MF, relationships = rel, filteredMFs = filteredMF, filteredRelationships = filteredRel,assigned = assignments))
               } else {
-                assignment@transAssign <- c(assignment@transAssign,list(list(MFs = MF, relationships = rel, filteredMFs = filteredMF, filteredRelationships = filteredRel,assigned = assigned)))
+                assignment@transAssign <- c(assignment@transAssign,list(list(MFs = MF, relationships = rel, filteredMFs = filteredMF, filteredRelationships = filteredRel,assigned = assignments)))
               }  
             } else {
               assignment@transAssign <- c(assignment@transAssign,list(list()))

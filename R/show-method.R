@@ -38,14 +38,15 @@ setMethod('show',signature = 'AssignmentParameters',
 #' @description show mehtod for Assignment class.
 #' @param object S4 object of class Assignment
 #' @importFrom crayon blue red green
+#' @importFrom purrr map_dbl
 #' @export
 
 setMethod('show',signature = 'Assignment',
           function(object){
             cat(blue('\nMFassign'),red(str_c('v',packageVersion('MFassign') %>% as.character())),'\n')
             cat(yellow('Assignment:'),'\n')
-            cat('\t','Correlations:\t',nrow(object@correlations),'\n')
-            cat('\t','Relationships:\t',nrow(object@relationships),'\n')
+            cat('\t','Correlations:\t\t',nrow(object@correlations),'\n')
+            cat('\t','Relationships:\t\t',nrow(object@relationships),'\n')
             cat('\n')
             cat('\t',green('Adduct & isotope assignment:'),'\n')
             cat('\t\t','MFs:\t\t',nrow(object@addIsoAssign$filteredMFs),'\n')
@@ -55,14 +56,15 @@ setMethod('show',signature = 'Assignment',
             cat('\t',green('Transformation assignment:'),'\n')
             cat('\t\t','Iterations:\t',length(object@transAssign),'\n')
             if (length(object@transAssign)) {
-              transAssigned <- map(object@transAssign,~{
-                return(nrow(assigned))
+              transAssigned <- map_dbl(object@transAssign,~{
+                return(nrow(.$assigned))
               }) %>%
                 sum()
               cat('\t\t','Assigned:\t',transAssigned,'\n') 
             }
             cat('\n')
-            cat('\t','Total assignments:\t',nrow(object@assignments),'\n')
+            cat('\t','Total assignments:\t',blue(nrow(object@assignments)),'\n')
+            cat('\t','Unique MFs:\t\t',blue(length(unique(object@assignments$MF))),'\n')
             cat('\n')
           }
 )
