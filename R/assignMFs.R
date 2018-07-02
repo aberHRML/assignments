@@ -8,9 +8,13 @@
 #' @importFrom cli console_width
 #' @importFrom lubridate seconds_to_period
 #' @examples 
-#' \dontrun{
-#' res <- assignMFs(correlations,assignmentParameters('FIE'))
-#' }
+#' p <- assignmentParameters('FIE')
+#' p@nCores <- 2
+#'
+#' cors <- correlations[correlations$r > 0.998 | correlations$r < -0.998,]
+#'
+#' assignment <- assignMFs(cors,p)
+#'
 #' @export
 
 assignMFs <- function(correlations,parameters,verbose = T) {

@@ -17,7 +17,11 @@ assignMFs(correlations, parameters, verbose = T)
 assign molecular formulas to a set of given m/z.
 }
 \examples{
-\dontrun{
-res <- assignMFs(correlations,assignmentParameters('FIE'))
-}
+p <- assignmentParameters('FIE')
+p@nCores <- 2
+
+cors <- correlations[correlations$r > 0.998 | correlations$r < -0.998,]
+
+assignment <- assignMFs(cors,p)
+
 }
