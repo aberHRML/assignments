@@ -14,6 +14,7 @@ assignMFs <- function(correlations,parameters) {
   options(digits = 10)
   
   assignment <- new('Assignment',
+                    flags = character(),
                     parameters = parameters,
                     correlations = correlations,
                     relationships = tibble(),
@@ -22,7 +23,6 @@ assignMFs <- function(correlations,parameters) {
                     assignments  = tibble()
   )
   
-  method <- assignMethods(assignment@parameters@technique)
-  assignment <- method(assignment)
-  return(assignment)
+ assignment %>%
+   doAssignment()
 }
