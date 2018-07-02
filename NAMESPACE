@@ -2,6 +2,7 @@
 
 export(assignMFs)
 export(assignmentParameters)
+export(continueAssignment)
 exportClasses(Assignment)
 exportClasses(AssignmentParameters)
 importFrom(CHNOSZ,makeup)
