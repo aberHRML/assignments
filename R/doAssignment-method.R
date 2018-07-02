@@ -15,7 +15,7 @@ setMethod('doAssignment',signature = 'Assignment',
                 flag <- 'success'
               })
               if (flag == 'fail') {
-                cat('Failed at assignment step',i,'\n')
+                cat('Failed at assignment step:',i,'\n')
                 return(assignment)
               }
             }
