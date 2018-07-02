@@ -22,7 +22,7 @@ setMethod('show',signature = 'AssignmentParameters',
             adducts <- map(names(object@adducts),~{
               a <- str_c(object@adducts[[.]],collapse = ', ')
               str_c(.,': ',a)
-              }) %>%
+            }) %>%
               str_c(collapse = '\n\t ')
             cat('\t',adducts,'\n')
             
@@ -30,6 +30,39 @@ setMethod('show',signature = 'AssignmentParameters',
             
             cat('\t','Transformations:',str_c(object@transformations,collapse = ', '))
             
+            cat('\n')
+          }
+)
+
+#' show-Assignment
+#' @description show mehtod for Assignment class.
+#' @param object S4 object of class Assignment
+#' @importFrom crayon blue red green
+#' @export
+
+setMethod('show',signature = 'Assignment',
+          function(object){
+            cat(blue('\nMFassign'),red(str_c('v',packageVersion('MFassign') %>% as.character())),'\n')
+            cat(yellow('Assignment:'),'\n')
+            cat('\t','Correlations:\t',nrow(object@correlations),'\n')
+            cat('\t','Relationships:\t',nrow(object@relationships),'\n')
+            cat('\n')
+            cat('\t',green('Adduct & isotope assignment:'),'\n')
+            cat('\t\t','MFs:\t\t',nrow(object@addIsoAssign$filteredMFs),'\n')
+            cat('\t\t','Relationships:\t',nrow(object@addIsoAssign$filteredRelationships),'\n')
+            cat('\t\t','Assigned:\t',nrow(object@addIsoAssign$assigned),'\n')
+            cat('\n')
+            cat('\t',green('Transformation assignment:'),'\n')
+            cat('\t\t','Iterations:\t',length(object@transAssign),'\n')
+            if (length(object@transAssign)) {
+              transAssigned <- map(object@transAssign,~{
+                return(nrow(assigned))
+              }) %>%
+                sum()
+              cat('\t\t','Assigned:\t',transAssigned,'\n') 
+            }
+            cat('\n')
+            cat('\t','Total assignments:\t',nrow(object@assignments),'\n')
             cat('\n')
           }
 )
