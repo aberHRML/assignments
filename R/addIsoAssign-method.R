@@ -3,6 +3,12 @@
 
 setMethod('addIsoAssign',signature = 'Assignment',
           function(assignment){
+            
+            if (assignment@log$verbose == T) {
+              startTime <- proc.time()
+              cat(blue('Adduct & isotope assignment '),cli::symbol$continue,'\r',sep = '')
+            }
+            
             parameters <- assignment@parameters
             rel <- assignment@relationships %>% 
               filter(is.na(Transformation1) & is.na(Transformation2) & r > 0) %>%
@@ -98,6 +104,17 @@ setMethod('addIsoAssign',signature = 'Assignment',
             
             assignment@assignments <- assigned
             assignment@addIsoAssign <- list(MFs = MF, relationships = rel, filteredMFs = filteredMF, filteredRelationships = filteredRel,assigned = assigned)
+            
+            if (assignment@log$verbose == T) {
+              endTime <- proc.time()
+              elapsed <- {endTime - startTime} %>%
+                .[3] %>%
+                round(1) %>%
+                seconds_to_period() %>%
+                str_c('[',.,']')
+              cat(blue('Adduct & isotope assignment '),'\t',green(cli::symbol$tick),' ',elapsed,'\n',sep = '')
+            }
+            
             return(assignment)
           })
 

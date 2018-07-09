@@ -4,18 +4,24 @@
 \alias{assignMFs}
 \title{assignMFs}
 \usage{
-assignMFs(correlations, parameters)
+assignMFs(correlations, parameters, verbose = T)
 }
 \arguments{
 \item{correlations}{table containing correlations of m/z to assign molecular formulas}
 
 \item{parameters}{an S4 object of class AssignmentParamters containing the parameters for molecular formula assignment}
+
+\item{verbose}{should output be printed to the console}
 }
 \description{
 assign molecular formulas to a set of given m/z.
 }
 \examples{
-\dontrun{
-res <- assignMFs(correlations,assignmentParameters('FIE'))
-}
+p <- assignmentParameters('FIE')
+p@nCores <- 2
+
+cors <- correlations[correlations$r > 0.998 | correlations$r < -0.998,]
+
+assignment <- assignMFs(cors,p)
+
 }
