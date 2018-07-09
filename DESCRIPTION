@@ -1,6 +1,6 @@
 Package: MFassign
 Title: Molecular formula assignment for high resolution metabolomics
-Version: 0.3.0
+Version: 0.4.0
 Authors@R: person("Jasen", "Finch", email = "jsf9@aber.ac.uk", role = c("aut", "cre"))
 Description: Molecular formula assignment for high resolution metabolomics.
 Depends: R (>= 3.4.0),
@@ -11,7 +11,11 @@ Imports: CHNOSZ,
     stringr,
     tibble,
     methods,
-    tidyr
+    tidyr,
+    crayon,
+    purrr,
+    cli,
+    lubridate
 License: GPL (>= 3)
 Encoding: UTF-8
 LazyData: true
@@ -38,5 +42,6 @@ Collate:
         'FIEassignment.R'
         'doAssignment-method.R'
         'continueAssignment.R'
+        'show-method.R'
 Suggests: testthat,
     covr

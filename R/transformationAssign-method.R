@@ -4,9 +4,15 @@
 
 setMethod('transformationAssign',signature = 'Assignment',
           function(assignment){
+            
             parameters <- assignment@parameters
             count <- length(assignment@transAssign)
             assigned <- assignment@assignments
+            
+            if (assignment@log$verbose == T) {
+              startTime <- proc.time()
+              cat(blue(str_c('Transformation assignment iteration ', count + 1,' ')),cli::symbol$continue,'\r',sep = '')
+            }
             
             rel <- assignment@relationships %>%
               filter((`m/z1` %in% assigned$`Measured m/z` | (`m/z2` %in% assigned$`Measured m/z`)) & !(`m/z1` %in% assigned$`Measured m/z` & (`m/z2` %in% assigned$`Measured m/z`)))
@@ -148,15 +154,26 @@ setMethod('transformationAssign',signature = 'Assignment',
               assignment@assignments <- bind_rows(assignment@assignments,assignments)
               
               if (count == 0) {
-                assignment@transAssign <- list(`1` = list(MFs = MF, relationships = rel, filteredMFs = filteredMF, filteredRelationships = filteredRel,assigned = assigned))
+                assignment@transAssign <- list(`1` = list(MFs = MF, relationships = rel, filteredMFs = filteredMF, filteredRelationships = filteredRel,assigned = assignments))
               } else {
-                assignment@transAssign <- c(assignment@transAssign,list(list(MFs = MF, relationships = rel, filteredMFs = filteredMF, filteredRelationships = filteredRel,assigned = assigned)))
+                assignment@transAssign <- c(assignment@transAssign,list(list(MFs = MF, relationships = rel, filteredMFs = filteredMF, filteredRelationships = filteredRel,assigned = assignments)))
               }  
             } else {
               assignment@transAssign <- c(assignment@transAssign,list(list()))
               
             }
             names(assignment@transAssign)[count + 1] <- count + 1
+            
+            if (assignment@log$verbose == T) {
+              endTime <- proc.time()
+              elapsed <- {endTime - startTime} %>%
+                .[3] %>%
+                round(1) %>%
+                seconds_to_period() %>%
+                str_c('[',.,']')
+              cat(blue(str_c('Transformation assignment iteration ', count + 1,' ')),'\t',green(cli::symbol$tick),' ',elapsed,'\n',sep = '')
+            }
+            
             return(assignment)
           }
 )
