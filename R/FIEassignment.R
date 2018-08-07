@@ -18,10 +18,14 @@ FIEassignment <- function(element = NULL) {
       while (T) {
         count <- count + 1
         assignment <- suppressWarnings(transformationAssign(assignment))
-        if (nrow(assignment@transAssign[[count]]$assigned) == 0) {
-          assignment@transAssign <- assignment@transAssign[-count] 
+        if (length(assignment@transAssign[[count]]) == 0) {
           break()
         }
+        if (nrow(assignment@transAssign[[count]]$assigned) == 0) {
+          assignment@transAssign <- assignment@transAssign[-count]  
+          break()
+        }
+         
       }
       return(assignment)
     }

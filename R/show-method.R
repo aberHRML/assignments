@@ -60,7 +60,7 @@ setMethod('show',signature = 'Assignment',
             cat('\n')
             cat('\t',green('Transformation assignment:'),'\n')
             cat('\t\t','Iterations:\t',length(object@transAssign),'\n')
-            if (length(object@transAssign)) {
+            if (length(object@transAssign) & length(object@transAssign[[length(object@transAssign)]]) > 0) {
               transAssigned <- map_dbl(object@transAssign,~{
                 return(nrow(.$assigned))
               }) %>%
