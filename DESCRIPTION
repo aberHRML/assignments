@@ -43,5 +43,7 @@ Collate:
         'doAssignment-method.R'
         'continueAssignment.R'
         'show-method.R'
+        'access-methods.R'
+        'summariseAssignment-method.R'
 Suggests: testthat,
     covr

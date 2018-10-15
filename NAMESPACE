@@ -2,7 +2,9 @@
 
 export(assignMFs)
 export(assignmentParameters)
+export(assignments)
 export(continueAssignment)
+export(summariseAssignment)
 exportClasses(Assignment)
 exportClasses(AssignmentParameters)
 exportMethods(show)
