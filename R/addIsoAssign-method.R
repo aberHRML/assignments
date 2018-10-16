@@ -1,4 +1,5 @@
 #' @importFrom dplyr arrange rowwise sample_n left_join
+#' @importFrom stringr str_detect
 #' @importFrom mzAnnotation calcM calcMZ ppmError
 
 setMethod('addIsoAssign',signature = 'Assignment',
