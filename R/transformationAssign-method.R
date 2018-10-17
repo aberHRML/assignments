@@ -1,5 +1,5 @@
 #' @importFrom stringr str_c
-#' @importFrom dplyr full_join select
+#' @importFrom dplyr full_join select distinct
 #' @importFrom mzAnnotation transformMF
 
 setMethod('transformationAssign',signature = 'Assignment',
@@ -98,7 +98,7 @@ setMethod('transformationAssign',signature = 'Assignment',
               
               MF <- semi_join(MF,MFs,by = c('RetentionTime' = 'RetentionTime','MF' = 'MF','Isotope' = 'Isotope','Adduct' = 'Adduct','Measured m/z' = 'mz'))
               
-              MF <- calcNetworktrans(MF,rel)
+              MF <- calcNetworktrans(MF,rel,parameters)
               
               filteredMF <- group_by(MF,Cluster) %>% 
                 filter(Score == min(Score)) %>%
@@ -110,7 +110,7 @@ setMethod('transformationAssign',signature = 'Assignment',
               filteredRel <- bind_rows(filteredRel1,filteredRel2) %>%
                 select(`m/z1`:MF2)
               
-              filteredMF <- calcNetworktrans(filteredMF,filteredRel) %>%
+              filteredMF <- calcNetworktrans(filteredMF,filteredRel,parameters) %>%
                 group_by(`Measured m/z`) %>% 
                 filter(Degree == max(Degree))
               
@@ -122,7 +122,7 @@ setMethod('transformationAssign',signature = 'Assignment',
               filteredRel2 <- semi_join(filteredRel,filteredMF,by = c('RetentionTime2' = 'RetentionTime','MF2' = 'MF','Isotope2' = 'Isotope','Adduct2' = 'Adduct','m/z2' = 'Measured m/z'))
               filteredRel <- bind_rows(filteredRel1,filteredRel2) 
               
-              filteredMF <- calcNetworktrans(filteredMF,filteredRel)
+              filteredMF <- calcNetworktrans(filteredMF,filteredRel,parameters)
               
               filteredMF <- filteredMF %>%
                 group_by(`Measured m/z`) %>% 
@@ -135,7 +135,7 @@ setMethod('transformationAssign',signature = 'Assignment',
               filteredRel2 <- semi_join(filteredRel,filteredMF,by = c('RetentionTime2' = 'RetentionTime','MF2' = 'MF','Isotope2' = 'Isotope','Adduct2' = 'Adduct','m/z2' = 'Measured m/z'))
               filteredRel <- bind_rows(filteredRel1,filteredRel2) 
               
-              filteredMF <- calcNetworktrans(filteredMF,filteredRel)
+              filteredMF <- calcNetworktrans(filteredMF,filteredRel,parameters)
               
               adducts <- lapply(parameters@adducts,function(y){tibble(Adduct = y)})
               adducts <- bind_rows(adducts,.id = 'Mode')

@@ -58,7 +58,7 @@ setMethod('addIsoAssign',signature = 'Assignment',
             
             MFs <- semi_join(MF,MFs,by = c('RetentionTime' = 'RetentionTime','MF' = 'MF','Isotope' = 'Isotope','Adduct' = 'Adduct','Measured m/z' = 'mz'))
             
-            MFs <- calcNetwork(MFs,rel)
+            MFs <- calcNetwork(MFs,rel,parameters)
             
             filteredMF <- MFs %>%
               group_by(Cluster) %>% 
@@ -68,7 +68,7 @@ setMethod('addIsoAssign',signature = 'Assignment',
             
             filteredRel <- semi_join(rel,filteredMF,by = c('MF' = 'MF','Isotope1' = 'Isotope','Isotope2' = 'Isotope','Adduct1' = 'Adduct','Adduct2' = 'Adduct','m/z1' = 'Measured m/z','m/z2' = 'Measured m/z','RetentionTime1' = 'RetentionTime', 'RetentionTime2' = 'RetentionTime'))
             
-            filteredMF <- calcNetwork(filteredMF,filteredRel) %>% 
+            filteredMF <- calcNetwork(filteredMF,filteredRel,parameters) %>% 
               filter(Nodes > 1) %>%
               group_by(`Measured m/z`) %>% 
               filter(Degree == max(Degree)) 
@@ -79,7 +79,7 @@ setMethod('addIsoAssign',signature = 'Assignment',
             
             filteredRel <- semi_join(filteredRel,filteredMF,by = c('MF' = 'MF','Isotope1' = 'Isotope','Isotope2' = 'Isotope','Adduct1' = 'Adduct','Adduct2' = 'Adduct','m/z1' = 'Measured m/z','m/z2' = 'Measured m/z','RetentionTime1' = 'RetentionTime', 'RetentionTime2' = 'RetentionTime'))
             
-            filteredMF <- calcNetwork(filteredMF,filteredRel) %>%
+            filteredMF <- calcNetwork(filteredMF,filteredRel,parameters) %>%
               filter(Nodes > 1) 
             
             filteredMF <- filteredMF %>%
@@ -91,7 +91,7 @@ setMethod('addIsoAssign',signature = 'Assignment',
             
             filteredRel <- semi_join(filteredRel,filteredMF,by = c('MF' = 'MF','Isotope1' = 'Isotope','Isotope2' = 'Isotope','Adduct1' = 'Adduct','Adduct2' = 'Adduct','m/z1' = 'Measured m/z','m/z2' = 'Measured m/z','RetentionTime1' = 'RetentionTime', 'RetentionTime2' = 'RetentionTime'))
             
-            filteredMF <- calcNetwork(filteredMF,filteredRel) %>%
+            filteredMF <- calcNetwork(filteredMF,filteredRel,parameters) %>%
               filter(Nodes > 1)
             
             adducts <- lapply(parameters@adducts,function(y){tibble(Adduct = y)})
@@ -116,6 +116,3 @@ setMethod('addIsoAssign',signature = 'Assignment',
             
             return(assignment)
           })
-
-
-

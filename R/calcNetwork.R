@@ -1,6 +1,6 @@
 #' @importFrom dplyr group_by summarise group_indices
 
-calcNetwork <- function(MF,rel) {
+calcNetwork <- function(MF,rel,parameters) {
   MF <- MF %>%
     tbl_df() %>%
     select(RetentionTime:Score)

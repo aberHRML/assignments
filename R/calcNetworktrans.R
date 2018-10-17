@@ -1,7 +1,7 @@
 #' @importFrom dplyr group_by summarise group_indices
 #' @importFrom tidyr gather
 
-calcNetworktrans <- function(MF,rel) {
+calcNetworktrans <- function(MF,rel,parameters) {
   MF <- tbl_df(select(MF,RetentionTime:Score))
   Nodes <- suppressWarnings(group_by(MF,MF)) %>%
     summarise(Nodes = n())
