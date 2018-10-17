@@ -35,7 +35,7 @@ setMethod('addIsoAssign',signature = 'Assignment',
             clus <- makeCluster(parameters@nCores)
             MF <- sample_n(M,nrow(M)) %>%
               rowwise() %>% 
-              parApply(cl = clus,1,function(x){MFgen(as.numeric(x[5]),as.numeric(x[1]),ppm = parameters@ppm)}) %>% 
+              parApply(cl = clus,1,function(x,parameters){MFgen(as.numeric(x[5]),as.numeric(x[1]),ppm = parameters@ppm)},parameters = parameters) %>% 
               bind_rows() %>%
               left_join(M,by = c('Measured M' = 'M','Measured m/z' = 'mz')) %>% 
               rowwise() %>%
@@ -56,27 +56,22 @@ setMethod('addIsoAssign',signature = 'Assignment',
               mutate(RetentionTime = as.numeric(RetentionTime)) %>%
               arrange(mz)
             
-            MF <- semi_join(MF,MFs,by = c('RetentionTime' = 'RetentionTime','MF' = 'MF','Isotope' = 'Isotope','Adduct' = 'Adduct','Measured m/z' = 'mz'))
+            MFs <- semi_join(MF,MFs,by = c('RetentionTime' = 'RetentionTime','MF' = 'MF','Isotope' = 'Isotope','Adduct' = 'Adduct','Measured m/z' = 'mz'))
             
-            MF <- calcNetwork(MF,rel)
+            MFs <- calcNetwork(MFs,rel)
             
-            filteredMF <- group_by(MF,Cluster) %>% 
+            filteredMF <- MFs %>%
+              group_by(Cluster) %>% 
               filter(Score == min(Score)) %>%
               group_by(`Measured m/z`) %>% 
-              filter(Degree == max(Degree))
+              filter(Plausibility == min(Plausibility))
             
             filteredRel <- semi_join(rel,filteredMF,by = c('MF' = 'MF','Isotope1' = 'Isotope','Isotope2' = 'Isotope','Adduct1' = 'Adduct','Adduct2' = 'Adduct','m/z1' = 'Measured m/z','m/z2' = 'Measured m/z','RetentionTime1' = 'RetentionTime', 'RetentionTime2' = 'RetentionTime'))
             
             filteredMF <- calcNetwork(filteredMF,filteredRel) %>% 
-              filter(Degree > 1) %>%
+              filter(Nodes > 1) %>%
               group_by(`Measured m/z`) %>% 
               filter(Degree == max(Degree)) 
-            
-            addIsoScores <- filteredMF %>%
-              group_by(Cluster) %>% 
-              summarise(AddIsoScore = addIsoScore(Adduct,Isotope,addRank = parameters@adducts,isoRank = parameters@isotopes))
-            
-            filteredMF <- inner_join(filteredMF,addIsoScores,by = c('Cluster' = 'Cluster')) 
             
             filteredMF <- filteredMF %>%
               group_by(`Measured m/z`) %>%
@@ -85,13 +80,7 @@ setMethod('addIsoAssign',signature = 'Assignment',
             filteredRel <- semi_join(filteredRel,filteredMF,by = c('MF' = 'MF','Isotope1' = 'Isotope','Isotope2' = 'Isotope','Adduct1' = 'Adduct','Adduct2' = 'Adduct','m/z1' = 'Measured m/z','m/z2' = 'Measured m/z','RetentionTime1' = 'RetentionTime', 'RetentionTime2' = 'RetentionTime'))
             
             filteredMF <- calcNetwork(filteredMF,filteredRel) %>%
-              filter(Degree > 1) 
-            
-            addIsoScores <- filteredMF %>%
-              group_by(Cluster) %>% 
-              summarise(AddIsoScore = addIsoScore(Adduct,Isotope,addRank = parameters@adducts,isoRank = parameters@isotopes))
-            
-            filteredMF <- inner_join(filteredMF,addIsoScores,by = c('Cluster' = 'Cluster')) 
+              filter(Nodes > 1) 
             
             filteredMF <- filteredMF %>%
               group_by(`Measured m/z`) %>% 
@@ -100,8 +89,10 @@ setMethod('addIsoAssign',signature = 'Assignment',
               filter(absPPM == min(absPPM)) %>% 
               select(RetentionTime:AddIsoScore)
             
+            filteredRel <- semi_join(filteredRel,filteredMF,by = c('MF' = 'MF','Isotope1' = 'Isotope','Isotope2' = 'Isotope','Adduct1' = 'Adduct','Adduct2' = 'Adduct','m/z1' = 'Measured m/z','m/z2' = 'Measured m/z','RetentionTime1' = 'RetentionTime', 'RetentionTime2' = 'RetentionTime'))
+            
             filteredMF <- calcNetwork(filteredMF,filteredRel) %>%
-              filter(Degree > 1)
+              filter(Nodes > 1)
             
             adducts <- lapply(parameters@adducts,function(y){tibble(Adduct = y)})
             adducts <- bind_rows(adducts,.id = 'Mode')
@@ -111,7 +102,7 @@ setMethod('addIsoAssign',signature = 'Assignment',
               arrange(`MF`)
             
             assignment@assignments <- assigned
-            assignment@addIsoAssign <- list(MFs = MF, relationships = rel, filteredMFs = filteredMF, filteredRelationships = filteredRel,assigned = assigned)
+            assignment@addIsoAssign <- list(MFs = MFs, relationships = rel, filteredMFs = filteredMF, filteredRelationships = filteredRel,assigned = assigned)
             
             if (assignment@log$verbose == T) {
               endTime <- proc.time()
