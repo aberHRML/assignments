@@ -18,12 +18,12 @@ setGeneric('doAssignment',function(assignment){
   standardGeneric('doAssignment')
 })
 
-#' @export
+#' @rdname assignments
 setGeneric('assignments',function(assignment){
   standardGeneric('assignments')
 })
 
-#' @export
+#' @rdname summariseAssignment
 setGeneric('summariseAssignment',function(assignment){
   standardGeneric('summariseAssignment')
 })
