@@ -54,7 +54,7 @@ setMethod('show',signature = 'Assignment',
             cat('\t','Relationships:\t\t',nrow(object@relationships),'\n')
             cat('\n')
             cat('\t',green('Adduct & isotope assignment:'),'\n')
-            cat('\t\t','MFs:\t\t',nrow(object@addIsoAssign$filteredMFs),'\n')
+            cat('\t\t','MFs:\t\t',length(unique(object@addIsoAssign$assigned$MF)),'\n')
             cat('\t\t','Relationships:\t',nrow(object@addIsoAssign$filteredRelationships),'\n')
             cat('\t\t','Assigned:\t',nrow(object@addIsoAssign$assigned),'\n')
             cat('\n')

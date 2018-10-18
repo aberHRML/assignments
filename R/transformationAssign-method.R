@@ -1,5 +1,5 @@
 #' @importFrom stringr str_c
-#' @importFrom dplyr full_join select
+#' @importFrom dplyr full_join select distinct
 #' @importFrom mzAnnotation transformMF
 
 setMethod('transformationAssign',signature = 'Assignment',
@@ -29,7 +29,7 @@ setMethod('transformationAssign',signature = 'Assignment',
             if (nrow(rel) > 0) {
               M <- bind_rows(select(rel,mz = `m/z1`,RetentionTime = RetentionTime1,Isotope = Isotope1, Adduct = Adduct1),
                              select(rel,mz = `m/z2`,RetentionTime = RetentionTime2,Isotope = Isotope2, Adduct = Adduct2)) %>%
-                filter(!duplicated(.)) %>%
+                distinct() %>%
                 arrange(mz) %>%
                 rowwise() %>%
                 mutate(M = calcM(mz,Adduct,Isotope)) %>% 
@@ -92,58 +92,50 @@ setMethod('transformationAssign',signature = 'Assignment',
               
               MFs <- bind_rows(select(rel,RetentionTime = RetentionTime1,mz = `m/z1`,Isotope = Isotope1, Adduct = Adduct1, MF = MF1),
                                select(rel,RetentionTime = RetentionTime2,mz = `m/z2`,Isotope = Isotope2, Adduct = Adduct2,MF = MF2)) %>%
-                filter(!duplicated(.)) %>%
+                distinct() %>%
                 arrange(mz) %>%
                 filter(!(mz %in% assigned$`Measured m/z`))
               
               MF <- semi_join(MF,MFs,by = c('RetentionTime' = 'RetentionTime','MF' = 'MF','Isotope' = 'Isotope','Adduct' = 'Adduct','Measured m/z' = 'mz'))
               
-              MF <- calcNetworktrans(MF,rel)
+              MF <- calcNetworktrans(MF,rel,parameters)
               
               filteredMF <- group_by(MF,Cluster) %>% 
                 filter(Score == min(Score)) %>%
                 group_by(`Measured m/z`) %>% 
-                filter(Degree == max(Degree))
+                filter(Plausibility == min(Plausibility))
               
               filteredRel1 <- semi_join(rel,filteredMF,by = c('RetentionTime1' = 'RetentionTime','MF1' = 'MF','Isotope1' = 'Isotope','Adduct1' = 'Adduct','m/z1' = 'Measured m/z'))
               filteredRel2 <- semi_join(rel,filteredMF,by = c('RetentionTime2' = 'RetentionTime','MF2' = 'MF','Isotope2' = 'Isotope','Adduct2' = 'Adduct','m/z2' = 'Measured m/z'))
               filteredRel <- bind_rows(filteredRel1,filteredRel2) %>%
                 select(`m/z1`:MF2)
               
-              filteredMF <- calcNetworktrans(filteredMF,filteredRel) %>%
+              filteredMF <- calcNetworktrans(filteredMF,filteredRel,parameters) %>%
                 group_by(`Measured m/z`) %>% 
                 filter(Degree == max(Degree))
-              
-              addIsoScores <- filteredMF %>%
-                group_by(Cluster) %>% 
-                summarise(AddIsoScore = addIsoScore(Adduct,Isotope,addRank = parameters@adducts,isoRank = parameters@isotopes))
-              
-              filteredMF <- inner_join(filteredMF,addIsoScores,by = c('Cluster' = 'Cluster')) 
               
               filteredMF <- filteredMF %>%
                 group_by(`Measured m/z`) %>%
                 filter(AddIsoScore == min(AddIsoScore))
               
-              filteredRel1 <- semi_join(rel,filteredMF,by = c('RetentionTime1' = 'RetentionTime','MF1' = 'MF','Isotope1' = 'Isotope','Adduct1' = 'Adduct','m/z1' = 'Measured m/z'))
-              filteredRel2 <- semi_join(rel,filteredMF,by = c('RetentionTime2' = 'RetentionTime','MF2' = 'MF','Isotope2' = 'Isotope','Adduct2' = 'Adduct','m/z2' = 'Measured m/z'))
+              filteredRel1 <- semi_join(filteredRel,filteredMF,by = c('RetentionTime1' = 'RetentionTime','MF1' = 'MF','Isotope1' = 'Isotope','Adduct1' = 'Adduct','m/z1' = 'Measured m/z'))
+              filteredRel2 <- semi_join(filteredRel,filteredMF,by = c('RetentionTime2' = 'RetentionTime','MF2' = 'MF','Isotope2' = 'Isotope','Adduct2' = 'Adduct','m/z2' = 'Measured m/z'))
               filteredRel <- bind_rows(filteredRel1,filteredRel2) 
               
-              filteredMF <- calcNetworktrans(filteredMF,filteredRel)
-              
-              addIsoScores <- filteredMF %>%
-                group_by(Cluster) %>% 
-                summarise(AddIsoScore = addIsoScore(Adduct,Isotope,addRank = parameters@adducts,isoRank = parameters@isotopes))
-              
-              filteredMF <- inner_join(filteredMF,addIsoScores,by = c('Cluster' = 'Cluster')) 
+              filteredMF <- calcNetworktrans(filteredMF,filteredRel,parameters)
               
               filteredMF <- filteredMF %>%
                 group_by(`Measured m/z`) %>% 
                 filter(Score == min(Score)) %>%
                 mutate(absPPM = abs(`PPM Error`)) %>%
                 filter(absPPM == min(absPPM)) %>% 
-                select(RetentionTime:AddIsoScore)
+                select(RetentionTime:Plausibility)
               
-              filteredMF <- calcNetworktrans(filteredMF,filteredRel)
+              filteredRel1 <- semi_join(filteredRel,filteredMF,by = c('RetentionTime1' = 'RetentionTime','MF1' = 'MF','Isotope1' = 'Isotope','Adduct1' = 'Adduct','m/z1' = 'Measured m/z'))
+              filteredRel2 <- semi_join(filteredRel,filteredMF,by = c('RetentionTime2' = 'RetentionTime','MF2' = 'MF','Isotope2' = 'Isotope','Adduct2' = 'Adduct','m/z2' = 'Measured m/z'))
+              filteredRel <- bind_rows(filteredRel1,filteredRel2) 
+              
+              filteredMF <- calcNetworktrans(filteredMF,filteredRel,parameters)
               
               adducts <- lapply(parameters@adducts,function(y){tibble(Adduct = y)})
               adducts <- bind_rows(adducts,.id = 'Mode')

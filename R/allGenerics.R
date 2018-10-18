@@ -17,3 +17,13 @@ setGeneric("transformationAssign", function(assignment) {
 setGeneric('doAssignment',function(assignment){
   standardGeneric('doAssignment')
 })
+
+#' @rdname assignments
+setGeneric('assignments',function(assignment){
+  standardGeneric('assignments')
+})
+
+#' @rdname summariseAssignment
+setGeneric('summariseAssignment',function(assignment){
+  standardGeneric('summariseAssignment')
+})

@@ -1,6 +1,6 @@
 #' @importFrom dplyr group_by summarise group_indices
 
-calcNetwork <- function(MF,rel) {
+calcNetwork <- function(MF,rel,parameters) {
   MF <- MF %>%
     tbl_df() %>%
     select(RetentionTime:Score)
@@ -42,5 +42,14 @@ calcNetwork <- function(MF,rel) {
   cl <- group_by(MF,Cluster) %>% group_indices()
   MF <- mutate(MF,Cluster = cl) %>%
     arrange(Cluster)
+  
+  addIsoScores <- MF %>%
+    group_by(Cluster,MF) %>% 
+    summarise(AddIsoScore = addIsoScore(Adduct,Isotope,addRank = parameters@adducts,isoRank = parameters@isotopes))
+  
+  MF <- inner_join(MF,addIsoScores,by = c('Cluster','MF')) %>%
+    mutate(`Average AddIsoScore` = AddIsoScore / Nodes,
+           Plausibility = `Average AddIsoScore` / Edges)
+  
   return(MF)
 }
