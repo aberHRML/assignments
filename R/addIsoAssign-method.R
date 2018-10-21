@@ -23,8 +23,8 @@ setMethod('addIsoAssign',signature = 'Assignment',
                 select(-rtDiff)
             }
             
-            M <- bind_rows(select(rel,mz = `m/z1`,RetentionTime = RetentionTime1,Isotope = Isotope1, Adduct = Adduct1),
-                           select(rel,mz = `m/z2`,RetentionTime = RetentionTime2,Isotope = Isotope2, Adduct = Adduct2)) %>%
+            M <- bind_rows(select(rel,mz = `m/z1`,RetentionTime = RetentionTime1,Isotope = Isotope1, Adduct = Adduct1, Feature = Feature1),
+                           select(rel,mz = `m/z2`,RetentionTime = RetentionTime2,Isotope = Isotope2, Adduct = Adduct2, Feature = Feature2)) %>%
               filter(!duplicated(.)) %>%
               arrange(mz) %>%
               rowwise() %>%
@@ -34,20 +34,21 @@ setMethod('addIsoAssign',signature = 'Assignment',
             
             clus <- makeCluster(parameters@nCores)
             MF <- sample_n(M,nrow(M)) %>%
-              rowwise() %>% 
-              parApply(cl = clus,1,function(x,parameters){MFgen(as.numeric(x[5]),as.numeric(x[1]),ppm = parameters@ppm)},parameters = parameters) %>% 
+              split(1:nrow(.)) %>%
+              parLapply(cl = clus,function(x,parameters){MFgen(x$M,x$mz,ppm = parameters@ppm)},parameters = parameters) %>% 
               bind_rows() %>%
               left_join(M,by = c('Measured M' = 'M','Measured m/z' = 'mz')) %>% 
               rowwise() %>%
               mutate(`Theoretical m/z` = calcMZ(`Theoretical M`,Adduct,Isotope), 
                      `PPM Error` = ppmError(`Measured m/z`,`Theoretical m/z`)) %>%
-              select(RetentionTime,MF,Isotope,Adduct,`Theoretical M`,`Measured M`,`Theoretical m/z`,`Measured m/z`, `PPM Error`) %>%
+              select(Feature,RetentionTime,MF,Isotope,Adduct,`Theoretical M`,`Measured M`,`Theoretical m/z`,`Measured m/z`, `PPM Error`) %>%
               rowwise() %>%
               mutate(Score = MFscore(MF)) %>%
               filter(Score <= parameters@maxMFscore)
             stopCluster(clus)
             
-            rel <- rel %>% addMFs(MF) %>%
+            rel <- rel %>% 
+              addMFs(MF) %>%
               mutate(RetentionTime1 = as.numeric(RetentionTime1),RetentionTime2 = as.numeric(RetentionTime2))
             
             MFs <- bind_rows(select(rel,mz = `m/z1`,RetentionTime = RetentionTime1,Isotope = Isotope1, Adduct = Adduct1, MF = MF),
