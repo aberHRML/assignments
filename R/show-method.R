@@ -58,9 +58,9 @@ setMethod('show',signature = 'Assignment',
             cat('\t\t','Relationships:\t',nrow(object@addIsoAssign$filteredRelationships),'\n')
             cat('\t\t','Assigned:\t',nrow(object@addIsoAssign$assigned),'\n')
             cat('\n')
-            cat('\t',green('Transformation assignment:'),'\n')
-            cat('\t\t','Iterations:\t',length(object@transAssign),'\n')
-            if (length(object@transAssign) & length(object@transAssign[[length(object@transAssign)]]) > 0) {
+            if (length(object@transAssign) > 0) {
+              cat('\t',green('Transformation assignment:'),'\n')
+              cat('\t\t','Iterations:\t',length(object@transAssign),'\n')
               transAssigned <- map_dbl(object@transAssign,~{
                 return(nrow(.$assigned))
               }) %>%
