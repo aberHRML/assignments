@@ -15,7 +15,11 @@ Imports: CHNOSZ,
     crayon,
     purrr,
     cli,
-    lubridate
+    lubridate,
+    tidygraph,
+    igraph,
+    ggraph,
+    ggthemes
 License: GPL (>= 3)
 Encoding: UTF-8
 LazyData: true
@@ -45,5 +49,6 @@ Collate:
         'show-method.R'
         'access-methods.R'
         'summariseAssignment-method.R'
+        'plotNetwork-method.R'
 Suggests: testthat,
     covr
