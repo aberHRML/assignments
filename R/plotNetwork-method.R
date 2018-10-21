@@ -26,10 +26,10 @@ setMethod('plotNetwork',signature = 'Assignment',
               geom_node_point(aes(colour = Mode),alpha = 1) +
               scale_colour_ptol() +
               theme_graph(base_family = 'sans') +
-              labs(title = str_c('Assignment correlation Network (r > ',rThreshold,')'))
+              labs(title = str_c('Assignment correlation network (r > ',rThreshold,')'))
             
             if (labels) {
-              pl + geom_node_text(aes(label = name),repel = T)
+              pl <- pl + geom_node_text(aes(label = name),size = 2,repel = T)
             }
             
             return(pl)
