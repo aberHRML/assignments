@@ -1,7 +1,7 @@
 #' @importFrom dplyr bind_cols
 
 eliminate <- function(MFs,by,direction){
-  a <- MFs %>%
+  MFs %>%
     bind_cols(MFs %>% select(by = by)) %>%
     split(.$Feature) %>%
     map(~{
