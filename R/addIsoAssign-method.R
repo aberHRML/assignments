@@ -57,7 +57,9 @@ setMethod('addIsoAssign',signature = 'Assignment',
               mutate(RetentionTime = as.numeric(RetentionTime)) %>%
               arrange(mz)
             
-            MFs <- semi_join(MF,MFs,by = c('RetentionTime' = 'RetentionTime','MF' = 'MF','Isotope' = 'Isotope','Adduct' = 'Adduct','Measured m/z' = 'mz'))
+            MFs <- MFs %>%
+              left_join(MF, by = c("Feature", "RetentionTime", "Isotope", "Adduct", "MF")) %>%
+              select(-mz)
             
             MFs <- calcNetwork(MFs,rel,parameters)
             
