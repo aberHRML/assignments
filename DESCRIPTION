@@ -52,5 +52,6 @@ Collate:
         'plotNetwork-method.R'
         'networkComponents.R'
         'addNames.R'
+        'eliminate.R'
 Suggests: testthat,
     covr
