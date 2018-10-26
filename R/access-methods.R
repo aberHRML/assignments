@@ -10,3 +10,4 @@ setMethod('assignments',signature = 'Assignment',
               mutate(Feature = str_c(Mode,`Measured m/z`)) %>%
               select(Feature,RetentionTime:Mode)
 })
+

@@ -37,7 +37,7 @@ Collate:
         'MFscore.R'
         'addIsoScore.R'
         'addMFs.R'
-        'calcNetwork.R'
+        'calcComponents.R'
         'assignMethods.R'
         'correlations.R'
         'calcNetworktrans.R'
@@ -50,5 +50,7 @@ Collate:
         'access-methods.R'
         'summariseAssignment-method.R'
         'plotNetwork-method.R'
+        'networkComponents.R'
+        'addNames.R'
 Suggests: testthat,
     covr
