@@ -53,5 +53,6 @@ Collate:
         'networkComponents.R'
         'addNames.R'
         'eliminate.R'
+        'recalcComponents.R'
 Suggests: testthat,
     covr

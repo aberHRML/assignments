@@ -17,6 +17,5 @@ calcComponents <- function(MFs,rel) {
            Plausibility = AverageAddIsoScore * Size) %>%
     unmorph()
   
-  
   return(graph)
 }
