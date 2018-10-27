@@ -50,12 +50,13 @@ setMethod('show',signature = 'Assignment',
           function(object){
             cat(blue('\nMFassign'),red(str_c('v',packageVersion('MFassign') %>% as.character())),'\n')
             cat(yellow('Assignment:'),'\n')
+            cat('\t','Features:\t\t',length(unique(c(object@correlations$Feature1,object@correlations$Feature2))),'\n')
             cat('\t','Correlations:\t\t',nrow(object@correlations),'\n')
             cat('\t','Relationships:\t\t',nrow(object@relationships),'\n')
             cat('\n')
             cat('\t',green('Adduct & isotope assignment:'),'\n')
             cat('\t\t','MFs:\t\t',length(unique(object@addIsoAssign$assigned$MF)),'\n')
-            cat('\t\t','Relationships:\t',nrow(object@addIsoAssign$filteredRelationships),'\n')
+            cat('\t\t','Relationships:\t',object@addIsoAssign$filteredGraph %>% E() %>% length(),'\n')
             cat('\t\t','Assigned:\t',nrow(object@addIsoAssign$assigned),'\n')
             cat('\n')
             if (length(object@transAssign) > 0) {
