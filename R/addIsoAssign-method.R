@@ -2,6 +2,7 @@
 #' @importFrom stringr str_detect
 #' @importFrom mzAnnotation calcM calcMZ ppmError
 #' @importFrom igraph vertex.attributes
+#' @importFrom parallel parLapply
 
 setMethod('addIsoAssign',signature = 'Assignment',
           function(assignment){
@@ -30,7 +31,7 @@ setMethod('addIsoAssign',signature = 'Assignment',
             clus <- makeCluster(parameters@nCores)
             MF <- sample_n(M,nrow(M)) %>%
               split(1:nrow(.)) %>%
-              parLapply(cl = clus,function(x,parameters){MFassign:::MFgen(x$M,x$mz,ppm = parameters@ppm)},parameters = parameters) %>% 
+              parLapply(cl = clus,function(x,parameters){MFgen(x$M,x$mz,ppm = parameters@ppm)},parameters = parameters) %>% 
               bind_rows() %>%
               left_join(M,by = c('Measured M' = 'M','Measured m/z' = 'mz')) %>% 
               rowwise() %>%
@@ -38,15 +39,15 @@ setMethod('addIsoAssign',signature = 'Assignment',
                      `PPM Error` = ppmError(`Measured m/z`,`Theoretical m/z`)) %>%
               select(Feature,RetentionTime,MF,Isotope,Adduct,`Theoretical M`,`Measured M`,`Theoretical m/z`,`Measured m/z`, `PPM Error`) %>%
               rowwise() %>%
-              mutate(Score = MFassign:::MFscore(MF)) %>%
+              mutate(Score = MFscore(MF)) %>%
               filter(Score <= parameters@maxMFscore)
             stopCluster(clus)
             
             rel <- rel %>% 
-              MFassign:::addMFs(MF) %>%
+              addMFs(MF) %>%
               filter(MF1 == MF2) %>%
               mutate(RetentionTime1 = as.numeric(RetentionTime1),RetentionTime2 = as.numeric(RetentionTime2)) %>%
-              MFassign:::addNames()
+              addNames()
             
             MFs <- bind_rows(select(rel,Name = Name1,Feature = Feature1,mz = `m/z1`,RetentionTime = RetentionTime1,Isotope = Isotope1, Adduct = Adduct1, MF = MF1),
                              select(rel,Name = Name2,Feature = Feature2,mz = `m/z2`,RetentionTime = RetentionTime2,Isotope = Isotope2, Adduct = Adduct2,MF = MF2)) %>%
@@ -57,10 +58,10 @@ setMethod('addIsoAssign',signature = 'Assignment',
               left_join(MF, by = c("Feature", "RetentionTime", "Isotope", "Adduct",'MF')) %>%
               mutate(ID = 1:nrow(.)) %>%
               rowwise() %>%
-              mutate(AddIsoScore = MFassign:::addIsoScore(Adduct,Isotope,parameters@adducts,parameters@isotopes),
+              mutate(AddIsoScore = addIsoScore(Adduct,Isotope,parameters@adducts,parameters@isotopes),
                      `PPM Error` = abs(`PPM Error`))
             
-            graph <- MFassign:::calcComponents(MFs,rel)
+            graph <- calcComponents(MFs,rel)
             
             filters <- tibble(Measure = c('Plausibility','Size','AddIsoScore','Score','PPM Error'),
                               Direction = c(rep('max',3),rep('min',2)))
@@ -74,9 +75,9 @@ setMethod('addIsoAssign',signature = 'Assignment',
                 filter(name %in% {filteredGraph %>% 
                     vertex.attributes() %>% 
                     as_tibble() %>%
-                    MFassign:::eliminate(f$Measure,f$Direction) %>%
+                    eliminate(f$Measure,f$Direction) %>%
                     .$name}) %>%
-                MFassign:::recalcComponents()
+                recalcComponents()
             }
             
             assignment@addIsoAssign <- list(

@@ -1,5 +1,10 @@
 #' plotNetwork-Assignment
 #' @rdname plotNetwork
+#' @description plot correlation network
+#' @param assignment of class Assignment
+#' @param layout graph layout to use. See \code{\link[ggraph]{ggraph}} for layout options
+#' @param rThreshold r threhold to use for filtering edge correlation weights
+#' @param labels whether to plot labeld. Defaults to \code{FALSE}
 #' @importFrom tidygraph as_tbl_graph
 #' @importFrom igraph vertex_attr set_vertex_attr
 #' @importFrom ggraph ggraph geom_edge_link geom_node_point theme_graph geom_node_text

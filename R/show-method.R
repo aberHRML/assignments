@@ -44,6 +44,7 @@ setMethod('show',signature = 'AssignmentParameters',
 #' @importFrom crayon blue red green
 #' @importFrom purrr map_dbl
 #' @importFrom utils packageVersion
+#' @importFrom igraph E
 #' @export
 
 setMethod('show',signature = 'Assignment',

@@ -11,6 +11,15 @@ plotNetwork(assignment, layout = "kk", rThreshold = 0.7, labels = F)
 \S4method{plotNetwork}{Assignment}(assignment, layout = "kk",
   rThreshold = 0.7, labels = F)
 }
+\arguments{
+\item{assignment}{of class Assignment}
+
+\item{layout}{graph layout to use. See \code{\link[ggraph]{ggraph}} for layout options}
+
+\item{rThreshold}{r threhold to use for filtering edge correlation weights}
+
+\item{labels}{whether to plot labeld. Defaults to \code{FALSE}}
+}
 \description{
-plotNetwork-Assignment
+plot correlation network
 }
