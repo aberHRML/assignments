@@ -19,6 +19,13 @@ setMethod('addIsoAssign',signature = 'Assignment',
               filter(!(is.na(Isotope1) & !is.na(Isotope2) & Adduct1 == Adduct2 & log2IntensityRatio < 0)) %>%
               filter(!(!is.na(Isotope1) & is.na(Isotope2) & Adduct1 == Adduct2)) 
             
+            if (str_detect(parameters@technique,'-LC')) {
+              rel <- rel %>%
+                mutate(rtDiff = abs(RetentionTime1 - RetentionTime2)) %>%
+                filter(rtDiff <= parameters@RTwindow) %>%
+                select(-rtDiff)
+            }
+            
             M <- bind_rows(select(rel,mz = `m/z1`,RetentionTime = RetentionTime1,Isotope = Isotope1, Adduct = Adduct1, Feature = Feature1),
                            select(rel,mz = `m/z2`,RetentionTime = RetentionTime2,Isotope = Isotope2, Adduct = Adduct2, Feature = Feature2)) %>%
               filter(!duplicated(.)) %>%
