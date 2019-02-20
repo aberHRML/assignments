@@ -1,4 +1,4 @@
-#' @importFrom dplyr group_by summarise group_indices
+#' @importFrom dplyr group_by summarise group_indices n
 #' @importFrom tidyr gather
 
 calcNetworktrans <- function(MF,rel,parameters) {
