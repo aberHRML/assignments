@@ -32,8 +32,10 @@ setMethod('addIsoAssign',signature = 'Assignment',
               arrange(M) %>%
               filter(M <= parameters@maxM)
             
+            nM <- nrow(M)
+            
             clus <- makeCluster(parameters@nCores)
-            MF <- sample_n(M,nrow(M)) %>%
+            MF <- sample_n(M,nM) %>%
               rowwise() %>% 
               parApply(cl = clus,1,function(x){MFgen(as.numeric(x[5]),as.numeric(x[1]),ppm = parameters@ppm)}) %>% 
               bind_rows() %>%
