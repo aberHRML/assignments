@@ -1,6 +1,7 @@
 #' @importFrom dplyr arrange rowwise sample_n left_join
 #' @importFrom stringr str_detect
 #' @importFrom mzAnnotation calcM calcMZ ppmError
+#' @importFrom parallel parLapply
 
 setMethod('addIsoAssign',signature = 'Assignment',
           function(assignment){
@@ -36,8 +37,10 @@ setMethod('addIsoAssign',signature = 'Assignment',
             
             clus <- makeCluster(parameters@nCores)
             MF <- sample_n(M,nM) %>%
-              rowwise() %>% 
-              parApply(cl = clus,1,function(x){MFgen(as.numeric(x[5]),as.numeric(x[1]),ppm = parameters@ppm)}) %>% 
+              split(1:nrow(.)) %>% 
+              parLapply(cl = clus,function(x,parameters){
+                MFgen(as.numeric(x[5]),as.numeric(x[1]),ppm = parameters@ppm)
+                },parameters = parameters) %>%
               bind_rows() %>%
               left_join(M,by = c('Measured M' = 'M','Measured m/z' = 'mz')) %>% 
               rowwise() %>%
