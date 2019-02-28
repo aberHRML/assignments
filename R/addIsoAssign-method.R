@@ -39,7 +39,7 @@ setMethod('addIsoAssign',signature = 'Assignment',
             MF <- sample_n(M,nM) %>%
               split(1:nrow(.)) %>% 
               parLapply(cl = clus,function(x,parameters){
-                MFassign:::MFgen(as.numeric(x[5]),as.numeric(x[1]),ppm = parameters@ppm)
+                MFgen(as.numeric(x[5]),as.numeric(x[1]),ppm = parameters@ppm)
                 },parameters = parameters) %>%
               bind_rows() %>%
               left_join(M,by = c('Measured M' = 'M','Measured m/z' = 'mz')) %>% 
