@@ -32,3 +32,8 @@ setGeneric('summariseAssignment',function(assignment){
 setGeneric('plotNetwork',function(assignment, layout = 'kk', rThreshold = 0.7, labels = F){
 standardGeneric('plotNetwork')
 })
+
+#' @rdname plotAdductDist
+setGeneric('plotAdductDist',function(assignment){
+  standardGeneric('plotAdductDist')
+})

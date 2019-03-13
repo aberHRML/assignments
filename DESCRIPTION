@@ -55,5 +55,6 @@ Collate:
         'addNames.R'
         'eliminate.R'
         'recalcComponents.R'
+        'plotAdductDist-method.R'
 Suggests: testthat,
     covr
