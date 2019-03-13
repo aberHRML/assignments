@@ -37,8 +37,10 @@ setMethod('transformationAssign',signature = 'Assignment',
                 filter(M <= parameters@maxM) %>%
                 filter(!(mz %in% assigned$`Measured m/z`))
               
+              nM <- nrow(M)
+              
               clus <- makeCluster(parameters@nCores)
-              MF <- sample_n(M,nrow(M)) %>%
+              MF <- sample_n(M,nM) %>%
                 rowwise() %>% 
                 parApply(cl = clus,1,function(x,ppm){MFgen(as.numeric(x[5]),as.numeric(x[1]),ppm)},ppm = parameters@ppm) %>% 
                 bind_rows() %>%
