@@ -11,8 +11,6 @@ r:
   - devel
   
 apt_packages:
- - default-jre
- - default-jdk
  - libopenbabel-dev
  - libudunits2-dev
  
