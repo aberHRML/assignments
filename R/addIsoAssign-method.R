@@ -41,7 +41,7 @@ setMethod('addIsoAssign',signature = 'Assignment',
 
             MF <- sample_n(M,nM) %>%
               split(1:nrow(.)) %>%
-              parLapply(cl = clus,function(x,parameters){MFassign:::MFgen(x$M,x$mz,ppm = parameters@ppm)},parameters = parameters) %>% 
+              parLapply(cl = clus,function(x,parameters){MFgen(x$M,x$mz,ppm = parameters@ppm)},parameters = parameters) %>% 
               bind_rows() %>%
               left_join(M,by = c('Measured M' = 'M','Measured m/z' = 'mz')) %>% 
               rowwise() %>%

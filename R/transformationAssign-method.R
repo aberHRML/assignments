@@ -27,8 +27,8 @@ setMethod('transformationAssign',signature = 'Assignment',
             rel <- bind_rows(mz1,mz2)
             
             if (nrow(rel) > 0) {
-              M <- bind_rows(select(rel,mz = `m/z1`,RetentionTime = RetentionTime1,Isotope = Isotope1, Adduct = Adduct1),
-                             select(rel,mz = `m/z2`,RetentionTime = RetentionTime2,Isotope = Isotope2, Adduct = Adduct2)) %>%
+              M <- bind_rows(select(rel,mz = `m/z1`,RetentionTime = RetentionTime1,Isotope = Isotope1, Adduct = Adduct1, Feature = Feature1),
+                             select(rel,mz = `m/z2`,RetentionTime = RetentionTime2,Isotope = Isotope2, Adduct = Adduct2, Feature = Feature2)) %>%
                 distinct() %>%
                 arrange(mz) %>%
                 rowwise() %>%
@@ -41,116 +41,84 @@ setMethod('transformationAssign',signature = 'Assignment',
               
               clus <- makeCluster(parameters@nCores)
               MF <- sample_n(M,nM) %>%
-                rowwise() %>% 
-                parApply(cl = clus,1,function(x,ppm){MFgen(as.numeric(x[5]),as.numeric(x[1]),ppm)},ppm = parameters@ppm) %>% 
+                split(1:nrow(.)) %>%
+                parLapply(cl = clus,function(x,parameters){MFassign:::MFgen(x$M,x$mz,ppm = parameters@ppm)},parameters = parameters) %>% 
                 bind_rows() %>%
                 left_join(M,by = c('Measured M' = 'M','Measured m/z' = 'mz')) %>% 
                 rowwise() %>%
                 mutate(`Theoretical m/z` = calcMZ(`Theoretical M`,Adduct,Isotope), 
                        `PPM Error` = ppmError(`Measured m/z`,`Theoretical m/z`)) %>%
-                select(RetentionTime,MF,Isotope,Adduct,`Theoretical M`,`Measured M`,`Theoretical m/z`,`Measured m/z`, `PPM Error`) %>%
+                select(Feature,RetentionTime,MF,Isotope,Adduct,`Theoretical M`,`Measured M`,`Theoretical m/z`,`Measured m/z`, `PPM Error`) %>%
                 rowwise() %>%
                 mutate(Score = MFscore(MF)) %>%
                 filter(Score <= parameters@maxMFscore)
               stopCluster(clus)
+             
+              MF <- MF %>%
+                bind_rows(assigned %>%
+                            select(names(MF)))
+              rel <- rel %>% 
+                addMFs(MF,identMF = F) %>%
+                mutate(RetentionTime1 = as.numeric(RetentionTime1),RetentionTime2 = as.numeric(RetentionTime2)) %>%
+                addNames()
               
-              MFs <- select(MF,RetentionTime,MF,Isotope,Adduct,`Measured m/z`) %>%
-                bind_rows(select(assigned,RetentionTime,MF,Isotope,Adduct,`Measured m/z`))
-              
-              rel <- filter(rel, `m/z1` %in% MF$`Measured m/z` | `m/z2` %in% MF$`Measured m/z`) %>%
-                left_join(MFs,by = c('RetentionTime1' = 'RetentionTime','m/z1' = 'Measured m/z')) %>%
-                rename(MF1 = MF)
-              rel[is.na(rel)] <- ''
-              
-              rel <- rel %>%
-                mutate(RetentionTime1 = as.numeric(RetentionTime1),RetentionTime2 = as.numeric(RetentionTime2))
-              
-              rel <- filter(rel,Isotope1 == Isotope & Adduct1 == Adduct) %>%
-                select(`m/z1`:MF1) %>%
-                left_join(MFs,by = c('RetentionTime2' = 'RetentionTime','m/z2' = 'Measured m/z')) %>%
-                rename(MF2 = MF)
-              rel[is.na(rel)] <- ''
-              
-              rel <- filter(rel,Isotope2 == Isotope & Adduct2 == Adduct) %>%
-                select(-(Isotope:Adduct))
-              rel[rel == ''] <- NA
-              
-              rel <- rel %>%
-                mutate(RetentionTime1 = as.numeric(RetentionTime1),RetentionTime2 = as.numeric(RetentionTime2))
-              
-              trans1 <- rel %>%
-                select(MF2,Transformation1) %>%
-                rowwise() %>%
-                mutate(TransformedMF = transformMF(MF2,Transformation1))
-              
-              trans2 <- rel %>%
-                select(MF1,Transformation2) %>%
-                rowwise() %>%
-                mutate(TransformedMF = transformMF(MF1,Transformation2))
-              
-              rel <- rel %>%
-                mutate(TransformedMF1 = trans1$TransformedMF, TransformedMF2 = trans2$TransformedMF) %>%
-                filter(TransformedMF1 == TransformedMF2)
-              
-              MFs <- bind_rows(select(rel,RetentionTime = RetentionTime1,mz = `m/z1`,Isotope = Isotope1, Adduct = Adduct1, MF = MF1),
-                               select(rel,RetentionTime = RetentionTime2,mz = `m/z2`,Isotope = Isotope2, Adduct = Adduct2,MF = MF2)) %>%
+              MFs <- bind_rows(select(rel,Name = Name1,Feature = Feature1,mz = `m/z1`,RetentionTime = RetentionTime1,Isotope = Isotope1, Adduct = Adduct1, MF = MF1),
+                               select(rel,Name = Name2,Feature = Feature2,mz = `m/z2`,RetentionTime = RetentionTime2,Isotope = Isotope2, Adduct = Adduct2,MF = MF2)) %>%
                 distinct() %>%
+                mutate(RetentionTime = as.numeric(RetentionTime)) %>%
                 arrange(mz) %>%
-                filter(!(mz %in% assigned$`Measured m/z`))
+                select(-mz) %>%
+                left_join(MF, by = c("Feature", "RetentionTime", "Isotope", "Adduct",'MF')) %>%
+                mutate(ID = 1:nrow(.)) %>%
+                rowwise() %>%
+                mutate(AddIsoScore = addIsoScore(Adduct,Isotope,parameters@adducts,parameters@isotopes),
+                       `PPM Error` = abs(`PPM Error`)) %>%
+                tbl_df()
               
-              MF <- semi_join(MF,MFs,by = c('RetentionTime' = 'RetentionTime','MF' = 'MF','Isotope' = 'Isotope','Adduct' = 'Adduct','Measured m/z' = 'mz'))
+              graph <- calcComponents(MFs,rel)
               
-              MF <- calcNetworktrans(MF,rel,parameters)
+              filters <- tibble(Measure = c('Plausibility','Size','AddIsoScore','Score','PPM Error'),
+                                Direction = c(rep('max',3),rep('min',2)))
               
-              filteredMF <- group_by(MF,Cluster) %>% 
-                filter(Score == min(Score)) %>%
-                group_by(`Measured m/z`) %>% 
-                filter(Plausibility == min(Plausibility))
+              filteredGraph <- graph
               
-              filteredRel1 <- semi_join(rel,filteredMF,by = c('RetentionTime1' = 'RetentionTime','MF1' = 'MF','Isotope1' = 'Isotope','Adduct1' = 'Adduct','m/z1' = 'Measured m/z'))
-              filteredRel2 <- semi_join(rel,filteredMF,by = c('RetentionTime2' = 'RetentionTime','MF2' = 'MF','Isotope2' = 'Isotope','Adduct2' = 'Adduct','m/z2' = 'Measured m/z'))
-              filteredRel <- bind_rows(filteredRel1,filteredRel2) %>%
-                select(`m/z1`:MF2)
+              for (i in 1:nrow(filters)) { 
+                f <- filters[i,]
+                filteredGraph <- filteredGraph %>%
+                  activate(nodes) %>%
+                  filter(name %in% {filteredGraph %>% 
+                      vertex.attributes() %>% 
+                      as_tibble() %>%
+                      eliminate(f$Measure,f$Direction) %>%
+                      .$name}) 
+                if (V(filteredGraph) %>% length() > 0) {
+                  filteredGraph <- filteredGraph %>%
+                    recalcComponents()
+                } else {
+                  break()
+                }
+              }
               
-              filteredMF <- calcNetworktrans(filteredMF,filteredRel,parameters) %>%
-                group_by(`Measured m/z`) %>% 
-                filter(Degree == max(Degree))
+            
+              newlyAssigned <- filteredGraph %>%
+                vertex.attributes() %>% 
+                as_tibble() %>%
+                rename(Name = name) %>%
+                mutate(Mode = str_sub(Feature,1,1)) %>%
+                filter(!(Name %in% assigned$Name)) %>%
+                select(Name:Score,Mode)
               
-              filteredMF <- filteredMF %>%
-                group_by(`Measured m/z`) %>%
-                filter(AddIsoScore == min(AddIsoScore))
-              
-              filteredRel1 <- semi_join(filteredRel,filteredMF,by = c('RetentionTime1' = 'RetentionTime','MF1' = 'MF','Isotope1' = 'Isotope','Adduct1' = 'Adduct','m/z1' = 'Measured m/z'))
-              filteredRel2 <- semi_join(filteredRel,filteredMF,by = c('RetentionTime2' = 'RetentionTime','MF2' = 'MF','Isotope2' = 'Isotope','Adduct2' = 'Adduct','m/z2' = 'Measured m/z'))
-              filteredRel <- bind_rows(filteredRel1,filteredRel2) 
-              
-              filteredMF <- calcNetworktrans(filteredMF,filteredRel,parameters)
-              
-              filteredMF <- filteredMF %>%
-                group_by(`Measured m/z`) %>% 
-                filter(Score == min(Score)) %>%
-                mutate(absPPM = abs(`PPM Error`)) %>%
-                filter(absPPM == min(absPPM)) %>% 
-                select(RetentionTime:Plausibility)
-              
-              filteredRel1 <- semi_join(filteredRel,filteredMF,by = c('RetentionTime1' = 'RetentionTime','MF1' = 'MF','Isotope1' = 'Isotope','Adduct1' = 'Adduct','m/z1' = 'Measured m/z'))
-              filteredRel2 <- semi_join(filteredRel,filteredMF,by = c('RetentionTime2' = 'RetentionTime','MF2' = 'MF','Isotope2' = 'Isotope','Adduct2' = 'Adduct','m/z2' = 'Measured m/z'))
-              filteredRel <- bind_rows(filteredRel1,filteredRel2) 
-              
-              filteredMF <- calcNetworktrans(filteredMF,filteredRel,parameters)
-              
-              adducts <- lapply(parameters@adducts,function(y){tibble(Adduct = y)})
-              adducts <- bind_rows(adducts,.id = 'Mode')
-              
-              assignments <- select(filteredMF,RetentionTime:Score) %>%
-                inner_join(adducts,c('Adduct' = 'Adduct')) %>%
-                arrange(`MF`)
-              assignment@assignments <- bind_rows(assignment@assignments,assignments)
+              outputs <- list(
+                graph = graph,
+                filteredGraph = filteredGraph,
+                assigned = newlyAssigned)
+                
+              assignment@assignments <- bind_rows(assignment@assignments,newlyAssigned)
               
               if (count == 0) {
-                assignment@transAssign <- list(`1` = list(MFs = MF, relationships = rel, filteredMFs = filteredMF, filteredRelationships = filteredRel,assigned = assignments))
+                assignment@transAssign <- list(`1` = outputs)
               } else {
-                assignment@transAssign <- c(assignment@transAssign,list(list(MFs = MF, relationships = rel, filteredMFs = filteredMF, filteredRelationships = filteredRel,assigned = assignments)))
+                assignment@transAssign <- c(assignment@transAssign,list(outputs))
               }  
             } else {
               assignment@transAssign <- c(assignment@transAssign,list(list()))

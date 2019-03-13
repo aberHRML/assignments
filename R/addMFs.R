@@ -1,9 +1,15 @@
 #' @importFrom dplyr rename
 
-addMFs <- function(rel,MF){
+addMFs <- function(rel,MF,identMF = T){
 
-  relations <- rel %>%
-    filter(Feature1 %in% MF$Feature,Feature2 %in% MF$Feature) %>%
+  if (identMF == T) {
+    relations <- rel %>%
+      filter(Feature1 %in% MF$Feature, Feature2 %in% MF$Feature)  
+  } else {
+    relations <- rel %>%
+      filter(Feature1 %in% MF$Feature | Feature2 %in% MF$Feature)  
+  }
+   relations <- relations %>%
     left_join(MF %>%
                 select(Feature,MF,Isotope,Adduct,`Measured m/z`),by = c('Feature1' = 'Feature')) %>%
     rename(MF1 = MF)

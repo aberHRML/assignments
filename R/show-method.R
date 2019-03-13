@@ -73,7 +73,9 @@ setMethod('show',signature = 'Assignment',
               cat('\n')
             }
             if (nrow(object@assignments) > 0) {
-              cat('\t','Total assignments:\t',blue(nrow(object@assignments)),'\n')
+              cat('\t','Total assignments:\t',blue(nrow(object@assignments)),
+                  blue(str_c('(',round(nrow(object@assignments)/length(unique(c(object@correlations$Feature1,object@correlations$Feature2))) * 100),'%)')),
+                        '\n')
               cat('\t','Unique MFs:\t\t',blue(length(unique(object@assignments$MF))),'\n')
               cat('\n') 
             }
