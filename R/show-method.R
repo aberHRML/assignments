@@ -55,11 +55,13 @@ setMethod('show',signature = 'Assignment',
             cat('\t','Correlations:\t\t',nrow(object@correlations),'\n')
             cat('\t','Relationships:\t\t',nrow(object@relationships),'\n')
             cat('\n')
-            cat('\t',green('Adduct & isotope assignment:'),'\n')
-            cat('\t\t','MFs:\t\t',length(unique(object@addIsoAssign$assigned$MF)),'\n')
-            cat('\t\t','Relationships:\t',object@addIsoAssign$filteredGraph %>% E() %>% length(),'\n')
-            cat('\t\t','Assigned:\t',nrow(object@addIsoAssign$assigned),'\n')
-            cat('\n')
+            if (length(object@addIsoAssign) > 0) {
+              cat('\t',green('Adduct & isotope assignment:'),'\n')
+              cat('\t\t','MFs:\t\t',length(unique(object@addIsoAssign$assigned$MF)),'\n')
+              cat('\t\t','Relationships:\t',object@addIsoAssign$filteredGraph %>% E() %>% length(),'\n')
+              cat('\t\t','Assigned:\t',nrow(object@addIsoAssign$assigned),'\n')
+              cat('\n')
+            }
             if (length(object@transAssign) > 0) {
               cat('\t',green('Transformation assignment:'),'\n')
               cat('\t\t','Iterations:\t',length(object@transAssign),'\n')
@@ -68,10 +70,12 @@ setMethod('show',signature = 'Assignment',
               }) %>%
                 sum()
               cat('\t\t','Assigned:\t',transAssigned,'\n') 
+              cat('\n')
             }
-            cat('\n')
-            cat('\t','Total assignments:\t',blue(nrow(object@assignments)),'\n')
-            cat('\t','Unique MFs:\t\t',blue(length(unique(object@assignments$MF))),'\n')
-            cat('\n')
+            if (nrow(object@assignments) > 0) {
+              cat('\t','Total assignments:\t',blue(nrow(object@assignments)),'\n')
+              cat('\t','Unique MFs:\t\t',blue(length(unique(object@assignments$MF))),'\n')
+              cat('\n') 
+            }
           }
 )
