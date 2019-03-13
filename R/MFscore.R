@@ -1,9 +1,9 @@
-#' @importFrom CHNOSZ makeup
+#' @importFrom CHNOSZ count.elements
 
 MFscore <- function(mf){
   elements <- c('C','H','N','O','P','S')
-  eleFreq <- as.vector(makeup(mf))
-  ele <- names(makeup(mf))
+  eleFreq <- as.vector(count.elements(mf))
+  ele <- names(count.elements(mf))
   
   if (length(which(!(elements %in% ele))) > 0) {
     eleFreq <- c(eleFreq,rep(0,length(which(!(elements %in% ele)))))
