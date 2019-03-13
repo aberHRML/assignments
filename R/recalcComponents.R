@@ -11,5 +11,5 @@ recalcComponents <- function(graph){
            AverageAddIsoScore = sum(AddIsoScore) / Nodes,
            Plausibility = AverageAddIsoScore * Size) %>%
     unmorph() %>%
-    filter(Size > 1)
+    filter(Nodes > 1)
 }

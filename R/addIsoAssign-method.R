@@ -1,7 +1,7 @@
 #' @importFrom dplyr arrange rowwise sample_n left_join
 #' @importFrom stringr str_detect
 #' @importFrom mzAnnotation calcM calcMZ ppmError
-#' @importFrom igraph vertex.attributes
+#' @importFrom igraph vertex.attributes V
 #' @importFrom parallel parLapply
 
 setMethod('addIsoAssign',signature = 'Assignment',
@@ -41,7 +41,7 @@ setMethod('addIsoAssign',signature = 'Assignment',
 
             MF <- sample_n(M,nM) %>%
               split(1:nrow(.)) %>%
-              parLapply(cl = clus,function(x,parameters){MFgen(x$M,x$mz,ppm = parameters@ppm)},parameters = parameters) %>% 
+              parLapply(cl = clus,function(x,parameters){MFassign:::MFgen(x$M,x$mz,ppm = parameters@ppm)},parameters = parameters) %>% 
               bind_rows() %>%
               left_join(M,by = c('Measured M' = 'M','Measured m/z' = 'mz')) %>% 
               rowwise() %>%
@@ -69,7 +69,8 @@ setMethod('addIsoAssign',signature = 'Assignment',
               mutate(ID = 1:nrow(.)) %>%
               rowwise() %>%
               mutate(AddIsoScore = addIsoScore(Adduct,Isotope,parameters@adducts,parameters@isotopes),
-                     `PPM Error` = abs(`PPM Error`))
+                     `PPM Error` = abs(`PPM Error`)) %>%
+              tbl_df()
             
             graph <- calcComponents(MFs,rel)
             
@@ -86,8 +87,13 @@ setMethod('addIsoAssign',signature = 'Assignment',
                     vertex.attributes() %>% 
                     as_tibble() %>%
                     eliminate(f$Measure,f$Direction) %>%
-                    .$name}) %>%
-                recalcComponents()
+                    .$name}) 
+                if (V(filteredGraph) %>% length() > 0) {
+                filteredGraph <- filteredGraph %>%
+                  recalcComponents()
+                } else {
+                  break()
+                }
             }
             
             assignment@addIsoAssign <- list(
@@ -95,10 +101,13 @@ setMethod('addIsoAssign',signature = 'Assignment',
               filteredGraph = filteredGraph,
               assigned = filteredGraph %>% 
                 vertex.attributes() %>% 
-                as_tibble()
+                as_tibble() %>%
+                rename(Name = name) %>%
+                mutate(Mode = str_sub(Feature,1,1))
             )
             
-            assignment@assignments <- assignment@addIsoAssign$assigned
+            assignment@assignments <- assignment@addIsoAssign$assigned %>%
+              select(Name:Score,Mode)
             
             if (assignment@log$verbose == T) {
               endTime <- proc.time()
