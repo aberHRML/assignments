@@ -25,7 +25,7 @@ setMethod('plotFeatureSolutions',signature = 'Assignment',
               unique() %>%
               {comp[comp %in% .]}
             
-            pl <- graph %>%
+            graph %>%
               map(~{
                 stats <- nodes(.) %>%
                   select(Component:Plausibility) %>%
@@ -51,9 +51,9 @@ setMethod('plotFeatureSolutions',signature = 'Assignment',
                   labs(title = str_c('Component ',stats$Component),
                        caption = str_c('Size = ',stats$Size,'; ',
                                        'Nodes = ',stats$Nodes,'; ',
-                                       'Density = ',stats$Density %>% round(3),'; ',
-                                       'AddIsoScore = ',stats$AverageAddIsoScore %>% round(3),'; ',
-                                       'Plausibility = ',stats$Plausibility %>% round(3))) +
+                                       'Density = ',stats$Density %>% round(2),'; ',
+                                       'AddIsoScore = ',stats$AverageAddIsoScore %>% round(2),'; ',
+                                       'Plausibility = ',stats$Plausibility %>% round(2))) +
                   xlim(min(g$x) - (max(g$x) - min(g$x)) * 0.05,
                        max(g$x) + (max(g$x) - min(g$x)) * 0.05) +
                   ylim(min(g$y) - (max(g$y) - min(g$y)) * 0.05,
