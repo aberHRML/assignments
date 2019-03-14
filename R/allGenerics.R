@@ -37,3 +37,8 @@ standardGeneric('plotNetwork')
 setGeneric('plotAdductDist',function(assignment){
   standardGeneric('plotAdductDist')
 })
+
+#' @rdname plotFeatureSolutions
+setGeneric('plotFeatureSolutions',function(assignment,feature){
+  standardGeneric('plotFeatureSolutions')
+})

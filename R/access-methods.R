@@ -9,3 +9,21 @@ setMethod('assignments',signature = 'Assignment',
             assignment@assignments
 })
 
+#' nodes
+#' @export
+
+nodes <- function(graph){
+           graph %>%
+              vertex.attributes() %>%
+              as_tibble()
+}
+
+#' edges
+#' @importFrom igraph edge.attributes
+#' @export
+
+edges <- function(graph){
+  graph %>%
+    edge.attributes() %>%
+    as_tibble()
+}

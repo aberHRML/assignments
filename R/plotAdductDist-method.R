@@ -1,4 +1,5 @@
 #' plotAdductDist-Assignment
+#' @rdname plotAdductDist
 #' @importFrom patchwork wrap_plots
 #' @importFrom ggthemes ptol_pal
 #' @importFrom ggplot2 ggplot geom_bar theme_bw facet_wrap theme element_text
