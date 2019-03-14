@@ -113,7 +113,8 @@ setMethod('transformationAssign',signature = 'Assignment',
                   rename(Name = name) %>%
                   mutate(Mode = str_sub(Feature,1,1)) %>%
                   filter(!(Name %in% assigned$Name)) %>%
-                  select(Name:Score,Mode)
+                  select(Name:Score,Mode) %>%
+                  mutate(Iteration = str_c('T',count + 1))
                 
                 outputs <- list(
                   graph = graph,

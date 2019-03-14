@@ -113,7 +113,8 @@ setMethod('addIsoAssign',signature = 'Assignment',
             )
             
             assignment@assignments <- assignment@addIsoAssign$assigned %>%
-              select(Name:Score,Mode)
+              select(Name:Score,Mode) %>%
+              mutate(Iteration = 'A&I')
             
             if (assignment@log$verbose == T) {
               endTime <- proc.time()
