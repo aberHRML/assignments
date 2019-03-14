@@ -37,7 +37,13 @@ setMethod('addIsoAssign',signature = 'Assignment',
             
             nM <- nrow(M)
             
-            clus <- makeCluster(parameters@nCores)
+            slaves <- nrow(M) / 100
+            
+            if (slaves > parameters@nCores) {
+              slaves <- parameters@nCores
+            }
+            
+            clus <- makeCluster(slaves)
 
             MF <- sample_n(M,nM) %>%
               split(1:nrow(.)) %>%

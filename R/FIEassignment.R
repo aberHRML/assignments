@@ -19,6 +19,7 @@ FIEassignment <- function(element = NULL) {
         count <- count + 1
         assignment <- suppressWarnings(transformationAssign(assignment))
         if (length(assignment@transAssign[[count]]) == 0) {
+          assignment@transAssign <- assignment@transAssign[-count] 
           break()
         }
         if (nrow(assignment@transAssign[[count]]$assigned) == 0) {
