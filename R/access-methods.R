@@ -6,7 +6,24 @@
 
 setMethod('assignments',signature = 'Assignment',
           function(assignment){
-            assignment@assignments %>%
-              mutate(Feature = str_c(Mode,`Measured m/z`)) %>%
-              select(Feature,RetentionTime:Mode)
+            assignment@assignments
 })
+
+#' nodes
+#' @export
+
+nodes <- function(graph){
+           graph %>%
+              vertex.attributes() %>%
+              as_tibble()
+}
+
+#' edges
+#' @importFrom igraph edge.attributes
+#' @export
+
+edges <- function(graph){
+  graph %>%
+    edge.attributes() %>%
+    as_tibble()
+}

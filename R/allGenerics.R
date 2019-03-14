@@ -27,3 +27,18 @@ setGeneric('assignments',function(assignment){
 setGeneric('summariseAssignment',function(assignment){
   standardGeneric('summariseAssignment')
 })
+
+#' @rdname plotNetwork
+setGeneric('plotNetwork',function(assignment, layout = 'kk', rThreshold = 0.7, labels = F){
+standardGeneric('plotNetwork')
+})
+
+#' @rdname plotAdductDist
+setGeneric('plotAdductDist',function(assignment){
+  standardGeneric('plotAdductDist')
+})
+
+#' @rdname plotFeatureSolutions
+setGeneric('plotFeatureSolutions',function(assignment,feature){
+  standardGeneric('plotFeatureSolutions')
+})

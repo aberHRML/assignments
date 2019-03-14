@@ -15,7 +15,12 @@ Imports: CHNOSZ,
     crayon,
     purrr,
     cli,
-    lubridate
+    lubridate,
+    tidygraph,
+    igraph,
+    ggraph,
+    ggthemes,
+    ggplot2
 License: GPL (>= 3)
 Encoding: UTF-8
 LazyData: true
@@ -33,10 +38,9 @@ Collate:
         'MFscore.R'
         'addIsoScore.R'
         'addMFs.R'
-        'calcNetwork.R'
+        'calcComponents.R'
         'assignMethods.R'
         'correlations.R'
-        'calcNetworktrans.R'
         'LCassignment.R'
         'MFassign.R'
         'FIEassignment.R'
@@ -45,5 +49,12 @@ Collate:
         'show-method.R'
         'access-methods.R'
         'summariseAssignment-method.R'
+        'plotNetwork-method.R'
+        'networkComponents.R'
+        'addNames.R'
+        'eliminate.R'
+        'recalcComponents.R'
+        'plotAdductDist-method.R'
+        'plotFeatureSolutions.R'
 Suggests: testthat,
     covr
