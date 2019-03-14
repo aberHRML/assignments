@@ -21,9 +21,9 @@ setMethod('plotFeatureSolutions',signature = 'Assignment',
             
             selectedComp <- assignment@addIsoAssign$filteredGraph %>%
               nodes() %>%
-              .$Component %>%
-              unique() %>%
-              {comp[comp %in% .]}
+              select(Feature,Component) %>%
+              filter(Feature == feature) %>%
+              .$Component
             
             graph %>%
               map(~{
@@ -31,7 +31,7 @@ setMethod('plotFeatureSolutions',signature = 'Assignment',
                   select(Component:Plausibility) %>%
                   .[1,]
                 
-                if (stats$Component == selectedComp){
+                if (stats$Component[1] == selectedComp){
                   border <- 'red'  
                 } else {
                   border <- 'black'
@@ -42,8 +42,10 @@ setMethod('plotFeatureSolutions',signature = 'Assignment',
                   mutate(Feat = Feature == feature) %>%
                   create_layout('nicely')
                 ggraph(g) +
-                  geom_edge_link() +
-                  geom_node_label(aes(label = name,colour = Feat),size = 2,) +
+                  geom_edge_link(aes(colour = r)) +
+                  scale_edge_color_gradient(low = 'white',high = 'black',limits = c(0.5,1)) +
+                  geom_node_label(aes(label = name,fill = Feat),size = 2,) +
+                  scale_fill_manual(values = c('white','steelblue')) +
                   theme_graph(title_size = 12,
                               title_face = 'plain',
                               foreground = border,
@@ -58,8 +60,7 @@ setMethod('plotFeatureSolutions',signature = 'Assignment',
                        max(g$x) + (max(g$x) - min(g$x)) * 0.05) +
                   ylim(min(g$y) - (max(g$y) - min(g$y)) * 0.05,
                        max(g$y) + (max(g$y) - min(g$y)) * 0.05) +
-                  guides(colour = FALSE) +
-                  scale_colour_manual(values = c('black','steelblue'))
+                  guides(fill = FALSE)
               }) %>%
               .[order(comp)] %>%
               wrap_plots() + plot_annotation(title = str_c('Solutions for feature ',feature))
