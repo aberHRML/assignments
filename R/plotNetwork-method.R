@@ -1,41 +1,91 @@
 #' plotNetwork-Assignment
 #' @rdname plotNetwork
-#' @description plot correlation network
+#' @description plot assignment network
 #' @param assignment of class Assignment
 #' @param layout graph layout to use. See \code{\link[ggraph]{ggraph}} for layout options
 #' @param rThreshold r threhold to use for filtering edge correlation weights
-#' @param labels whether to plot labeld. Defaults to \code{FALSE}
 #' @importFrom tidygraph as_tbl_graph
-#' @importFrom igraph vertex_attr set_vertex_attr
+#' @importFrom igraphr set_vertex_attr set_edge_attr
 #' @importFrom ggraph ggraph geom_edge_link geom_node_point theme_graph geom_node_text
 #' @importFrom ggthemes scale_colour_ptol
 #' @importFrom ggplot2 labs aes
 #' @export
 
 setMethod('plotNetwork',signature = 'Assignment',
-          function(assignment, layout = 'kk', rThreshold = 0.7, labels = F){
+          function(assignment, layout = 'nicely', rThreshold = 0.7){
             
-            network <- assignment@correlations %>%
+            AI <- assignment@addIsoAssign$filteredGraph
+            TA <- assignment@transAssign %>%
+              map(~{.$filteredGraph})
+            
+            graph <- AI %>%
+              bind_graphs({a <- TA[[1]]
+              for (i in 2:length(TA)){
+                a <- bind_graphs(a,TA[[i]])
+              }
+              a
+              }) 
+            
+            e <- edges(graph) %>%
+              mutate(Explained = 'Explained')
+            n <- nodes(graph) %>%
+              select(name:Score) %>%
+              distinct() %>%
+              mutate(Assigned = 'Assigned')
+            
+            network <- assignment %>%
+              .@correlations %>%
               filter(r > rThreshold) %>%
-              as_tbl_graph(directed = F)
+              as_tbl_graph(directed = F) %>%
+              activate(nodes) %>%
+              rename(Feature = name) %>%
+              mutate(Mode = str_sub(Feature,1,1)) %>%
+              left_join(n, by = "Feature") %>%
+              activate(edges) %>%
+              left_join(e, by = c("Mode1", "Mode2", "m/z1", "m/z2", "RetentionTime1", "RetentionTime2", "log2IntensityRatio", "r", "ID"))
             
-            nodes <- vertex_attr(network) %>% 
-              as_tibble() %>%
-              mutate(Mode = str_sub(name,1,1))
+            assigned <- nodes(network)$Assigned
+            assigned[is.na(assigned)] <- 'Unassigned'
             
-            network <- set_vertex_attr(network,'Mode',value = nodes$Mode)
+            network <- set_vertex_attr(network,'Assigned',value = assigned)
             
+            explained <- edges(network)$Explained
+            explained[is.na(explained)] <- 'Unexplained'
             
-            pl <- ggraph(network,layout = layout) +
-              geom_edge_link(alpha = 0.1) +
-              geom_node_point(aes(colour = Mode),alpha = 1) +
+            network <- set_edge_attr(network,'Explained',value = explained)
+            
+            explainedEdges <- network %>% 
+              edges() %>%
+              .$Explained %>%
+              table()
+            
+            assignedNodes <- network %>% 
+              nodes() %>%
+              .$Assigned %>%
+              table()
+            
+            rt <- str_c('Visualised using threshold of r > ',rThreshold)
+            nn <- str_c('Total nodes = ',sum(assignedNodes))
+            an <- str_c('Assigned nodes = ',
+                        assignedNodes[1],
+                        ' (',
+                        {assignedNodes[1]/sum(assignedNodes) * 100} %>%
+                          round(),'%)')
+            ne <- str_c('Total edges = ',sum(explainedEdges))
+            ee <- str_c('Explained edges = ',
+                        explainedEdges[1],
+                        ' (',
+                        {explainedEdges[1]/sum(explainedEdges) * 100} %>%
+                          round(),'%)')
+            
+            ggraph(network,layout = layout) +
+              geom_edge_link(alpha = 0.2) +
+              geom_node_point(aes(colour = Assigned)) +
               scale_colour_ptol() +
-              theme_graph(base_family = 'sans') +
-              labs(title = str_c('Assignment correlation network (r > ',rThreshold,')'))
-            
-            if (labels) {
-              pl <- pl + geom_node_text(aes(label = name),size = 2,repel = T)
-            }
-            
-            return(pl)
+              theme_graph() +
+              theme(legend.title = element_blank()) +
+              coord_fixed() +
+              facet_edges(~Explained) +
+              labs(title = str_c('Assigned correlation network'),
+                   caption = str_c(rt,nn,an,ne,ee,sep = '\n'))
           })

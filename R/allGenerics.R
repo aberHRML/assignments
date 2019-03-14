@@ -29,7 +29,7 @@ setGeneric('summariseAssignment',function(assignment){
 })
 
 #' @rdname plotNetwork
-setGeneric('plotNetwork',function(assignment, layout = 'kk', rThreshold = 0.7, labels = F){
+setGeneric('plotNetwork',function(assignment, layout = 'kk', rThreshold = 0.7){
 standardGeneric('plotNetwork')
 })
 
