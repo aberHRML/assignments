@@ -1,5 +1,8 @@
 #' plotFeatureSolutions
 #' @rdname plotFeatureSolutions
+#' @description Plot possible MF solutions for a given feature.
+#' @param assignment S4 object of class Assignent
+#' @param feature name of feature to plot
 #' @importFrom patchwork plot_annotation
 #' @importFrom ggraph create_layout scale_edge_color_gradient geom_node_label
 #' @importFrom ggplot2 scale_fill_manual margin xlim ylim guides

@@ -1,5 +1,7 @@
 #' plotAdductDist-Assignment
 #' @rdname plotAdductDist
+#' @description Plot adduct distributions.
+#' @param assignment S4 object of class Assignment
 #' @importFrom patchwork wrap_plots
 #' @importFrom ggthemes ptol_pal
 #' @importFrom ggplot2 ggplot geom_bar theme_bw facet_wrap theme element_text

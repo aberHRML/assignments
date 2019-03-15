@@ -10,6 +10,8 @@ setMethod('assignments',signature = 'Assignment',
 })
 
 #' nodes
+#' @description extract node table from tbl_graph object.
+#' @param graph object of class tbl_graph
 #' @export
 
 nodes <- function(graph){
@@ -19,6 +21,8 @@ nodes <- function(graph){
 }
 
 #' edges
+#' @description extract edge table from tbl_graph object.
+#' @param graph object of class tbl_graph
 #' @importFrom igraph edge.attributes
 #' @export
 

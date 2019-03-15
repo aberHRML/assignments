@@ -10,6 +10,9 @@ plotAdductDist(assignment)
 
 \S4method{plotAdductDist}{Assignment}(assignment)
 }
+\arguments{
+\item{assignment}{S4 object of class Assignment}
+}
 \description{
-plotAdductDist-Assignment
+Plot adduct distributions.
 }

@@ -10,6 +10,11 @@ plotFeatureSolutions(assignment, feature)
 
 \S4method{plotFeatureSolutions}{Assignment}(assignment, feature)
 }
+\arguments{
+\item{assignment}{S4 object of class Assignent}
+
+\item{feature}{name of feature to plot}
+}
 \description{
-plotFeatureSolutions
+Plot possible MF solutions for a given feature.
 }

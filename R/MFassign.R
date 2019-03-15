@@ -9,5 +9,6 @@ globalVariables(c(
   'Theoretical m/z','PPM Error','name','Mode','V1','V2','Mode1',
   'Mode2','ID','Adducts','Isotopes','Transformations','Error',
   'Count','TransformedMF1', 'TransformedMF2','Plausibility','absPPM',
-  'Name1','Name2','Size','AverageAddIsoScore','nodes','rtDiff'
+  'Name1','Name2','Size','AverageAddIsoScore','nodes','rtDiff',
+  'Component','Weight','AIS','Name','Assigned'
 ))

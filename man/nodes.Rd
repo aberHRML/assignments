@@ -6,6 +6,9 @@
 \usage{
 nodes(graph)
 }
+\arguments{
+\item{graph}{object of class tbl_graph}
+}
 \description{
-nodes
+extract node table from tbl_graph object.
 }

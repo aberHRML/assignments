@@ -4,7 +4,8 @@ Version: 0.5.0
 Authors@R: person("Jasen", "Finch", email = "jsf9@aber.ac.uk", role = c("aut", "cre"))
 Description: Molecular formula assignment for high resolution metabolomics.
 Depends: R (>= 3.4.0),
-    mzAnnotation
+    mzAnnotation,
+    ggraph
 Imports: CHNOSZ,
     dplyr,
     magrittr,
@@ -18,9 +19,9 @@ Imports: CHNOSZ,
     lubridate,
     tidygraph,
     igraph,
-    ggraph,
     ggthemes,
-    ggplot2
+    ggplot2,
+    patchwork
 License: GPL (>= 3)
 Encoding: UTF-8
 LazyData: true

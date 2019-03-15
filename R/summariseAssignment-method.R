@@ -2,6 +2,7 @@
 #' @rdname summariseAssignment
 #' @description Summarise features assigned to moleuclar formulas.
 #' @param assignment S4 object of class Assignment
+#' @importFrom dplyr desc
 #' @export
 
 setMethod('summariseAssignment',signature = 'Assignment',

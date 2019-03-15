@@ -6,6 +6,9 @@
 \usage{
 edges(graph)
 }
+\arguments{
+\item{graph}{object of class tbl_graph}
+}
 \description{
-edges
+extract edge table from tbl_graph object.
 }
