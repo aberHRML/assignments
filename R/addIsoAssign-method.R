@@ -80,7 +80,7 @@ setMethod('addIsoAssign',signature = 'Assignment',
             
             graph <- calcComponents(MFs,rel)
             
-            filters <- tibble(Measure = c('Plausibility','Size','AddIsoScore','Score','PPM Error'),
+            filters <- tibble(Measure = c('Plausibility','Size','AIS','Score','PPM Error'),
                               Direction = c(rep('max',3),rep('min',2)))
             
             filteredGraph <- graph

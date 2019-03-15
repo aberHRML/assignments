@@ -4,11 +4,11 @@
 #' @param assignment of class Assignment
 #' @param layout graph layout to use. See \code{\link[ggraph]{ggraph}} for layout options
 #' @param rThreshold r threhold to use for filtering edge correlation weights
-#' @importFrom tidygraph as_tbl_graph
-#' @importFrom igraphr set_vertex_attr set_edge_attr
-#' @importFrom ggraph ggraph geom_edge_link geom_node_point theme_graph geom_node_text
+#' @importFrom tidygraph as_tbl_graph bind_graphs
+#' @importFrom igraph set_vertex_attr set_edge_attr
+#' @importFrom ggraph ggraph geom_edge_link geom_node_point theme_graph geom_node_text facet_edges
 #' @importFrom ggthemes scale_colour_ptol
-#' @importFrom ggplot2 labs aes
+#' @importFrom ggplot2 labs aes element_blank coord_fixed
 #' @export
 
 setMethod('plotNetwork',signature = 'Assignment',

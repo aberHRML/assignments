@@ -1,6 +1,8 @@
 #' plotFeatureSolutions
 #' @rdname plotFeatureSolutions
 #' @importFrom patchwork plot_annotation
+#' @importFrom ggraph create_layout scale_edge_color_gradient geom_node_label
+#' @importFrom ggplot2 scale_fill_manual margin xlim ylim guides
 #' @export
 
 setMethod('plotFeatureSolutions',signature = 'Assignment',
@@ -53,8 +55,9 @@ setMethod('plotFeatureSolutions',signature = 'Assignment',
                   labs(title = str_c('Component ',stats$Component),
                        caption = str_c('Size = ',stats$Size,'; ',
                                        'Nodes = ',stats$Nodes,'; ',
+                                       'Weight = ',stats$Weight %>% round(2),'; ',
                                        'Density = ',stats$Density %>% round(2),'; ',
-                                       'AddIsoScore = ',stats$AverageAddIsoScore %>% round(2),'; ',
+                                       'AIS = ',stats$AIS %>% round(2),'; ',
                                        'Plausibility = ',stats$Plausibility %>% round(2))) +
                   xlim(min(g$x) - (max(g$x) - min(g$x)) * 0.05,
                        max(g$x) + (max(g$x) - min(g$x)) * 0.05) +
