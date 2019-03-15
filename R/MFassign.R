@@ -1,10 +1,14 @@
 
 globalVariables(c(
-  '.','AddIsoScore','Adduct','Adducts','Adduct1','Adduct2','Cluster', 'Degree',
-  'EdgeWeight1', 'EdgeWeight2', 'Error', 'Feature1', 'Feature2', 'Isotope', 'Isotope1',
-  'Isotope2', 'Isotopes', 'MF1', 'MF2', 'Mass', 'Measured M', 'Measured m/z', 'Mode1', 'Mode2',
-  'PPM Error', 'RetentionTime', 'RetentionTime1', 'RetentionTime2', 'Score',
-  'Theoretical M', 'Theoretical m/z', 'Transformation1', 'Transformation2',
-  'Transformations', 'TransformedMF1', 'TransformedMF2', 'V1', 'V2', 'absPPM', 'desc',
-  'log2IntensityRatio', 'm/z1', 'm/z2', 'mz', 'n', 'r', 'rt1', 'rt2', 'rtDiff'
+  'Mass','.','Feature1','Feature2','Feature','Isotope','Adduct',
+  'Measured m/z','Isotope1','Adduct1','Isotope2','Adduct2','MF1', 
+  'MF2','Nodes','AddIsoScore','RetentionTime','Score','r','EdgeWeight1', 
+  'EdgeWeight2','Degree','Measured M','Cluster', 'Average AddIsoScore',
+  'Transformation1','Transformation2','log2IntensityRatio','m/z1',
+  'm/z2','RetentionTime1','RetentionTime2','mz','Theoretical M',
+  'Theoretical m/z','PPM Error','name','Mode','V1','V2','Mode1',
+  'Mode2','ID','Adducts','Isotopes','Transformations','Error',
+  'Count','TransformedMF1', 'TransformedMF2','Plausibility','absPPM',
+  'Name1','Name2','Size','AverageAddIsoScore','nodes','rtDiff',
+  'Component','Weight','AIS','Name','Assigned'
 ))

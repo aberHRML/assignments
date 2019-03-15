@@ -41,9 +41,10 @@ setMethod('prepCorrelations',signature = 'Assignment',
                        as_tibble() %>% 
                        select(V2) %>%
                        unlist() %>%
-                       as.numeric()
+                       as.numeric(),
+                     ID = 1:nrow(.)
               ) %>%
-              select(Feature1,Feature2,Mode1:RetentionTime2,log2IntensityRatio,r)
+              select(Feature1,Feature2,Mode1:RetentionTime2,log2IntensityRatio,r,ID)
             
             assignment@correlations <- correlations
             

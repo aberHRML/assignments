@@ -12,9 +12,11 @@ r:
   
 apt_packages:
  - libopenbabel-dev
+ - libudunits2-dev
  
 r_github_packages:
     - jasenfinch/mzAnnotation
+    - thomasp85/patchwork
  
 notifications:
     email:

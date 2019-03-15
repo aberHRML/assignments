@@ -33,7 +33,7 @@ setMethod('relationships',signature = 'Assignment',
               bind_rows() %>%
               as_tibble() %>%
               inner_join(cors,by = c('m/z1' = 'm/z1','m/z2' = 'm/z2')) %>%
-              select(Feature1:Mode2,`m/z1`,`m/z2`,RetentionTime1,RetentionTime2,Adduct1:Transformation2,log2IntensityRatio,r,Error) %>%
+              select(Feature1:Mode2,`m/z1`,`m/z2`,RetentionTime1,RetentionTime2,Adduct1:Transformation2,log2IntensityRatio,r,Error,ID) %>%
               mutate(RetentionTime1 = as.numeric(RetentionTime1),RetentionTime2 = as.numeric(RetentionTime2))
               
             stopCluster(clus)

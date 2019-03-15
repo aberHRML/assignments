@@ -44,32 +44,40 @@ setMethod('show',signature = 'AssignmentParameters',
 #' @importFrom crayon blue red green
 #' @importFrom purrr map_dbl
 #' @importFrom utils packageVersion
+#' @importFrom igraph E
 #' @export
 
 setMethod('show',signature = 'Assignment',
           function(object){
             cat(blue('\nMFassign'),red(str_c('v',packageVersion('MFassign') %>% as.character())),'\n')
             cat(yellow('Assignment:'),'\n')
+            cat('\t','Features:\t\t',length(unique(c(object@correlations$Feature1,object@correlations$Feature2))),'\n')
             cat('\t','Correlations:\t\t',nrow(object@correlations),'\n')
             cat('\t','Relationships:\t\t',nrow(object@relationships),'\n')
             cat('\n')
-            cat('\t',green('Adduct & isotope assignment:'),'\n')
-            cat('\t\t','MFs:\t\t',nrow(object@addIsoAssign$filteredMFs),'\n')
-            cat('\t\t','Relationships:\t',nrow(object@addIsoAssign$filteredRelationships),'\n')
-            cat('\t\t','Assigned:\t',nrow(object@addIsoAssign$assigned),'\n')
-            cat('\n')
-            cat('\t',green('Transformation assignment:'),'\n')
-            cat('\t\t','Iterations:\t',length(object@transAssign),'\n')
-            if (length(object@transAssign) & length(object@transAssign[[length(object@transAssign)]]) > 0) {
+            if (length(object@addIsoAssign) > 0) {
+              cat('\t',green('Adduct & isotope assignment:'),'\n')
+              cat('\t\t','MFs:\t\t',length(unique(object@addIsoAssign$assigned$MF)),'\n')
+              cat('\t\t','Relationships:\t',object@addIsoAssign$filteredGraph %>% E() %>% length(),'\n')
+              cat('\t\t','Assigned:\t',nrow(object@addIsoAssign$assigned),'\n')
+              cat('\n')
+            }
+            if (length(object@transAssign) > 0) {
+              cat('\t',green('Transformation assignment:'),'\n')
+              cat('\t\t','Iterations:\t',length(object@transAssign),'\n')
               transAssigned <- map_dbl(object@transAssign,~{
                 return(nrow(.$assigned))
               }) %>%
                 sum()
               cat('\t\t','Assigned:\t',transAssigned,'\n') 
+              cat('\n')
             }
-            cat('\n')
-            cat('\t','Total assignments:\t',blue(nrow(object@assignments)),'\n')
-            cat('\t','Unique MFs:\t\t',blue(length(unique(object@assignments$MF))),'\n')
-            cat('\n')
+            if (nrow(object@assignments) > 0) {
+              cat('\t','Total assignments:\t',blue(nrow(object@assignments)),
+                  blue(str_c('(',round(nrow(object@assignments)/length(unique(c(object@correlations$Feature1,object@correlations$Feature2))) * 100),'%)')),
+                        '\n')
+              cat('\t','Unique MFs:\t\t',blue(length(unique(object@assignments$MF))),'\n')
+              cat('\n') 
+            }
           }
 )

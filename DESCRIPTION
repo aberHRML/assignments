@@ -1,10 +1,11 @@
 Package: MFassign
 Title: Molecular formula assignment for high resolution metabolomics
-Version: 0.4.6
+Version: 0.5.0
 Authors@R: person("Jasen", "Finch", email = "jsf9@aber.ac.uk", role = c("aut", "cre"))
 Description: Molecular formula assignment for high resolution metabolomics.
 Depends: R (>= 3.4.0),
-    mzAnnotation
+    mzAnnotation,
+    ggraph
 Imports: CHNOSZ,
     dplyr,
     magrittr,
@@ -15,7 +16,12 @@ Imports: CHNOSZ,
     crayon,
     purrr,
     cli,
-    lubridate
+    lubridate,
+    tidygraph,
+    igraph,
+    ggthemes,
+    ggplot2,
+    patchwork
 License: GPL (>= 3)
 Encoding: UTF-8
 LazyData: true
@@ -33,15 +39,23 @@ Collate:
         'MFscore.R'
         'addIsoScore.R'
         'addMFs.R'
-        'calcNetwork.R'
+        'calcComponents.R'
         'assignMethods.R'
         'correlations.R'
-        'calcNetworktrans.R'
         'LCassignment.R'
         'MFassign.R'
         'FIEassignment.R'
         'doAssignment-method.R'
         'continueAssignment.R'
         'show-method.R'
+        'access-methods.R'
+        'summariseAssignment-method.R'
+        'plotNetwork-method.R'
+        'networkComponents.R'
+        'addNames.R'
+        'eliminate.R'
+        'recalcComponents.R'
+        'plotAdductDist-method.R'
+        'plotFeatureSolutions.R'
 Suggests: testthat,
     covr

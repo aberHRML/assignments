@@ -26,6 +26,7 @@ assignMFs <- function(correlations,parameters,verbose = T) {
     cat(rep('_',console_width()),'\n',sep = '')
     print(parameters)
     cat(rep('_',console_width()),'\n\n',sep = '')
+    cat('Correlations:\t',nrow(correlations),'\n\n')
   }
   
   assignment <- new('Assignment',
