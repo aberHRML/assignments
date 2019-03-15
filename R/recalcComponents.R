@@ -3,8 +3,7 @@
 
 recalcComponents <- function(graph){
   g <- graph %>%
-    activate(nodes) %>%
-    mutate(Component = group_components()) 
+    activate(nodes)
   
   comp <- g %>%
     nodes() %>%
