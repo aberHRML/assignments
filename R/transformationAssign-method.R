@@ -46,7 +46,7 @@ setMethod('transformationAssign',signature = 'Assignment',
                 slaves <- parameters@nCores
               }
                 
-              clus <- makeCluster(slaves)
+              clus <- makeCluster(slaves,type = parameters@clusterType)
               
               MF <- sample_n(M,nM) %>%
                 split(1:nrow(.)) %>%
