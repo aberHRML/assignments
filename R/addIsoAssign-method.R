@@ -37,8 +37,8 @@ setMethod('addIsoAssign',signature = 'Assignment',
             
             nM <- nrow(M)
             
-            slaves <- {nrow(M) / 100} %>%
-              ceiling()
+            slaves <- nrow(M) / 100
+            slaves <-  ceiling(slaves)
             
             if (slaves > parameters@nCores) {
               slaves <- parameters@nCores
@@ -53,8 +53,8 @@ setMethod('addIsoAssign',signature = 'Assignment',
               left_join(M,by = c('Measured M' = 'M','Measured m/z' = 'mz'))
             stopCluster(clus)
             
-            slaves <- {nrow(MF) / 50000} %>%
-              ceiling()
+            slaves <- nrow(MF) / 50000
+            slaves <- ceiling(slaves)
             
             if (slaves > parameters@nCores) {
               slaves <- parameters@nCores
@@ -90,8 +90,8 @@ setMethod('addIsoAssign',signature = 'Assignment',
               distinct() %>%
               mutate(ID = 1:nrow(.))
             
-            slaves <- {nrow(MFs) / 20000}  %>%
-              ceiling()
+            slaves <- nrow(MFs) / 20000
+            slaves <- ceiling(slaves)
             
             if (slaves > parameters@nCores) {
               slaves <- parameters@nCores

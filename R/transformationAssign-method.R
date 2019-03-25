@@ -39,9 +39,8 @@ setMethod('transformationAssign',signature = 'Assignment',
               
               nM <- nrow(M)
               
-              slaves <- {nrow(M) / 20} %>%
-                round() %>%
-                ceiling()
+              slaves <- nrow(M) / 20
+              slaves <- ceiling(slaves)
               
               if (slaves < 1) {
                 slaves <- 1

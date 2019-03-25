@@ -10,8 +10,8 @@ recalcComponents <- function(graph,nCores,clusterType){
     .$Component %>%
     unique()
   
-  slaves <- {length(comp) / 1000} %>%
-    ceiling()
+  slaves <- length(comp) / 1000
+  slaves <- ceiling(slaves)
   
   if (slaves > nCores) {
     slaves <- nCores
