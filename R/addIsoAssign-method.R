@@ -2,7 +2,7 @@
 #' @importFrom stringr str_detect
 #' @importFrom mzAnnotation calcM calcMZ ppmError
 #' @importFrom igraph vertex.attributes V
-#' @importFrom parallel parLapply
+#' @importFrom parallel parLapply clusterExport
 
 setMethod('addIsoAssign',signature = 'Assignment',
           function(assignment){
@@ -37,25 +37,41 @@ setMethod('addIsoAssign',signature = 'Assignment',
             
             nM <- nrow(M)
             
-            slaves <- nrow(M) / 100
+            slaves <- {nrow(M) / 100} %>%
+              ceiling()
             
             if (slaves > parameters@nCores) {
               slaves <- parameters@nCores
             }
             
-            clus <- makeCluster(slaves)
-
+            clus <- makeCluster(slaves, type = parameters@clusterType)
+            
             MF <- sample_n(M,nM) %>%
               split(1:nrow(.)) %>%
-              parLapply(cl = clus,function(x,parameters){MFgen(x$M,x$mz,ppm = parameters@ppm)},parameters = parameters) %>% 
+              parLapply(cl = clus,function(x,parameters){MFassign:::MFgen(x$M,x$mz,ppm = parameters@ppm)},parameters = parameters) %>% 
               bind_rows() %>%
-              left_join(M,by = c('Measured M' = 'M','Measured m/z' = 'mz')) %>% 
-              rowwise() %>%
-              mutate(`Theoretical m/z` = calcMZ(`Theoretical M`,Adduct,Isotope), 
-                     `PPM Error` = ppmError(`Measured m/z`,`Theoretical m/z`)) %>%
-              select(Feature,RetentionTime,MF,Isotope,Adduct,`Theoretical M`,`Measured M`,`Theoretical m/z`,`Measured m/z`, `PPM Error`) %>%
-              rowwise() %>%
-              mutate(Score = MFscore(MF)) %>%
+              left_join(M,by = c('Measured M' = 'M','Measured m/z' = 'mz'))
+            stopCluster(clus)
+            
+            slaves <- {nrow(MF) / 50000} %>%
+              ceiling()
+            
+            if (slaves > parameters@nCores) {
+              slaves <- parameters@nCores
+            }
+            
+            clus <- makeCluster(slaves, type = parameters@clusterType)
+            clusterExport(clus,c('%>%','mutate','calcMZ','ppmError','select'))
+            
+            MF <- MF %>%
+              split(1:nrow(.)) %>%
+              parLapply(cl = clus,fun = function(x){
+                mutate(x,`Theoretical m/z` = calcMZ(`Theoretical M`,Adduct,Isotope), 
+                       `PPM Error` = ppmError(`Measured m/z`,`Theoretical m/z`)) %>%
+                  select(Feature,RetentionTime,MF,Isotope,Adduct,`Theoretical M`,`Measured M`,`Theoretical m/z`,`Measured m/z`, `PPM Error`) %>%
+                  mutate(Score = MFscore(MF))
+              }) %>%
+              bind_rows() %>%
               filter(Score <= parameters@maxMFscore)
             stopCluster(clus)
             
@@ -67,18 +83,34 @@ setMethod('addIsoAssign',signature = 'Assignment',
             
             MFs <- bind_rows(select(rel,Name = Name1,Feature = Feature1,mz = `m/z1`,RetentionTime = RetentionTime1,Isotope = Isotope1, Adduct = Adduct1, MF = MF1),
                              select(rel,Name = Name2,Feature = Feature2,mz = `m/z2`,RetentionTime = RetentionTime2,Isotope = Isotope2, Adduct = Adduct2,MF = MF2)) %>%
-              distinct() %>%
               mutate(RetentionTime = as.numeric(RetentionTime)) %>%
               arrange(mz) %>%
               select(-mz) %>%
               left_join(MF, by = c("Feature", "RetentionTime", "Isotope", "Adduct",'MF')) %>%
-              mutate(ID = 1:nrow(.)) %>%
-              rowwise() %>%
-              mutate(AddIsoScore = addIsoScore(Adduct,Isotope,parameters@adducts,parameters@isotopes),
-                     `PPM Error` = abs(`PPM Error`)) %>%
-              tbl_df()
+              distinct() %>%
+              mutate(ID = 1:nrow(.))
             
-            graph <- calcComponents(MFs,rel)
+            slaves <- {nrow(MFs) / 20000}  %>%
+              ceiling()
+            
+            if (slaves > parameters@nCores) {
+              slaves <- parameters@nCores
+            }
+            
+            clus <- makeCluster(slaves, type = parameters@clusterType)
+            clusterExport(clus,c('mutate'))
+            
+            MFs <- MFs %>%
+              split(1:nrow(.)) %>%
+              parLapply(cl = clus,fun = function(x,parameters){
+                mutate(x,AddIsoScore = addIsoScore(Adduct,Isotope,parameters@adducts,parameters@isotopes),
+                       `PPM Error` = abs(`PPM Error`)) 
+              },parameters = parameters) %>%
+              bind_rows() %>%
+              tbl_df()
+            stopCluster(clus)
+            
+            graph <- calcComponents(MFs,rel,parameters@nCores,parameters@clusterType)
             
             filters <- tibble(Measure = c('Plausibility','Size','AIS','Score','PPM Error'),
                               Direction = c(rep('max',3),rep('min',2)))
@@ -94,12 +126,12 @@ setMethod('addIsoAssign',signature = 'Assignment',
                     as_tibble() %>%
                     eliminate(f$Measure,f$Direction) %>%
                     .$name}) 
-                if (V(filteredGraph) %>% length() > 0) {
+              if (V(filteredGraph) %>% length() > 0) {
                 filteredGraph <- filteredGraph %>%
-                  recalcComponents()
-                } else {
-                  break()
-                }
+                  recalcComponents(parameters@nCores,parameters@clusterType)
+              } else {
+                break()
+              }
             }
             
             assignment@addIsoAssign <- list(

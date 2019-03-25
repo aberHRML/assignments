@@ -40,7 +40,12 @@ setMethod('transformationAssign',signature = 'Assignment',
               nM <- nrow(M)
               
               slaves <- {nrow(M) / 20} %>%
-                round()
+                round() %>%
+                ceiling()
+              
+              if (slaves < 1) {
+                slaves <- 1
+              }
               
               if (slaves > parameters@nCores) {
                 slaves <- parameters@nCores
@@ -84,7 +89,7 @@ setMethod('transformationAssign',signature = 'Assignment',
                          `PPM Error` = abs(`PPM Error`)) %>%
                   tbl_df()
                 
-                graph <- calcComponents(MFs,rel)
+                graph <- calcComponents(MFs,rel,parameters@nCores,parameters@clusterType)
                 
                 filters <- tibble(Measure = c('Plausibility','Size','AIS','Score','PPM Error'),
                                   Direction = c(rep('max',3),rep('min',2)))
@@ -102,7 +107,7 @@ setMethod('transformationAssign',signature = 'Assignment',
                         .$name}) 
                   if (V(filteredGraph) %>% length() > 0) {
                     filteredGraph <- filteredGraph %>%
-                      recalcComponents()
+                      recalcComponents(parameters@nCores,parameters@clusterType)
                   } else {
                     break()
                   }
