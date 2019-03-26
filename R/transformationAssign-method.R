@@ -46,7 +46,7 @@ setMethod('transformationAssign',signature = 'Assignment',
                 slaves <- parameters@nCores
               }
                 
-              clus <- makeCluster(slaves)
+              clus <- makeCluster(slaves,type = parameters@clusterType)
               
               MF <- sample_n(M,nM) %>%
                 split(1:nrow(.)) %>%
@@ -73,11 +73,11 @@ setMethod('transformationAssign',signature = 'Assignment',
                 
                 MFs <- bind_rows(select(rel,Name = Name1,Feature = Feature1,mz = `m/z1`,RetentionTime = RetentionTime1,Isotope = Isotope1, Adduct = Adduct1, MF = MF1),
                                  select(rel,Name = Name2,Feature = Feature2,mz = `m/z2`,RetentionTime = RetentionTime2,Isotope = Isotope2, Adduct = Adduct2,MF = MF2)) %>%
-                  distinct() %>%
                   mutate(RetentionTime = as.numeric(RetentionTime)) %>%
                   arrange(mz) %>%
                   select(-mz) %>%
                   left_join(MF, by = c("Feature", "RetentionTime", "Isotope", "Adduct",'MF')) %>%
+                  distinct() %>%
                   mutate(ID = 1:nrow(.)) %>%
                   rowwise() %>%
                   mutate(AddIsoScore = addIsoScore(Adduct,Isotope,parameters@adducts,parameters@isotopes),
