@@ -26,7 +26,10 @@ addMFs <- function(rel,MF,identMF = T){
   relations <- relations %>%
     filter(Isotope2 == Isotope & Adduct2 == Adduct) %>%
     select(-(Isotope:`Measured m/z`))
-  relations[relations == ''] <- NA
+  
+  if (nrow(relations) > 0) {
+    relations[relations == ''] <- NA  
+  }
   
   return(relations)
 }
