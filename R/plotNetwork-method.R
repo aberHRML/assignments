@@ -86,6 +86,6 @@ setMethod('plotNetwork',signature = 'Assignment',
               theme(legend.title = element_blank()) +
               coord_fixed() +
               facet_edges(~Explained) +
-              labs(title = str_c('Assigned correlation network'),
+              labs(title = str_c('Assignment correlation network'),
                    caption = str_c(rt,nn,an,ne,ee,sep = '\n'))
           })
