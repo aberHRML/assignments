@@ -51,18 +51,20 @@ setMethod('transformationAssign',signature = 'Assignment',
               MF <- sample_n(M,nM) %>%
                 split(1:nrow(.)) %>%
                 parLapply(cl = clus,function(x,parameters){MFgen(x$M,x$mz,ppm = parameters@ppm)},parameters = parameters) %>% 
-                bind_rows() %>%
-                left_join(M,by = c('Measured M' = 'M','Measured m/z' = 'mz')) %>% 
-                rowwise() %>%
-                mutate(`Theoretical m/z` = calcMZ(`Theoretical M`,Adduct,Isotope), 
-                       `PPM Error` = ppmError(`Measured m/z`,`Theoretical m/z`)) %>%
-                select(Feature,RetentionTime,MF,Isotope,Adduct,`Theoretical M`,`Measured M`,`Theoretical m/z`,`Measured m/z`, `PPM Error`) %>%
-                rowwise() %>%
-                mutate(Score = MFscore(MF)) %>%
-                filter(Score <= parameters@maxMFscore)
+                bind_rows()
               stopCluster(clus)
               
               if (nrow(MF) > 0) {
+                MF <- MF  %>%
+                  left_join(M,by = c('Measured M' = 'M','Measured m/z' = 'mz')) %>% 
+                  rowwise() %>%
+                  mutate(`Theoretical m/z` = calcMZ(`Theoretical M`,Adduct,Isotope), 
+                         `PPM Error` = ppmError(`Measured m/z`,`Theoretical m/z`)) %>%
+                  select(Feature,RetentionTime,MF,Isotope,Adduct,`Theoretical M`,`Measured M`,`Theoretical m/z`,`Measured m/z`, `PPM Error`) %>%
+                  rowwise() %>%
+                  mutate(Score = MFscore(MF)) %>%
+                  filter(Score <= parameters@maxMFscore)   
+                
                 MF <- MF %>%
                   bind_rows(assigned %>%
                               select(names(MF)))
