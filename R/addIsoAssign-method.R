@@ -37,8 +37,8 @@ setMethod('addIsoAssign',signature = 'Assignment',
             
             nM <- nrow(M)
             
-            slaves <- nrow(M) / 100 * mean(M$M)/100 %>%
-              ceiling()
+            slaves <- nrow(M) / 100 * mean(M$M)/100
+            slaves <-  ceiling(slaves)
             
             if (slaves > parameters@nCores) {
               slaves <- parameters@nCores
