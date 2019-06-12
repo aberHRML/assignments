@@ -63,6 +63,10 @@ assignmentParameters <- function(technique = NULL){
                clusterType = 'FORK'
       )
     }
+    if (.Platform$OS.type == 'windows') {
+      p@clusterType <- 'PSOCK'
+    }
+    p@nCores <- {detectCores() * 0.75} %>% round()
   }
   return(p)
 } 
