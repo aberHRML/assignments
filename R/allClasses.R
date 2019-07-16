@@ -25,6 +25,9 @@ setClass('AssignmentParameters',
            adducts = 'list',
            isotopes = 'character',
            transformations = 'character',
+           adductRules = 'tbl_df',
+           isotopeRules = 'tbl_df',
+           transformationRules = 'tbl_df',
            nCores = 'numeric',
            clusterType = 'character'
          ))

@@ -26,6 +26,9 @@ assignmentParameters <- function(technique = NULL){
                          p = c('[M+H]1+','[M+K]1+','[M+Na]1+','[M+K41]1+',
                                '[M+NH4]1+','[M+2H]2+','[2M+H]1+')),
           transformations = transformations()$`MF Change`,
+          adductRules = adducts(),
+          isotopeRules = isotopes(),
+          transformationRules = transformations(),
           nCores = detectCores(),
           clusterType = 'FORK'
       )
@@ -44,6 +47,9 @@ assignmentParameters <- function(technique = NULL){
                          p = c('[M+H]1+','[M+K]1+','[M+Na]1+','[M+K41]1+',
                                '[M+NH4]1+','[M+2H]2+','[2M+H]1+')),
           transformations = transformations()$`MF Change`,
+          adductRules = adducts(),
+          isotopeRules = isotopes(),
+          transformationRules = transformations(),
           nCores = detectCores(),
           clusterType = 'FORK'
       )
@@ -60,6 +66,9 @@ assignmentParameters <- function(technique = NULL){
                adducts = list(n = c('[M-H]1-','[M+Hac-H]1-','[M-2H]2-','[2M-H]1-'),
                               p = c('[M+H]1+','[M+NH4]1+','[M+H-H2O]1+','[M+ACN+H]1+','[M+Na]1+','[M+2H]2+','[2M+H]1+')),
                transformations = transformations()$`MF Change`,
+               adductRules = adducts(),
+               isotopeRules = isotopes(),
+               transformationRules = transformations(),
                nCores = detectCores(),
                clusterType = 'FORK'
       )
