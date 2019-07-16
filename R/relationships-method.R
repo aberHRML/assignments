@@ -5,6 +5,7 @@
 #' @importFrom mzAnnotation relationshipCalculator
 #' @importFrom magrittr %>%
 #' @importFrom tibble tibble
+#' @importFrom mzAnnotation adducts isotopes
 
 setMethod('relationships',signature = 'Assignment',
           function(assignment){
@@ -26,9 +27,9 @@ setMethod('relationships',signature = 'Assignment',
                                                   adducts = add,
                                                   isotopes = iso,
                                                   transformations = trans,
-                                                  adductTable = Adducts,
-                                                  isotopeTable = Isotopes,
-                                                  transformationTable = Transformations)
+                                                  adductTable = adducts(),
+                                                  isotopeTable = isotopes(),
+                                                  transformationTable = transformations())
             },limit = parameters@limit, add = parameters@adducts, iso = parameters@isotopes,trans = parameters@transformations) %>%
               bind_rows() %>%
               as_tibble() %>%
