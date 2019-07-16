@@ -3,6 +3,7 @@
 #' @param technique technique to use for assignment. \code{NULL} prints available techniques
 #' @importFrom parallel detectCores
 #' @importFrom methods new
+#' @importFrom mzAnnotation transformations
 #' @export
 
 assignmentParameters <- function(technique = NULL){
@@ -24,7 +25,7 @@ assignmentParameters <- function(technique = NULL){
                                "[M-2H]2-", "[M+Cl37]1-","[2M-H]1-"),
                          p = c('[M+H]1+','[M+K]1+','[M+Na]1+','[M+K41]1+',
                                '[M+NH4]1+','[M+2H]2+','[2M+H]1+')),
-          transformations = mzAnnotation::Transformations$`MF Change`,
+          transformations = transformations()$`MF Change`,
           nCores = detectCores(),
           clusterType = 'FORK'
       )
@@ -42,7 +43,7 @@ assignmentParameters <- function(technique = NULL){
                                "[M-2H]2-", "[M+Cl37]1-","[2M-H]1-"),
                          p = c('[M+H]1+','[M+K]1+','[M+Na]1+','[M+K41]1+',
                                '[M+NH4]1+','[M+2H]2+','[2M+H]1+')),
-          transformations = mzAnnotation::Transformations$`MF Change`,
+          transformations = transformations()$`MF Change`,
           nCores = detectCores(),
           clusterType = 'FORK'
       )
@@ -58,7 +59,7 @@ assignmentParameters <- function(technique = NULL){
                isotopes = c('13C','18O','13C2'),
                adducts = list(n = c('[M-H]1-','[M+Hac-H]1-','[M-2H]2-','[2M-H]1-'),
                               p = c('[M+H]1+','[M+NH4]1+','[M+H-H2O]1+','[M+ACN+H]1+','[M+Na]1+','[M+2H]2+','[2M+H]1+')),
-               transformations = mzAnnotation::Transformations$`MF Change`,
+               transformations = transformations()$`MF Change`,
                nCores = detectCores(),
                clusterType = 'FORK'
       )
