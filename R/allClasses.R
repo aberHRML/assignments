@@ -10,6 +10,9 @@
 #' @slot adducts list of character vectors containing the adducts to use. List element names should denote ionisation mode.
 #' @slot isotopes character vector of isotopes to use
 #' @slot transformations character vector of transformations to use
+#' @slot adductRules tibble containing adduct formation rules as returned by mzAnnotation::adducts()
+#' @slot isotopeRules tibble containing isotope rules as returned by mzAnnotation::isotopes()
+#' @slot transformationRules tibble containing transformation rules as returned by mzAnnotation::transformations()
 #' @slot nCores number of cores to use for parallisation
 #' @slot clusterType cluster type to use for parallisation
 #' @export

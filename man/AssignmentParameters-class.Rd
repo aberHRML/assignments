@@ -29,6 +29,12 @@ An S4 class to store assignment parameters.
 
 \item{\code{transformations}}{character vector of transformations to use}
 
+\item{\code{adductRules}}{tibble containing adduct formation rules as returned by mzAnnotation::adducts()}
+
+\item{\code{isotopeRules}}{tibble containing isotope rules as returned by mzAnnotation::isotopes()}
+
+\item{\code{transformationRules}}{tibble containing transformation rules as returned by mzAnnotation::transformations()}
+
 \item{\code{nCores}}{number of cores to use for parallisation}
 
 \item{\code{clusterType}}{cluster type to use for parallisation}
