@@ -1,3 +1,7 @@
+setGeneric('calcCorrelations', function(assignment){
+  standardGeneric('calcCorrelations')
+})
+
 setGeneric('prepCorrelations', function(assignment){
   standardGeneric('prepCorrelations')
 })
