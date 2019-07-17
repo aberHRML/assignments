@@ -58,5 +58,6 @@ Collate:
         'plotAdductDist-method.R'
         'plotFeatureSolutions.R'
         'calcCorrelations-method.R'
+        'filterCorrelations-method.R'
 Suggests: testthat,
     covr
