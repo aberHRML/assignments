@@ -17,7 +17,7 @@ setMethod('relationships',signature = 'Assignment',
             
             parameters <- assignment@parameters
             
-            cors <- assignment@correlations
+            cors <- assignment@preparedCorrelations
             
             clus <- makeCluster(parameters@nCores,type = parameters@clusterType)
             rel <- parApply(clus,select(cors,`m/z1`,`m/z2`,Mode1,Mode2),1,function(y,limit,add,iso,trans,addRules,isoRules,transRules){
