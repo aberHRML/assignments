@@ -1,6 +1,6 @@
 #' assignMFs
 #' @description assign molecular formulas to a set of given m/z.
-#' @param data tibble containing the peak intensities of m/z for which to assign molecular formulas
+#' @param dat tibble containing the peak intensities of m/z for which to assign molecular formulas
 #' @param parameters an S4 object of class AssignmentParamters containing the parameters for molecular formula assignment
 #' @param verbose should output be printed to the console
 #' @importFrom tibble tibble
@@ -11,13 +11,13 @@
 #' p <- assignmentParameters('FIE')
 #' p@nCores <- 2
 #'
-#' cors <- correlations[correlations$r > 0.998 | correlations$r < -0.998,]
+#' dat <- dplyr::select(peakData,n191.01962,n192.02306,n193.02388,n226.99693,n228.97636,n228.99274,n231.00069,n384.0495,n385.04874)
 #'
-#' assignment <- assignMFs(cors,p)
+#' assignment <- assignMFs(dat,p)
 #'
 #' @export
 
-assignMFs <- function(data,parameters,verbose = T) {
+assignMFs <- function(dat,parameters,verbose = T) {
   options(digits = 10)
   
   if (verbose == T) {
@@ -26,14 +26,16 @@ assignMFs <- function(data,parameters,verbose = T) {
     cat(rep('_',console_width()),'\n',sep = '')
     print(parameters)
     cat(rep('_',console_width()),'\n\n',sep = '')
-    cat('Correlations:\t',nrow(correlations),'\n\n')
+    cat('No. m/z:\t',ncol(dat),'\n\n')
   }
   
   assignment <- new('Assignment',
                     log = list(date = date(),verbose = verbose),
                     flags = character(),
                     parameters = parameters,
-                    correlations = correlations,
+                    data = dat,
+                    correlations = tibble(),
+                    preparedCorrelatiosn = tibble(),
                     relationships = tibble(),
                     addIsoAssign = list(),
                     transAssign = list(),
