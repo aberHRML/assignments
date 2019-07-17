@@ -16,7 +16,11 @@ An S4 class to store assignment results
 
 \item{\code{parameters}}{An S4 object of class AssignmentParameters containing the assignment parameters}
 
+\item{\code{data}}{A tibble containing the peak intensity matrix}
+
 \item{\code{correlations}}{A tibble containing the correlations}
+
+\item{\code{preparedCorrelations}}{A tibble containing the prepared correlations ready for analysis}
 
 \item{\code{relationships}}{A tibble containing the predicted relationships}
 
