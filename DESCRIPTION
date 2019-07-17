@@ -21,7 +21,8 @@ Imports: CHNOSZ,
     ggthemes,
     ggplot2,
     patchwork,
-    mzAnnotation
+    mzAnnotation,
+    metabolyseR
 License: GPL (>= 3)
 Encoding: UTF-8
 LazyData: true
@@ -41,7 +42,7 @@ Collate:
         'addMFs.R'
         'calcComponents.R'
         'assignMethods.R'
-        'correlations.R'
+        'peakData.R'
         'LCassignment.R'
         'MFassign.R'
         'FIEassignment.R'
@@ -57,5 +58,7 @@ Collate:
         'recalcComponents.R'
         'plotAdductDist-method.R'
         'plotFeatureSolutions.R'
+        'calcCorrelations-method.R'
+        'filterCorrelations-method.R'
 Suggests: testthat,
     covr

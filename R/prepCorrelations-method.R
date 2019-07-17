@@ -7,7 +7,7 @@ setMethod('prepCorrelations',signature = 'Assignment',
              cat(blue('Preparing correlations '),cli::symbol$continue,'\r',sep = '')
             }
             
-            correlations <- assignment@correlations
+            correlations <- assignment@preparedCorrelations
             
             correlations <- correlations %>%
               mutate(Mode1 = str_split_fixed(Feature1,'@',2) %>% 
@@ -46,7 +46,7 @@ setMethod('prepCorrelations',signature = 'Assignment',
               ) %>%
               select(Feature1,Feature2,Mode1:RetentionTime2,log2IntensityRatio,r,ID)
             
-            assignment@correlations <- correlations
+            assignment@preparedCorrelations <- correlations
             
             if (assignment@log$verbose == T) {
               endTime <- proc.time()
