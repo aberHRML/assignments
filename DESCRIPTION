@@ -21,7 +21,8 @@ Imports: CHNOSZ,
     ggthemes,
     ggplot2,
     patchwork,
-    mzAnnotation
+    mzAnnotation,
+    metabolyseR
 License: GPL (>= 3)
 Encoding: UTF-8
 LazyData: true

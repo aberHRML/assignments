@@ -20,8 +20,6 @@ assign molecular formulas to a set of given m/z.
 p <- assignmentParameters('FIE')
 p@nCores <- 2
 
-dat <- dplyr::select(peakData,n191.01962,n192.02306,n193.02388,n226.99693,n228.97636,n228.99274,n231.00069,n384.0495,n385.04874)
-
-assignment <- assignMFs(dat,p)
+assignment <- assignMFs(peakData,p)
 
 }
