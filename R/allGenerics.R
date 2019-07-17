@@ -50,3 +50,8 @@ setGeneric('plotAdductDist',function(assignment){
 setGeneric('plotFeatureSolutions',function(assignment,feature,maxComponents = 10){
   standardGeneric('plotFeatureSolutions')
 })
+
+#' @rdname plotSpectrum
+setGeneric('plotSpectrum',function(assignment,MF){
+  standardGeneric('plotSpectrum')
+})

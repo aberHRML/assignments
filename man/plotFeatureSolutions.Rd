@@ -6,14 +6,17 @@
 \alias{plotFeatureSolutions,Assignment-method}
 \title{plotFeatureSolutions}
 \usage{
-plotFeatureSolutions(assignment, feature)
+plotFeatureSolutions(assignment, feature, maxComponents = 10)
 
-\S4method{plotFeatureSolutions}{Assignment}(assignment, feature)
+\S4method{plotFeatureSolutions}{Assignment}(assignment, feature,
+  maxComponents = 10)
 }
 \arguments{
 \item{assignment}{S4 object of class Assignent}
 
 \item{feature}{name of feature to plot}
+
+\item{maxComponents}{maximum number of components to plot}
 }
 \description{
 Plot possible MF solutions for a given feature.

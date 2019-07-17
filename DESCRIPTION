@@ -22,7 +22,8 @@ Imports: CHNOSZ,
     ggplot2,
     patchwork,
     mzAnnotation,
-    metabolyseR
+    metabolyseR,
+    ggrepel
 License: GPL (>= 3)
 Encoding: UTF-8
 LazyData: true
@@ -60,5 +61,6 @@ Collate:
         'plotFeatureSolutions.R'
         'calcCorrelations-method.R'
         'filterCorrelations-method.R'
+        'plotSpectrum-method.R'
 Suggests: testthat,
     covr
