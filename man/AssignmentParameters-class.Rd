@@ -12,6 +12,10 @@ An S4 class to store assignment parameters.
 \describe{
 \item{\code{technique}}{assignment technique to use}
 
+\item{\code{correlations}}{list of correlation parameters to be passed to metabolyseR correlation analysis}
+
+\item{\code{filter}}{list of r and n thresholds for filtering correlations}
+
 \item{\code{maxM}}{maximum M for which to assign molecular formulas}
 
 \item{\code{maxMFscore}}{threshold for molecular formula score}
@@ -28,6 +32,12 @@ An S4 class to store assignment parameters.
 \item{\code{isotopes}}{character vector of isotopes to use}
 
 \item{\code{transformations}}{character vector of transformations to use}
+
+\item{\code{adductRules}}{tibble containing adduct formation rules as returned by mzAnnotation::adducts()}
+
+\item{\code{isotopeRules}}{tibble containing isotope rules as returned by mzAnnotation::isotopes()}
+
+\item{\code{transformationRules}}{tibble containing transformation rules as returned by mzAnnotation::transformations()}
 
 \item{\code{nCores}}{number of cores to use for parallisation}
 

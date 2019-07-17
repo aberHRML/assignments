@@ -4,10 +4,10 @@
 \alias{assignMFs}
 \title{assignMFs}
 \usage{
-assignMFs(correlations, parameters, verbose = T)
+assignMFs(dat, parameters, verbose = T)
 }
 \arguments{
-\item{correlations}{table containing correlations of m/z to assign molecular formulas}
+\item{dat}{tibble containing the peak intensities of m/z for which to assign molecular formulas}
 
 \item{parameters}{an S4 object of class AssignmentParamters containing the parameters for molecular formula assignment}
 
@@ -20,8 +20,6 @@ assign molecular formulas to a set of given m/z.
 p <- assignmentParameters('FIE')
 p@nCores <- 2
 
-cors <- correlations[correlations$r > 0.998 | correlations$r < -0.998,]
-
-assignment <- assignMFs(cors,p)
+assignment <- assignMFs(peakData,p)
 
 }

@@ -13,10 +13,13 @@ r:
 apt_packages:
  - libopenbabel-dev
  - libudunits2-dev
+ - libnetcdf-dev
+ - netcdf-bin
  
 r_github_packages:
     - jasenfinch/mzAnnotation
     - thomasp85/patchwork
+    - jasenfinch/metabolyseR
  
 notifications:
     email:

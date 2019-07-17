@@ -1,6 +1,6 @@
 Package: MFassign
 Title: Molecular formula assignment for high resolution metabolomics
-Version: 0.5.5
+Version: 0.6.0
 Authors@R: person("Jasen", "Finch", email = "jsf9@aber.ac.uk", role = c("aut", "cre"))
 Description: Molecular formula assignment for high resolution metabolomics.
 Depends: R (>= 3.5.0),
@@ -21,7 +21,9 @@ Imports: CHNOSZ,
     ggthemes,
     ggplot2,
     patchwork,
-    mzAnnotation
+    mzAnnotation,
+    metabolyseR,
+    ggrepel
 License: GPL (>= 3)
 Encoding: UTF-8
 LazyData: true
@@ -41,7 +43,7 @@ Collate:
         'addMFs.R'
         'calcComponents.R'
         'assignMethods.R'
-        'correlations.R'
+        'peakData.R'
         'LCassignment.R'
         'MFassign.R'
         'FIEassignment.R'
@@ -57,5 +59,8 @@ Collate:
         'recalcComponents.R'
         'plotAdductDist-method.R'
         'plotFeatureSolutions.R'
+        'calcCorrelations-method.R'
+        'filterCorrelations-method.R'
+        'plotSpectrum-method.R'
 Suggests: testthat,
     covr

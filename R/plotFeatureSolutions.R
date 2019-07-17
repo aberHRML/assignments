@@ -3,26 +3,46 @@
 #' @description Plot possible MF solutions for a given feature.
 #' @param assignment S4 object of class Assignent
 #' @param feature name of feature to plot
+#' @param maxComponents maximum number of components to plot
 #' @importFrom patchwork plot_annotation
 #' @importFrom ggraph create_layout scale_edge_color_gradient geom_node_label
 #' @importFrom ggplot2 scale_fill_manual margin xlim ylim guides
 #' @export
 
 setMethod('plotFeatureSolutions',signature = 'Assignment',
-          function(assignment,feature){
+          function(assignment,feature,maxComponents = 10){
             
             n <- nodes(assignment@addIsoAssign$graph)
             
             comp <- n %>%
               filter(Feature == feature) %>%
-              .$Component %>%
-              unique()
+              select(Component,Plausibility) %>%
+              distinct() %>%
+              arrange(Component)
             
             graph <- assignment@addIsoAssign$graph %>%
-              filter(Component %in% comp) %>%
+              filter(Component %in% comp$Component) %>%
               mutate(name = str_replace_all(name,'  ','\n')) %>%
               mutate(name = str_replace_all(name,' ','\n')) %>%
-              morph(to_components)
+              morph(to_components) 
+            
+            graphComponents <- graph %>% 
+              map_dbl(~{nodes(.) %>% 
+                  .$Component %>% 
+                  .[1]
+              })
+            
+            comp <- comp %>%
+              arrange(desc(Plausibility)) %>%
+              .$Component
+            
+            graph <- graph %>%
+              set_names(graphComponents) %>%
+              .[comp %>% as.character()]
+            
+            if (length(comp) > maxComponents) {
+              graph <- graph[1:maxComponents]
+            }
             
             selectedComp <- assignment@addIsoAssign$filteredGraph %>%
               nodes() %>%
@@ -68,6 +88,5 @@ setMethod('plotFeatureSolutions',signature = 'Assignment',
                        max(g$y) + (max(g$y) - min(g$y)) * 0.05) +
                   guides(fill = FALSE)
               }) %>%
-              .[order(comp)] %>%
               wrap_plots() + plot_annotation(title = str_c('Solutions for feature ',feature))
           })

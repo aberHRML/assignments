@@ -17,26 +17,34 @@ setMethod('relationships',signature = 'Assignment',
             
             parameters <- assignment@parameters
             
-            cors <- assignment@correlations
+            cors <- assignment@preparedCorrelations
             
             clus <- makeCluster(parameters@nCores,type = parameters@clusterType)
-            rel <- parApply(clus,select(cors,`m/z1`,`m/z2`,Mode1,Mode2),1,function(y,limit,add,iso,trans){
+            rel <- parApply(clus,select(cors,`m/z1`,`m/z2`,Mode1,Mode2),1,function(y,limit,add,iso,trans,addRules,isoRules,transRules){
               mzAnnotation::relationshipCalculator(as.numeric(y[1:2]),
-                                                  limit = limit,
-                                                  modes = y[3:4],
-                                                  adducts = add,
-                                                  isotopes = iso,
-                                                  transformations = trans,
-                                                  adductTable = adducts(),
-                                                  isotopeTable = isotopes(),
-                                                  transformationTable = transformations())
-            },limit = parameters@limit, add = parameters@adducts, iso = parameters@isotopes,trans = parameters@transformations) %>%
+                                                   limit = limit,
+                                                   modes = y[3:4],
+                                                   adducts = add,
+                                                   isotopes = iso,
+                                                   transformations = trans,
+                                                   adductTable = addRules,
+                                                   isotopeTable = isoRules,
+                                                   transformationTable = transRules)
+            },
+            limit = parameters@limit,
+            add = parameters@adducts, 
+            iso = parameters@isotopes,
+            trans = parameters@transformations,
+            addRules = parameters@adductRules,
+            isoRules = parameters@isotopeRules,
+            transRules = parameters@transformationRules
+            ) %>%
               bind_rows() %>%
               as_tibble() %>%
               inner_join(cors,by = c('m/z1' = 'm/z1','m/z2' = 'm/z2')) %>%
               select(Feature1:Mode2,`m/z1`,`m/z2`,RetentionTime1,RetentionTime2,Adduct1:Transformation2,log2IntensityRatio,r,Error,ID) %>%
               mutate(RetentionTime1 = as.numeric(RetentionTime1),RetentionTime2 = as.numeric(RetentionTime2))
-              
+            
             stopCluster(clus)
             
             assignment@relationships <- rel
