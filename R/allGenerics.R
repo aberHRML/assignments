@@ -47,6 +47,6 @@ setGeneric('plotAdductDist',function(assignment){
 })
 
 #' @rdname plotFeatureSolutions
-setGeneric('plotFeatureSolutions',function(assignment,feature){
+setGeneric('plotFeatureSolutions',function(assignment,feature,maxComponents = 10){
   standardGeneric('plotFeatureSolutions')
 })
