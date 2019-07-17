@@ -1,6 +1,6 @@
 #' assignMFs
 #' @description assign molecular formulas to a set of given m/z.
-#' @param correlations table containing correlations of m/z to assign molecular formulas
+#' @param data tibble containing the peak intensities of m/z for which to assign molecular formulas
 #' @param parameters an S4 object of class AssignmentParamters containing the parameters for molecular formula assignment
 #' @param verbose should output be printed to the console
 #' @importFrom tibble tibble
@@ -17,7 +17,7 @@
 #'
 #' @export
 
-assignMFs <- function(correlations,parameters,verbose = T) {
+assignMFs <- function(data,parameters,verbose = T) {
   options(digits = 10)
   
   if (verbose == T) {
