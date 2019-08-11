@@ -34,7 +34,7 @@ setMethod('plotNetwork',signature = 'Assignment',
               mutate(Assigned = 'Assigned')
             
             network <- assignment %>%
-              .@correlations %>%
+              .@preparedCorrelations %>%
               filter(r > rThreshold) %>%
               as_tbl_graph(directed = F) %>%
               activate(nodes) %>%
