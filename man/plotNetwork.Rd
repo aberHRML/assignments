@@ -6,9 +6,9 @@
 \alias{plotNetwork,Assignment-method}
 \title{plotNetwork-Assignment}
 \usage{
-plotNetwork(assignment, layout = "kk", rThreshold = 0.7)
+plotNetwork(assignment, layout = "stress", rThreshold = 0.7)
 
-\S4method{plotNetwork}{Assignment}(assignment, layout = "nicely",
+\S4method{plotNetwork}{Assignment}(assignment, layout = "stress",
   rThreshold = 0.7)
 }
 \arguments{

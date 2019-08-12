@@ -7,12 +7,13 @@
 #' @importFrom tidygraph as_tbl_graph bind_graphs
 #' @importFrom igraph set_vertex_attr set_edge_attr
 #' @importFrom ggraph ggraph geom_edge_link geom_node_point theme_graph geom_node_text facet_edges
-#' @importFrom ggthemes scale_colour_ptol
+#' @importFrom ggthemes scale_fill_ptol
 #' @importFrom ggplot2 labs aes element_blank coord_fixed
+#' @importFrom graphlayouts layout_igraph_stress
 #' @export
 
 setMethod('plotNetwork',signature = 'Assignment',
-          function(assignment, layout = 'nicely', rThreshold = 0.7){
+          function(assignment, layout = 'stress', rThreshold = 0.7){
             
             AI <- assignment@addIsoAssign$filteredGraph
             TA <- assignment@transAssign %>%
@@ -20,7 +21,7 @@ setMethod('plotNetwork',signature = 'Assignment',
             
             graph <- AI %>%
               bind_graphs({a <- TA[[1]]
-              for (i in 2:length(TA)){
+              for (i in 2:length(TA)) {
                 a <- bind_graphs(a,TA[[i]])
               }
               a
@@ -80,8 +81,8 @@ setMethod('plotNetwork',signature = 'Assignment',
             
             ggraph(network,layout = layout) +
               geom_edge_link(alpha = 0.2) +
-              geom_node_point(aes(colour = Assigned)) +
-              scale_colour_ptol() +
+              geom_node_point(aes(fill = Assigned),shape = 21) +
+              scale_fill_ptol() +
               theme_graph() +
               theme(legend.title = element_blank()) +
               coord_fixed() +

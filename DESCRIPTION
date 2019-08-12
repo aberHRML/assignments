@@ -23,7 +23,8 @@ Imports: CHNOSZ,
     patchwork,
     mzAnnotation,
     metabolyseR,
-    ggrepel
+    ggrepel,
+    graphlayouts
 License: GPL (>= 3)
 Encoding: UTF-8
 LazyData: true
