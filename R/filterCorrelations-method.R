@@ -27,7 +27,11 @@ setMethod('filterCorrelations',signature = 'Assignment',function(assignment){
   }
   
   cors <- assignment@correlations %>%
-    filterCors()
+    filterCors(rthresh = assignment@parameters@filter$rthresh,
+               n = assignment@parameters@filter$n,
+               rIncrement = assignment@parameters@filter$rIncrement,
+               nIncrement = assignment@parameters@filter$nIncrement
+               )
   
   assignment@preparedCorrelations <- cors
   
