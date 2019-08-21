@@ -1,5 +1,3 @@
-# R for travis: see documentation at https://docs.travis-ci.com/user/languages/r
-
 language: R
 sudo: true
 cache: packages
@@ -7,26 +5,28 @@ bioc_required: true
 warnings_are_errors: true
 
 r:
-  - release
-  - devel
-  
+- release
+- devel
+
 apt_packages:
- - libopenbabel-dev
- - libudunits2-dev
- - libnetcdf-dev
- - netcdf-bin
- - mesa-common-dev
- - libglu1-mesa-dev
- 
+- libopenbabel-dev
+- libudunits2-dev
+- libnetcdf-dev
+- netcdf-bin
+- mesa-common-dev
+- libglu1-mesa-dev
+
 r_github_packages:
-    - jasenfinch/mzAnnotation
-    - thomasp85/patchwork
-    - jasenfinch/metabolyseR
- 
-notifications:
-    email:
-    on_success: change
-    on_failure: change
-    
+- jasenfinch/mzAnnotation
+- thomasp85/patchwork
+- jasenfinch/metabolyseR
+
 after_success:
-  - Rscript -e 'covr::codecov()'
+- Rscript -e 'covr::codecov()'
+
+notifications:
+  email: false
+  slack:
+    secure: RJ7E9RyyGjXNjPuajGr9a5lsofS9MhcB6fMn5LbScg4DQoQknKNOvg4y/6Lt2VgnfGhBPMMVuNB4UxZfqwxeWCKCl8Fy7x7UWSbJtLr6tMIAddlbyKK2tomqOft0z0m1wZADLHbRwCBrEW7TN/ZO5oSR66S+zcUArLy2QrhnnyE5M70BmylZALB3gu8KmfAsDdDqf3vOXRWcMsCqrABUG+mzPQVzd1h+6Pnf1lWPK5W0NHNw5fYpZzJwGYqTFn/nGOXIIufdFSsP8OdQ8exbr/3ud5vNC2fH9Wbl3mUXJcPnGIo2YycjJ2ceNeCj7b72JSAo3APEo7wPZn4vE+7Zw15IY81wjAdLjHDuxO3W3vsk2GErftGCm5a5kxSs8ew7fAsWkBAT0lP15GbssBuPHGkB7iDPbPLMV13Rb7FCJued9rQ+0CBRF9ddmKkxuZaof57UtrT1edXDrj8wmr5+SKSZfYDNWq7ZyZPK3nFSfPdoMcG9puP+sXOs7wiL0/7dymH9r69808epQYpOjZUNn1R3dG7SLROkutCdoDTrqbeiwtcoIlsYVe8d5Pq5vdu4Kzmc09PjjhURWiapUoibnL78OhJaeCn8tn2rN9HzXKjmqu73S6o+LGS4AkPn+t4eDbiCKVT11obtsd9dvrLBx/TW7LS2/f3ZK+l5RmMWpWM=
+  on_success: change
+  on_failure: change
