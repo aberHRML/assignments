@@ -65,7 +65,9 @@ setMethod('show',signature = 'Assignment',
             if (length(object@transAssign) > 0) {
               cat('\t',green('Transformation assignment:'),'\n')
               cat('\t\t','Iterations:\t',length(object@transAssign),'\n')
-              transAssigned <- map_dbl(object@transAssign,~{
+              transAssigned <- object@transAssign %>%
+                {.[map_dbl(.,length) > 0]} %>%
+                map_dbl(~{
                 return(nrow(.$assigned))
               }) %>%
                 sum()
@@ -74,7 +76,7 @@ setMethod('show',signature = 'Assignment',
             }
             if (nrow(object@assignments) > 0) {
               cat('\t','Total assignments:\t',blue(nrow(object@assignments)),
-                  blue(str_c('(',round(nrow(object@assignments)/length(unique(c(object@correlations$Feature1,object@correlations$Feature2))) * 100),'%)')),
+                  blue(str_c('(',round(nrow(object@assignments)/ncol(object@data) * 100),'%)')),
                         '\n')
               cat('\t','Unique MFs:\t\t',blue(length(unique(object@assignments$MF))),'\n')
               cat('\n') 
