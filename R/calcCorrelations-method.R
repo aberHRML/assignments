@@ -1,4 +1,5 @@
-#' @importFrom metabolyseR analysisParameters metabolyse correlationResults
+#' @importFrom metabolyseR analysisParameters metabolyse correlationResults keepVariables analysisData dat sinfo
+#' @importFrom magrittr set_rownames
 
 setMethod('calcCorrelations',signature = 'Assignment',function(assignment){
   if (assignment@log$verbose == T) {
@@ -8,8 +9,45 @@ setMethod('calcCorrelations',signature = 'Assignment',function(assignment){
   
   p <- analysisParameters('correlations')
   p@correlations <- assignment@parameters@correlations
-  cors <- metabolyse(assignment@data,tibble(ID = 1:nrow(assignment@data)),p,verbose = F) %>%
-    correlationResults()
+  
+  if (str_detect(assignment@parameters@technique,'LC')) {
+    feat <- tibble(Feature = colnames(assignment@data)) %>%
+      mutate(RT = str_split_fixed(Feature,'@',2)[,2] %>%
+               as.numeric())
+    RTgroups <- feat %>%
+      data.frame() %>%
+      set_rownames(.$Feature) %>%
+      select(-Feature) %>%
+      dist() %>%
+      hclust() %>%
+      cutree(h = assignment@parameters@RTwindow) %>%
+      {tibble(Feature = names(.),Group = .)}
+    
+    RTsum <- RTgroups %>%
+      group_by(Group) %>%
+      summarise(N = n())
+    
+    RTgroups <- RTgroups %>%
+      filter(Group %in% {RTsum %>%
+          filter(N > 1) %>%
+          .$Group})
+    
+    cors <- RTgroups %>%
+      split(.$Group) %>%
+      map(~{
+        f <- .
+        analysisData(assignment@data,tibble(ID = 1:nrow(assignment@data))) %>%
+          keepVariables(variables = f$Feature) %>%
+          {metabolyse(dat(.),sinfo(.),p,verbose = TRUE)} %>% 
+          correlationResults()
+      }) %>%
+      bind_rows()
+    
+  } else {
+    cors <- metabolyse(assignment@data,tibble(ID = 1:nrow(assignment@data)),p,verbose = F) %>%
+      correlationResults()  
+  }
+  
   assignment@correlations <- cors
   
   if (assignment@log$verbose == T) {
