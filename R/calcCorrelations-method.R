@@ -32,16 +32,17 @@ setMethod('calcCorrelations',signature = 'Assignment',function(assignment){
           filter(N > 1) %>%
           .$Group})
     
+    clus <- makeCluster(assignment@parameters@nCores,type = assignment@parameters@clusterType)
     cors <- RTgroups %>%
       split(.$Group) %>%
-      map(~{
-        f <- .
+      parLapply(cl = clus,function(f){
         analysisData(assignment@data,tibble(ID = 1:nrow(assignment@data))) %>%
           keepVariables(variables = f$Feature) %>%
-          {metabolyse(dat(.),sinfo(.),p,verbose = TRUE)} %>% 
+          {metabolyse(dat(.),sinfo(.),p,verbose = FALSE)} %>% 
           correlationResults()
       }) %>%
-      bind_rows()
+      bind_rows(.id = 'RT Group')
+    stopCluster(clus)
     
   } else {
     cors <- metabolyse(assignment@data,tibble(ID = 1:nrow(assignment@data)),p,verbose = F) %>%
