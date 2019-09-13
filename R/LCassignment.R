@@ -15,28 +15,28 @@ LCassignment <- function(element = NULL){
     },
     relationships = function(assignment){
       assignment %>% 
-        relationships()
+        relationships(transformations = FALSE)
     },
     `adduct and isotope assignment` = function(assignment){
       assignment %>%
         addIsoAssign()
-    },
-    `transformation assignment` = function(assignment){
-      count <- 0
-      while (T) {
-        count <- count + 1
-        assignment <- suppressWarnings(transformationAssign(assignment))
-        if (length(assignment@transAssign[[count]]) == 0) {
-          break()
-        }
-        if (nrow(assignment@transAssign[[count]]$assigned) == 0) {
-          assignment@transAssign <- assignment@transAssign[-count]  
-          break()
-        }
-        
-      }
-      return(assignment)
-    }
+    }#,
+    # `transformation assignment` = function(assignment){
+    #   count <- 0
+    #   while (T) {
+    #     count <- count + 1
+    #     assignment <- suppressWarnings(transformationAssign(assignment))
+    #     if (length(assignment@transAssign[[count]]) == 0) {
+    #       break()
+    #     }
+    #     if (nrow(assignment@transAssign[[count]]$assigned) == 0) {
+    #       assignment@transAssign <- assignment@transAssign[-count]  
+    #       break()
+    #     }
+    #     
+    #   }
+    #   return(assignment)
+    # }
   )
   
   if (!is.null(element)) {

@@ -10,7 +10,7 @@ setGeneric('prepCorrelations', function(assignment){
   standardGeneric('prepCorrelations')
 })
 
-setGeneric("relationships", function(assignment) {
+setGeneric("relationships", function(assignment,transformations = TRUE) {
   standardGeneric("relationships")
 })
 
