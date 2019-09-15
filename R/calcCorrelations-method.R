@@ -1,5 +1,6 @@
 #' @importFrom metabolyseR analysisParameters metabolyse correlationResults keepVariables analysisData dat sinfo
 #' @importFrom magrittr set_rownames
+#' @importFrom stats cutree dist hclust
 
 setMethod('calcCorrelations',signature = 'Assignment',function(assignment){
   if (assignment@log$verbose == T) {

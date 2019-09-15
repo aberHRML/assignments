@@ -28,7 +28,7 @@ MFgen <- function(M,mz,ppm = 6){
     gr <- T
   }
   
-  res <- generateMF(M,ppm = ppm,charge = 0,validation = gr,composition = maxi) %>% 
+  res <- generateMF(M,ppm = ppm,charge = 0,validation = gr,element_max = maxi) %>% 
     rename(`Theoretical M` = Mass) %>%
     mutate(`Measured M` = M, `Measured m/z` = mz)
   return(res)
