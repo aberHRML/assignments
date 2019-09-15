@@ -14,7 +14,7 @@ setMethod('summariseAssignment',signature = 'Assignment',
                 d <- .
                 d$Isotope[is.na(d$Isotope)] <- ''
                 d <- d %>%
-                  mutate(Feature = str_c(Mode,`Measured m/z`),IIP = str_c(Isotope,Adduct,sep = ' ')) %>%
+                  mutate(IIP = str_c(Isotope,Adduct,sep = ' ')) %>%
                   arrange(`Measured m/z`)
                 tibble(MF = d$MF[1],Features = str_c(d$Feature,collapse = '; '),`Isotopes & Ionisation Products` = str_c(d$IIP,collapse = '; '),Count = nrow(d))
               }) %>%
