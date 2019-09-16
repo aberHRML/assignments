@@ -51,7 +51,7 @@ setMethod('show',signature = 'Assignment',
           function(object){
             cat(blue('\nMFassign'),red(str_c('v',packageVersion('MFassign') %>% as.character())),'\n')
             cat(yellow('Assignment:'),'\n')
-            cat('\t','Features:\t\t',length(unique(c(object@correlations$Feature1,object@correlations$Feature2))),'\n')
+            cat('\t','Features:\t\t',ncol(object@data),'\n')
             cat('\t','Correlations:\t\t',nrow(object@correlations),'\n')
             cat('\t','Relationships:\t\t',nrow(object@relationships),'\n')
             cat('\n')
