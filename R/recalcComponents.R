@@ -1,7 +1,7 @@
 #' @importFrom tidygraph to_components
 #' @importFrom dplyr n
 
-recalcComponents <- function(graph){
+recalcComponents <- function(graph,parameters){
   g <- graph %>%
     activate(nodes)
   
@@ -10,19 +10,29 @@ recalcComponents <- function(graph){
     .$Component %>%
     unique()
   
+  slaves <- length(comp) / 500
+  slaves <-  ceiling(slaves)
+  
+  if (slaves > parameters@nCores) {
+    slaves <- parameters@nCores
+  }
+  
+  clus <- makeCluster(slaves,type = parameters@clusterType)
+  
   weights <- comp %>%
-    map(~{
-      component <- .
-      g %>%
+    parLapply(cl = clus,function(component,graph){
+      graph %>%
         filter(Component == component) %>%
         edges() %>% 
         .$r %>% 
         mean() %>%
         tibble(Weight = .)
-    }) %>%
+    },graph = g) %>%
     set_names(comp) %>%
     bind_rows(.id = 'Component') %>%
     mutate(Component = as.numeric(Component))
+  
+  stopCluster(clus)
   
   g %>%
     select(-Weight) %>%

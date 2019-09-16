@@ -50,24 +50,38 @@ setMethod('transformationAssign',signature = 'Assignment',
               
               MF <- sample_n(M,nM) %>%
                 split(1:nrow(.)) %>%
-                parLapply(cl = clus,function(x,parameters){MFgen(x$M,x$mz,ppm = parameters@ppm)},parameters = parameters) %>% 
+                parLapply(cl = clus,function(x,parameters){
+                  mf <- MFgen(x$M,x$mz,ppm = parameters@ppm) 
+                  
+                  if (nrow(mf) > 0) {
+                    mf %>%
+                      left_join(M,by = c('Measured M' = 'M','Measured m/z' = 'mz')) %>% 
+                      rowwise() %>%
+                      mutate(`Theoretical m/z` = calcMZ(`Theoretical M`,Adduct,Isotope), 
+                             `PPM Error` = ppmError(`Measured m/z`,`Theoretical m/z`)) %>%
+                      select(Feature,RetentionTime,MF,Isotope,Adduct,`Theoretical M`,
+                             `Measured M`,`Theoretical m/z`,`Measured m/z`, `PPM Error`) %>%
+                      rowwise() %>%
+                      mutate(Score = MFscore(MF),
+                             `PPM Error` = abs(`PPM Error`),
+                             AddIsoScore = addIsoScore(Adduct,Isotope,parameters@adducts,parameters@isotopes)) %>%
+                      tbl_df() %>%
+                      filter(Score == min(Score)) %>%
+                      filter(Score < parameters@maxMFscore)
+                  } else {
+                    return(NULL)
+                  }
+                },parameters = parameters) %>% 
                 bind_rows()
               stopCluster(clus)
               
               if (nrow(MF) > 0) {
-                MF <- MF  %>%
-                  left_join(M,by = c('Measured M' = 'M','Measured m/z' = 'mz')) %>% 
-                  rowwise() %>%
-                  mutate(`Theoretical m/z` = calcMZ(`Theoretical M`,Adduct,Isotope), 
-                         `PPM Error` = ppmError(`Measured m/z`,`Theoretical m/z`)) %>%
-                  select(Feature,RetentionTime,MF,Isotope,Adduct,`Theoretical M`,`Measured M`,`Theoretical m/z`,`Measured m/z`, `PPM Error`) %>%
-                  rowwise() %>%
-                  mutate(Score = MFscore(MF)) %>%
-                  filter(Score <= parameters@maxMFscore)   
                 
                 MF <- MF %>%
                   bind_rows(assigned %>%
-                              select(names(MF)))
+                              select(names(MF)[!(names(MF) == 'AddIsoScore')]) %>%
+                              rowwise() %>%
+                              mutate(AddIsoScore = addIsoScore(Adduct,Isotope,parameters@adducts,parameters@isotopes)))
                 rel <- rel %>% 
                   addMFs(MF,identMF = F) %>%
                   mutate(RetentionTime1 = as.numeric(RetentionTime1),RetentionTime2 = as.numeric(RetentionTime2)) %>%
@@ -81,13 +95,9 @@ setMethod('transformationAssign',signature = 'Assignment',
                     select(-mz) %>%
                     left_join(MF, by = c("Feature", "RetentionTime", "Isotope", "Adduct",'MF')) %>%
                     distinct() %>%
-                    mutate(ID = 1:nrow(.)) %>%
-                    rowwise() %>%
-                    mutate(AddIsoScore = addIsoScore(Adduct,Isotope,parameters@adducts,parameters@isotopes),
-                           `PPM Error` = abs(`PPM Error`)) %>%
-                    tbl_df()
+                    mutate(ID = 1:nrow(.))
                   
-                  graph <- calcComponents(MFs,rel)
+                  graph <- calcComponents(MFs,rel,parameters)
                   
                   filters <- tibble(Measure = c('Plausibility','Size','AIS','Score','PPM Error'),
                                     Direction = c(rep('max',3),rep('min',2)))
@@ -105,7 +115,7 @@ setMethod('transformationAssign',signature = 'Assignment',
                           .$name}) 
                     if (V(filteredGraph) %>% length() > 0) {
                       filteredGraph <- filteredGraph %>%
-                        recalcComponents()
+                        recalcComponents(parameters)
                     } else {
                       break()
                     }
