@@ -82,8 +82,8 @@ setMethod('addIsoAssign',signature = 'Assignment',
               distinct() %>%
               mutate(ID = 1:nrow(.))
             
-            graph <- calcComponents(MFs,rel)
-            
+            graph <- calcComponents(MFs,rel,parameters)
+  
             filters <- tibble(Measure = c('Plausibility','Size','AIS','Score','PPM Error'),
                               Direction = c(rep('max',3),rep('min',2)))
             
@@ -100,7 +100,7 @@ setMethod('addIsoAssign',signature = 'Assignment',
                     .$name}) 
                 if (V(filteredGraph) %>% length() > 0) {
                 filteredGraph <- filteredGraph %>%
-                  recalcComponents()
+                  recalcComponents(parameters)
                 } else {
                   break()
                 }

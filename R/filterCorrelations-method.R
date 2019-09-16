@@ -26,12 +26,17 @@ setMethod('filterCorrelations',signature = 'Assignment',function(assignment){
     cat(blue('Filtering correlations '),cli::symbol$continue,'\r',sep = '')
   }
   
-  cors <- assignment@correlations %>%
-    filterCors(rthresh = assignment@parameters@filter$rthresh,
-               n = assignment@parameters@filter$n,
-               rIncrement = assignment@parameters@filter$rIncrement,
-               nIncrement = assignment@parameters@filter$nIncrement
-               )
+  if (str_detect(assignment@parameters@technique,'LC')) {
+    cors <- assignment@correlations %>%
+      filter(r < -(assignment@parameters@filter$rthresh) | r > assignment@parameters@filter$rthresh)
+  } else {
+    cors <- assignment@correlations %>%
+      filterCors(rthresh = assignment@parameters@filter$rthresh,
+                 n = assignment@parameters@filter$n,
+                 rIncrement = assignment@parameters@filter$rIncrement,
+                 nIncrement = assignment@parameters@filter$nIncrement
+      ) 
+  }
   
   assignment@preparedCorrelations <- cors
   
