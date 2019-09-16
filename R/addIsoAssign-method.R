@@ -38,20 +38,34 @@ setMethod('addIsoAssign',signature = 'Assignment',
             }
             
             clus <- makeCluster(slaves,type = parameters@clusterType)
-
+            
             MF <- sample_n(M,nM) %>%
               split(1:nrow(.)) %>%
-              parLapply(cl = clus,function(x,parameters){MFgen(x$M,x$mz,ppm = parameters@ppm)},parameters = parameters) %>% 
-              bind_rows() %>%
-              left_join(M,by = c('Measured M' = 'M','Measured m/z' = 'mz')) %>% 
-              rowwise() %>%
-              mutate(`Theoretical m/z` = calcMZ(`Theoretical M`,Adduct,Isotope), 
-                     `PPM Error` = ppmError(`Measured m/z`,`Theoretical m/z`)) %>%
-              select(Feature,RetentionTime,MF,Isotope,Adduct,`Theoretical M`,`Measured M`,`Theoretical m/z`,`Measured m/z`, `PPM Error`) %>%
-              rowwise() %>%
-              mutate(Score = MFscore(MF)) %>%
-              filter(Score <= parameters@maxMFscore)
-            stopCluster(clus)
+              parLapply(cl = clus,function(x,parameters,M){
+                mf <- MFgen(x$M,x$mz,ppm = parameters@ppm) 
+                
+                if (nrow(mf) > 0) {
+                  mf %>%
+                    left_join(M,by = c('Measured M' = 'M','Measured m/z' = 'mz')) %>% 
+                    rowwise() %>%
+                    mutate(`Theoretical m/z` = calcMZ(`Theoretical M`,Adduct,Isotope), 
+                           `PPM Error` = ppmError(`Measured m/z`,`Theoretical m/z`)) %>%
+                    select(Feature,RetentionTime,MF,Isotope,Adduct,`Theoretical M`,
+                           `Measured M`,`Theoretical m/z`,`Measured m/z`, `PPM Error`) %>%
+                    rowwise() %>%
+                    mutate(Score = MFscore(MF),
+                           `PPM Error` = abs(`PPM Error`),
+                           AddIsoScore = addIsoScore(Adduct,Isotope,parameters@adducts,parameters@isotopes)) %>%
+                    tbl_df() %>%
+                    filter(Score == min(Score)) %>%
+                    filter(Score < parameters@maxMFscore)
+                } else {
+                  return(NULL)
+                }
+              },parameters = parameters,M = M) %>% 
+              bind_rows()
+              
+              stopCluster(clus)
             
             rel <- rel %>% 
               addMFs(MF) %>%
@@ -66,11 +80,7 @@ setMethod('addIsoAssign',signature = 'Assignment',
               select(-mz) %>%
               left_join(MF, by = c("Feature", "RetentionTime", "Isotope", "Adduct",'MF')) %>%
               distinct() %>%
-              mutate(ID = 1:nrow(.)) %>%
-              rowwise() %>%
-              mutate(AddIsoScore = addIsoScore(Adduct,Isotope,parameters@adducts,parameters@isotopes),
-                     `PPM Error` = abs(`PPM Error`)) %>%
-              tbl_df()
+              mutate(ID = 1:nrow(.))
             
             graph <- calcComponents(MFs,rel)
             
