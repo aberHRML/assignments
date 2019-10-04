@@ -57,7 +57,7 @@ setMethod('addIsoAssign',signature = 'Assignment',
                            `PPM Error` = abs(`PPM Error`),
                            AddIsoScore = addIsoScore(Adduct,Isotope,parameters@adducts,parameters@isotopes)) %>%
                     tbl_df() %>%
-                    filter(Score == min(Score)) %>%
+                    filter(Score == min(Score,na.rm = T)) %>%
                     filter(Score < parameters@maxMFscore)
                 } else {
                   return(NULL)
