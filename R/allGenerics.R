@@ -36,6 +36,16 @@ setGeneric('summariseAssignment',function(assignment){
   standardGeneric('summariseAssignment')
 })
 
+#' @rdname assignmentData
+setGeneric('assignmentData',function(assignment){
+  standardGeneric('assignmentData')
+})
+
+#' @rdname assignedData
+setGeneric('assignedData',function(assignment){
+  standardGeneric('assignedData')
+})
+
 #' @rdname plotNetwork
 setGeneric('plotNetwork',function(assignment, layout = 'stress', rThreshold = 0.7){
 standardGeneric('plotNetwork')
