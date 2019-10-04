@@ -52,10 +52,10 @@ setMethod('assignmentData', signature = 'Assignment',
 setMethod('assignedData', signature = 'Assignment',
           function(assignment){
             
-            d <- x %>%
+            d <- assignment %>%
               assignmentData()
             
-            assignedFeats <- x %>%
+            assignedFeats <- assignment %>%
               assignments() %>%
               select(Feature,Name)
             
