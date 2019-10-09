@@ -10,9 +10,6 @@ r:
 
 apt_packages:
 - libopenbabel-dev
-- libudunits2-dev
-- libnetcdf-dev
-- netcdf-bin
 - mesa-common-dev
 - libglu1-mesa-dev
 
