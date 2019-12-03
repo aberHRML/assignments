@@ -23,7 +23,7 @@ filterCors <- function(correlations, rthresh = 0.7, n = 100000, rIncrement = 0.0
 setMethod('filterCorrelations',signature = 'Assignment',function(assignment){
   if (assignment@log$verbose == T) {
     startTime <- proc.time()
-    cat(blue('Filtering correlations '),cli::symbol$continue,'\r',sep = '')
+    message(blue('Filtering correlations '),cli::symbol$continue,'\r',appendLF = FALSE)
   }
   
   if (str_detect(assignment@parameters@technique,'LC')) {
@@ -49,7 +49,7 @@ setMethod('filterCorrelations',signature = 'Assignment',function(assignment){
       str_c('[',.,']')
     ncors <- nrow(assignment@preparedCorrelations) %>%
       str_c('[',.,' correlations',']')
-    cat(blue('Filtering correlations '),'\t',green(cli::symbol$tick),' ',ncors,' ',elapsed,'\n',sep = '')
+    message(blue('Filtering correlations '),'\t\t',green(cli::symbol$tick),' ',ncors,' ',elapsed)
   }
   return(assignment)
 })

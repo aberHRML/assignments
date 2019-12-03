@@ -11,7 +11,7 @@ setMethod('transformationAssign',signature = 'Assignment',
             
             if (assignment@log$verbose == T) {
               startTime <- proc.time()
-              cat(blue(str_c('Transformation assignment iteration ', count + 1,' ')),cli::symbol$continue,'\r',sep = '')
+              message(blue(str_c('Transformation assignment iteration ', count + 1,' ')),cli::symbol$continue,'\r',appendLF = FALSE)
             }
             
             rel <- assignment@relationships %>%
@@ -160,7 +160,7 @@ setMethod('transformationAssign',signature = 'Assignment',
                 round(1) %>%
                 seconds_to_period() %>%
                 str_c('[',.,']')
-              cat(blue(str_c('Transformation assignment iteration ', count + 1,' ')),'\t',green(cli::symbol$tick),' ',elapsed,'\n',sep = '')
+              message(blue(str_c('Transformation assignment iteration ', count + 1,' ')),'\t',green(cli::symbol$tick),' ',elapsed)
             }
             
             return(assignment)

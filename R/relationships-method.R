@@ -12,7 +12,7 @@ setMethod('relationships',signature = 'Assignment',
             
             if (assignment@log$verbose == T) {
               startTime <- proc.time()
-              cat(blue('Calculating relationships '),cli::symbol$continue,'\r',sep = '')
+              message(blue('Calculating relationships '),cli::symbol$continue,'\r',appendLF = 'FALSE')
             }
             
             parameters <- assignment@parameters
@@ -68,7 +68,7 @@ setMethod('relationships',signature = 'Assignment',
                 round(1) %>%
                 seconds_to_period() %>%
                 str_c('[',.,']')
-              cat(blue('Calculating relationships '),'\t',green(cli::symbol$tick),' ',elapsed,'\n',sep = '')
+              message(blue('Calculating relationships '),'\t',green(cli::symbol$tick),' ',elapsed)
             }
             
             return(assignment)

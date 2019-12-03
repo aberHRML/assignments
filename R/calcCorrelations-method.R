@@ -5,7 +5,7 @@
 setMethod('calcCorrelations',signature = 'Assignment',function(assignment){
   if (assignment@log$verbose == T) {
     startTime <- proc.time()
-    cat(blue('Calculating correlations '),cli::symbol$continue,'\r',sep = '')
+    message(blue('Calculating correlations '),cli::symbol$continue,'\r',appendLF = FALSE)
   }
   
   p <- analysisParameters('correlations')
@@ -61,7 +61,7 @@ setMethod('calcCorrelations',signature = 'Assignment',function(assignment){
       str_c('[',.,']')
     ncors <- nrow(assignment@correlations) %>%
       str_c('[',.,' correlations',']')
-    cat(blue('Calculating correlations '),'\t',green(cli::symbol$tick),' ',ncors,' ',elapsed,'\n',sep = '')
+    message(blue('Calculating correlations '),'\t',green(cli::symbol$tick),' ',ncors,' ',elapsed)
   }
   
   return(assignment)
