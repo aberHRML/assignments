@@ -7,6 +7,7 @@
 #' @importFrom stringr str_split_fixed
 #' @importFrom cli console_width
 #' @importFrom lubridate seconds_to_period
+#' @importFrom utils capture.output
 #' @examples 
 #' p <- assignmentParameters('FIE')
 #' p@nCores <- 2
