@@ -9,7 +9,7 @@ setMethod('addIsoAssign',signature = 'Assignment',
             
             if (assignment@log$verbose == T) {
               startTime <- proc.time()
-              cat(blue('Adduct & isotope assignment '),cli::symbol$continue,'\r',sep = '')
+              message(blue('Adduct & isotope assignment '),cli::symbol$continue,'\r',appendLF = FALSE)
             }
             
             parameters <- assignment@parameters
@@ -127,7 +127,7 @@ setMethod('addIsoAssign',signature = 'Assignment',
                 round(1) %>%
                 seconds_to_period() %>%
                 str_c('[',.,']')
-              cat(blue('Adduct & isotope assignment '),'\t',green(cli::symbol$tick),' ',elapsed,'\n',sep = '')
+              message(blue('Adduct & isotope assignment '),'\t',green(cli::symbol$tick),' ',elapsed)
             }
             
             return(assignment)

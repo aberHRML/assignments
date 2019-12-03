@@ -20,11 +20,19 @@ assignMFs <- function(dat,parameters,verbose = T) {
   
   if (verbose == T) {
     startTime <- proc.time()
-    cat(blue('\nMFassign'),red(str_c('v',packageVersion('MFassign') %>% as.character())),date(),'\n')
-    cat(rep('_',console_width()),'\n',sep = '')
-    print(parameters)
-    cat(rep('_',console_width()),'\n\n',sep = '')
-    cat('No. m/z:\t',ncol(dat),'\n\n')
+    message(blue('\nMFassign '),red(str_c('v',packageVersion('MFassign') %>% as.character())),' ',date())
+    message(rep('_',console_width()))
+    params <- parameters %>%
+      {capture.output(print(.))} %>%
+      {.[-1]} %>%
+      {
+        .[1] <- yellow(.[1])
+        return(.)
+      } %>%
+      str_c(collapse = '\n')
+    message(params)
+    message(rep('_',console_width()),'\n')
+    message('No. m/z:\t',ncol(dat),'\n')
   }
   
   assignment <- new('Assignment',
@@ -50,8 +58,8 @@ assignMFs <- function(dat,parameters,verbose = T) {
      round(1) %>%
      seconds_to_period() %>%
      str_c('[',.,']')
-   cat(rep('_',console_width()),'\n',sep = '')
-   cat('\n',green('Complete! '),elapsed,'\n\n')
+   message(rep('_',console_width()))
+   message('\n',green('Complete! '),elapsed,'\n')
  }
  
  return(assignment)

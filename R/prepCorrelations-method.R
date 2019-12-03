@@ -4,7 +4,7 @@ setMethod('prepCorrelations',signature = 'Assignment',
             
             if (assignment@log$verbose == T) {
              startTime <- proc.time()
-             cat(blue('Preparing correlations '),cli::symbol$continue,'\r',sep = '')
+             message(blue('Preparing correlations '),cli::symbol$continue,'\r',appendLF = FALSE)
             }
             
             correlations <- assignment@preparedCorrelations
@@ -55,7 +55,7 @@ setMethod('prepCorrelations',signature = 'Assignment',
                 round(1) %>%
                 seconds_to_period() %>%
                 str_c('[',.,']')
-              cat(blue('Preparing correlations '),'\t\t',green(cli::symbol$tick),' ',elapsed,'\n',sep = '')
+              message(blue('Preparing correlations '),'\t\t',green(cli::symbol$tick),' ',elapsed)
             }
             
             return(assignment)
