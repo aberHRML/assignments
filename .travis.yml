@@ -15,7 +15,6 @@ apt_packages:
 
 r_github_packages:
 - jasenfinch/mzAnnotation
-- thomasp85/patchwork
 - jasenfinch/metabolyseR
 
 after_success:
