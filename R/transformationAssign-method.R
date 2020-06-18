@@ -48,7 +48,9 @@ setMethod('transformationAssign',signature = 'Assignment',
               
               clus <- makeCluster(slaves,type = parameters@clusterType)
               
-              MF <- sample_n(M,nM) %>%
+              MF <- M %>%
+                ungroup() %>%
+                slice_sample(M,n = nM) %>%
                 split(1:nrow(.)) %>%
                 parLapply(cl = clus,function(x,parameters){
                   mf <- MFgen(x$M,x$mz,ppm = parameters@ppm) 

@@ -1,4 +1,4 @@
-#' @importFrom dplyr arrange rowwise sample_n left_join
+#' @importFrom dplyr arrange rowwise slice_sample left_join ungroup
 #' @importFrom stringr str_detect
 #' @importFrom mzAnnotation calcM calcMZ ppmError
 #' @importFrom igraph vertex.attributes V
@@ -39,7 +39,9 @@ setMethod('addIsoAssign',signature = 'Assignment',
             
             clus <- makeCluster(slaves,type = parameters@clusterType)
             
-            MF <- sample_n(M,nM) %>%
+            MF <- M %>%
+              ungroup() %>%
+              slice_sample(n = nM) %>%
               split(1:nrow(.)) %>%
               parLapply(cl = clus,function(x,parameters,M){
                 mf <- MFgen(x$M,x$mz,ppm = parameters@ppm) 
