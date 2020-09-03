@@ -1,6 +1,6 @@
 Package: MFassign
-Title: Molecular formula assignment for high resolution metabolomics
-Version: 0.7.5
+Title: Molecular Formula Assignment for High Resolution metabolomics
+Version: 0.7.6
 Authors@R: person("Jasen", "Finch", email = "jsf9@aber.ac.uk", role = c("aut", "cre"))
 Description: Molecular formula assignment for high resolution metabolomics.
 Depends: R (>= 3.5.0),
@@ -25,6 +25,8 @@ Imports: CHNOSZ,
     metabolyseR,
     ggrepel,
     graphlayouts
+Remotes: jasenfinch/mzAnnotation,
+    jasenfinch/metabolyseR
 License: GPL (>= 3)
 Encoding: UTF-8
 LazyData: true
