@@ -50,7 +50,7 @@ setMethod('transformationAssign',signature = 'Assignment',
               
               MF <- M %>%
                 ungroup() %>%
-                slice_sample(M,n = nM) %>%
+                slice_sample(n = nM) %>%
                 split(1:nrow(.)) %>%
                 parLapply(cl = clus,function(x,parameters){
                   mf <- MFgen(x$M,x$mz,ppm = parameters@ppm) 
