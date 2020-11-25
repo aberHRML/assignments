@@ -20,7 +20,7 @@ addMFs <- function(rel,MF,identMF = T){
    relations[,chr_columns] <- relations[,chr_columns] %>%
      {
        .[is.na(.)] <- ''
-       return(.)
+       .
      }
   
   relations <- relations %>%
@@ -36,7 +36,7 @@ addMFs <- function(rel,MF,identMF = T){
   relations[,chr_columns] <- relations[,chr_columns] %>%
     {
       .[is.na(.)] <- ''
-      return(.)
+      .
     }
   
   relations <- relations %>%
