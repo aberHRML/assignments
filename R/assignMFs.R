@@ -16,10 +16,10 @@
 #'
 #' @export
 
-assignMFs <- function(dat,parameters,verbose = T) {
+assignMFs <- function(dat,parameters,verbose = TRUE) {
   options(digits = 10)
   
-  if (verbose == T) {
+  if (verbose == TRUE) {
     startTime <- proc.time()
     message(blue('\nMFassign '),red(str_c('v',packageVersion('MFassign') %>% as.character())),' ',date())
     message(rep('_',console_width()))
@@ -28,7 +28,7 @@ assignMFs <- function(dat,parameters,verbose = T) {
       {.[-1]} %>%
       {
         .[1] <- yellow(.[1])
-        return(.)
+        .
       } %>%
       str_c(collapse = '\n')
     message(params)
