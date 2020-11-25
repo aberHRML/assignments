@@ -11,36 +11,24 @@ setMethod('prepCorrelations',signature = 'Assignment',
             
             correlations <- correlations %>%
               mutate(Mode1 = str_split_fixed(Feature1,'@',2) %>% 
-                       as_tibble() %>% 
-                       select(V1) %>% 
-                       unlist() %>% 
+                       .[,1] %>%
                        str_sub(1,1),
                      Mode2 = str_split_fixed(Feature2,'@',2) %>% 
-                       as_tibble() %>% 
-                       select(V1) %>% 
-                       unlist() %>% 
+                       .[,1] %>%
                        str_sub(1,1),
                      `m/z1` = str_split_fixed(Feature1,'@',2) %>% 
-                       as_tibble() %>% 
-                       select(V1) %>% 
-                       unlist() %>% 
+                       .[,1] %>% 
                        str_replace_all('[:alpha:]','') %>% 
                        as.numeric(),
                      `m/z2` = str_split_fixed(Feature2,'@',2) %>% 
-                       as_tibble() %>% 
-                       select(V1) %>% 
-                       unlist() %>% 
+                       .[,1] %>% 
                        str_replace_all('[:alpha:]','') %>% 
                        as.numeric(),
                      RetentionTime1 = str_split_fixed(Feature1,'@',2) %>% 
-                       as_tibble() %>% 
-                       select(V2) %>%
-                       unlist() %>%
+                       .[,2] %>%
                        as.numeric(),
                      RetentionTime2 = str_split_fixed(Feature2,'@',2) %>% 
-                       as_tibble() %>% 
-                       select(V2) %>%
-                       unlist() %>%
+                       .[,2] %>%
                        as.numeric(),
                      ID = 1:nrow(.)
               ) %>%
