@@ -1,4 +1,4 @@
-#' @importFrom metabolyseR analysisParameters metabolyse correlationResults keepVariables analysisData dat sinfo
+#' @importFrom metabolyseR analysisParameters metabolyse analysisResults keepFeatures analysisData dat sinfo
 #' @importFrom magrittr set_rownames
 #' @importFrom stats cutree dist hclust
 
@@ -38,16 +38,19 @@ setMethod('calcCorrelations',signature = 'Assignment',function(assignment){
       split(.$Group) %>%
       parLapply(cl = clus,function(f){
         analysisData(assignment@data,tibble(ID = 1:nrow(assignment@data))) %>%
-          keepVariables(variables = f$Feature) %>%
+          keepFeatures(features = f$Feature) %>%
           {metabolyse(dat(.),sinfo(.),p,verbose = FALSE)} %>% 
-          correlationResults()
+          analysisResults(element = 'correlations')
       }) %>%
       bind_rows(.id = 'RT Group')
     stopCluster(clus)
     
   } else {
-    cors <- metabolyse(assignment@data,tibble(ID = 1:nrow(assignment@data)),p,verbose = F) %>%
-      correlationResults()  
+    cors <- metabolyse(assignment@data,
+                       tibble(ID = 1:nrow(assignment@data)),
+                       p,
+                       verbose = FALSE) %>%
+      analysisResults(element = 'correlations') 
   }
   
   assignment@correlations <- cors
