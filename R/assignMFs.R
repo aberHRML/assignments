@@ -37,17 +37,9 @@ assignMFs <- function(dat,parameters,verbose = TRUE) {
   }
   
   assignment <- new('Assignment',
-                    log = list(date = date(),verbose = verbose),
-                    flags = character(),
-                    parameters = parameters,
                     data = dat,
-                    correlations = tibble(),
-                    preparedCorrelations = tibble(),
-                    relationships = tibble(),
-                    addIsoAssign = list(),
-                    transAssign = list(),
-                    assignments  = tibble()
-  )
+                    parameters = parameters)
+  assignment@log$verbose <- verbose
   
  assignment <- assignment %>%
    doAssignment()

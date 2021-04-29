@@ -83,7 +83,7 @@ setClass('Assignment',
            assignments  = 'tbl_df'
          ),
          prototype = list(
-           log = list(date = date(),verbose = verbose),
+           log = list(date = date(),verbose = TRUE),
            flags = character(),
            parameters = new('AssignmentParameters'),
            data = tibble(),
