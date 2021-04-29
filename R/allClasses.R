@@ -38,7 +38,7 @@ setClass('AssignmentParameters',
          prototype = list(
            technique = 'FIE',
            correlations = list(method = 'pearson',pAdjustMethod = 'bonferroni',corPvalue = 0.05),
-           filter = list(rthresh = 0.7,n = 100000,rIncrement = 0.01,nIncrement = 20000),
+           filter = list(rthresh = 0.7,n = 200000,rIncrement = 0.01,nIncrement = 20000),
            maxM = 1000,
            maxMFscore = 5,
            ppm = 5,
