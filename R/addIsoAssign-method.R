@@ -2,7 +2,6 @@
 #' @importFrom stringr str_detect
 #' @importFrom mzAnnotation calcM calcMZ ppmError
 #' @importFrom igraph vertex.attributes V
-#' @importFrom parallel parLapply
 #' @importFrom furrr furrr_options
 
 setMethod('addIsoAssign',signature = 'Assignment',
