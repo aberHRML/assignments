@@ -15,8 +15,6 @@
 #' @slot adductRules tibble containing adduct formation rules as returned by mzAnnotation::adducts()
 #' @slot isotopeRules tibble containing isotope rules as returned by mzAnnotation::isotopes()
 #' @slot transformationRules tibble containing transformation rules as returned by mzAnnotation::transformations()
-#' @slot nCores number of cores to use for parallisation
-#' @slot clusterType cluster type to use for parallisation
 #' @export
 
 setClass('AssignmentParameters',
@@ -34,9 +32,7 @@ setClass('AssignmentParameters',
            transformations = 'character',
            adductRules = 'tbl_df',
            isotopeRules = 'tbl_df',
-           transformationRules = 'tbl_df',
-           nCores = 'numeric',
-           clusterType = 'character'
+           transformationRules = 'tbl_df'
          ))
 
 #' Assignment
