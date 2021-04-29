@@ -1,5 +1,5 @@
 #' @importFrom furrr future_map
-#' @importFrom dplyr mutate bind_rows tbl_df filter
+#' @importFrom dplyr mutate bind_rows filter
 #' @importFrom dplyr inner_join semi_join select mutate_at
 #' @importFrom stringr str_sub str_replace_all
 #' @importFrom mzAnnotation relationshipCalculator

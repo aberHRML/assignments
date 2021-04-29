@@ -67,7 +67,7 @@ setMethod('transformationAssign',signature = 'Assignment',
                       mutate(Score = MFscore(MF),
                              `PPM Error` = abs(`PPM Error`),
                              AddIsoScore = addIsoScore(Adduct,Isotope,parameters@adducts,parameters@isotopes)) %>%
-                      tbl_df() %>%
+                      ungroup() %>%
                       filter(Score == min(Score)) %>%
                       filter(Score < parameters@maxMFscore)
                   } else {
