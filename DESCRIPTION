@@ -25,7 +25,8 @@ Imports: CHNOSZ,
     metabolyseR,
     ggrepel,
     graphlayouts,
-    future
+    future,
+    furrr
 Remotes: jasenfinch/mzAnnotation,
     jasenfinch/metabolyseR
 License: GPL (>= 3)
