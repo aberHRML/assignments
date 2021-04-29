@@ -16,19 +16,10 @@ calcComponents <- function(MFs,rel,parameters) {
     .$Component %>%
     unique()
   
-  slaves <- length(comp) / 500
-  slaves <-  ceiling(slaves)
-  
-  if (slaves > parameters@nCores) {
-    slaves <- parameters@nCores
-  }
-  
-  clus <- makeCluster(slaves,type = parameters@clusterType)
-  
   weights <- comp %>%
-    parLapply(cl = clus,function(component,graph){
+    future_map(~{
       graph %>%
-        filter(Component == component) %>%
+        filter(Component == .x) %>%
         edges() %>% 
         .$r %>% 
         mean() %>%
@@ -37,24 +28,6 @@ calcComponents <- function(MFs,rel,parameters) {
     set_names(comp) %>%
     bind_rows(.id = 'Component') %>%
     mutate(Component = as.numeric(Component))
-
-  # graph <- graph %>%
-  #   left_join(weights,by = 'Component') %>%
-  #   morph(to_components) %>%
-  #   parLapply(cl = clus,function(x){
-  #     mutate(x,Size = graph_size(),
-  #            Nodes = n(),
-  #            Density = (2 * Size) / (Nodes * (Nodes - 1)),
-  #            Weight = sum(Weight) / Nodes,
-  #            AIS = sum(AddIsoScore) / Nodes,
-  #            Plausibility = AIS * Size * Weight)
-  #   }) #%>%
-  #   {tbl_graph(
-  #     nodes = map(.,nodes) %>% bind_rows(),
-  #     edges = map(.,edges) %>% bind_rows()
-  #   )}
-  
-  stopCluster(clus)
   
   graph <- graph %>%
     left_join(weights,by = 'Component') %>%

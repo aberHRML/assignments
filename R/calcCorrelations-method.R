@@ -33,17 +33,15 @@ setMethod('calcCorrelations',signature = 'Assignment',function(assignment){
           filter(N > 1) %>%
           .$Group})
     
-    clus <- makeCluster(assignment@parameters@nCores,type = assignment@parameters@clusterType)
     cors <- RTgroups %>%
       split(.$Group) %>%
-      parLapply(cl = clus,function(f){
+      future_map(~{
         analysisData(assignment@data,tibble(ID = 1:nrow(assignment@data))) %>%
-          keepFeatures(features = f$Feature) %>%
+          keepFeatures(features = .x$Feature) %>%
           {metabolyse(dat(.),sinfo(.),p,verbose = FALSE)} %>% 
           analysisResults(element = 'correlations')
       }) %>%
       bind_rows(.id = 'RT Group')
-    stopCluster(clus)
     
   } else {
     cors <- metabolyse(assignment@data,

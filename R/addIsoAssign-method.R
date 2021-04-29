@@ -2,7 +2,7 @@
 #' @importFrom stringr str_detect
 #' @importFrom mzAnnotation calcM calcMZ ppmError
 #' @importFrom igraph vertex.attributes V
-#' @importFrom parallel parLapply
+#' @importFrom furrr furrr_options
 
 setMethod('addIsoAssign',signature = 'Assignment',
           function(assignment){
@@ -30,21 +30,12 @@ setMethod('addIsoAssign',signature = 'Assignment',
             
             nM <- nrow(M)
             
-            slaves <- nrow(M) / 100 * mean(M$M)/100
-            slaves <-  ceiling(slaves)
-            
-            if (slaves > parameters@nCores) {
-              slaves <- parameters@nCores
-            }
-            
-            clus <- makeCluster(slaves,type = parameters@clusterType)
-            
             MF <- M %>%
               ungroup() %>%
               slice_sample(n = nM) %>%
               split(1:nrow(.)) %>%
-              parLapply(cl = clus,function(x,parameters,M){
-                mf <- MFgen(x$M,x$mz,ppm = parameters@ppm) 
+              future_map(~{
+                mf <- MFgen(.x$M,.x$mz,ppm = parameters@ppm) 
                 
                 if (nrow(mf) > 0) {
                   mf %>%
@@ -57,18 +48,19 @@ setMethod('addIsoAssign',signature = 'Assignment',
                     rowwise() %>%
                     mutate(Score = MFscore(MF),
                            `PPM Error` = abs(`PPM Error`),
-                           AddIsoScore = addIsoScore(Adduct,Isotope,parameters@adducts,parameters@isotopes)) %>%
-                    tbl_df() %>%
-                    filter(Score == min(Score,na.rm = T)) %>%
+                           AddIsoScore = addIsoScore(Adduct,
+                                                     Isotope,
+                                                     parameters@adducts,
+                                                     parameters@isotopes)) %>%
+                    ungroup() %>%
+                    filter(Score == min(Score,na.rm = TRUE)) %>%
                     filter(Score < parameters@maxMFscore)
                 } else {
                   return(NULL)
                 }
-              },parameters = parameters,M = M) %>% 
+              },.options = furrr_options(seed = 1234)) %>% 
               bind_rows()
               
-              stopCluster(clus)
-            
             rel <- rel %>% 
               addMFs(MF) %>%
               filter(MF1 == MF2) %>%

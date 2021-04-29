@@ -9,8 +9,8 @@
 #' @importFrom lubridate seconds_to_period
 #' @importFrom utils capture.output
 #' @examples 
+#' plan(future::sequential)
 #' p <- assignmentParameters('FIE')
-#' p@nCores <- 2
 #'
 #' assignment <- assignMFs(peakData,p)
 #'
@@ -37,17 +37,9 @@ assignMFs <- function(dat,parameters,verbose = TRUE) {
   }
   
   assignment <- new('Assignment',
-                    log = list(date = date(),verbose = verbose),
-                    flags = character(),
-                    parameters = parameters,
                     data = dat,
-                    correlations = tibble(),
-                    preparedCorrelations = tibble(),
-                    relationships = tibble(),
-                    addIsoAssign = list(),
-                    transAssign = list(),
-                    assignments  = tibble()
-  )
+                    parameters = parameters)
+  assignment@log$verbose <- verbose
   
  assignment <- assignment %>%
    doAssignment()
