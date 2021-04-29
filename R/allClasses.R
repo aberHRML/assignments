@@ -81,4 +81,16 @@ setClass('Assignment',
            addIsoAssign = 'list',
            transAssign = 'list',
            assignments  = 'tbl_df'
+         ),
+         prototype = list(
+           log = list(date = date(),verbose = verbose),
+           flags = character(),
+           parameters = new('AssignmentParameters'),
+           data = dat,
+           correlations = tibble(),
+           preparedCorrelations = tibble(),
+           relationships = tibble(),
+           addIsoAssign = list(),
+           transAssign = list(),
+           assignments  = tibble()
          ))
