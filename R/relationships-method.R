@@ -69,7 +69,7 @@ setMethod('relationships',signature = 'Assignment',
                     bind_rows(.id = 'Mode') %>% 
                     select(-name)
                   
-                  relationships %>% 
+                  relationships <- relationships %>% 
                     inner_join(adduct_modes,
                                by = c('Mode1' = 'Mode',
                                       'Adduct1' = 'Adduct')) %>% 
