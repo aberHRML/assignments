@@ -3,6 +3,7 @@
 #' @importFrom mzAnnotation calcM calcMZ ppmError
 #' @importFrom igraph vertex.attributes V
 #' @importFrom parallel parLapply
+#' @importFrom furrr furrr_options
 
 setMethod('addIsoAssign',signature = 'Assignment',
           function(assignment){
@@ -58,7 +59,7 @@ setMethod('addIsoAssign',signature = 'Assignment',
                 } else {
                   return(NULL)
                 }
-              }) %>% 
+              },.options = furrr_options(seed = 1234)) %>% 
               bind_rows()
               
             rel <- rel %>% 

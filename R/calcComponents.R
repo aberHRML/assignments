@@ -16,19 +16,10 @@ calcComponents <- function(MFs,rel,parameters) {
     .$Component %>%
     unique()
   
-  slaves <- length(comp) / 500
-  slaves <-  ceiling(slaves)
-  
-  if (slaves > parameters@nCores) {
-    slaves <- parameters@nCores
-  }
-  
-  clus <- makeCluster(slaves,type = parameters@clusterType)
-  
   weights <- comp %>%
-    parLapply(cl = clus,function(component,graph){
+    future_map(~{
       graph %>%
-        filter(Component == component) %>%
+        filter(Component == .x) %>%
         edges() %>% 
         .$r %>% 
         mean() %>%
@@ -53,8 +44,6 @@ calcComponents <- function(MFs,rel,parameters) {
   #     nodes = map(.,nodes) %>% bind_rows(),
   #     edges = map(.,edges) %>% bind_rows()
   #   )}
-  
-  stopCluster(clus)
   
   graph <- graph %>%
     left_join(weights,by = 'Component') %>%

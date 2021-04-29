@@ -10,5 +10,5 @@ assignment <- assignMFs(peakData,
                         verbose = TRUE)
 
 test_that('assignMFs works',{
-  expect_true(class(assignment) == "Assignment")
+  expect_s4_class(assignment,"Assignment")
 })
