@@ -15,6 +15,7 @@
 #' @slot adductRules tibble containing adduct formation rules as returned by mzAnnotation::adducts()
 #' @slot isotopeRules tibble containing isotope rules as returned by mzAnnotation::isotopes()
 #' @slot transformationRules tibble containing transformation rules as returned by mzAnnotation::transformations()
+#' @importFrom mzAnnotation transformations
 #' @export
 
 setClass('AssignmentParameters',
@@ -33,6 +34,25 @@ setClass('AssignmentParameters',
            adductRules = 'tbl_df',
            isotopeRules = 'tbl_df',
            transformationRules = 'tbl_df'
+         ),
+         prototype = list(
+           technique = 'FIE',
+           correlations = list(method = 'pearson',pAdjustMethod = 'bonferroni',corPvalue = 0.05),
+           filter = list(rthresh = 0.7,n = 100000,rIncrement = 0.01,nIncrement = 20000),
+           maxM = 600,
+           maxMFscore = 5,
+           ppm = 5,
+           limit = 0.001,
+           RTwindow = numeric(),
+           isotopes = c('13C','18O','13C2'),
+           adducts = list(n = c("[M-H]1-", "[M+Cl]1-", "[M+K-2H]1-", 
+                                "[M-2H]2-", "[M+Cl37]1-","[2M-H]1-"),
+                          p = c('[M+H]1+','[M+K]1+','[M+Na]1+','[M+K41]1+',
+                                '[M+NH4]1+','[M+2H]2+','[2M+H]1+')),
+           transformations = transformations()$`MF Change`,
+           adductRules = adducts(),
+           isotopeRules = isotopes(),
+           transformationRules = transformations()
          ))
 
 #' Assignment
