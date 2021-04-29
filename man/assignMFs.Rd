@@ -17,7 +17,7 @@ assignMFs(dat, parameters, verbose = TRUE)
 assign molecular formulas to a set of given m/z.
 }
 \examples{
-plan(future::multisession,workers = 2)
+plan(future::sequential)
 p <- assignmentParameters('FIE')
 
 assignment <- assignMFs(peakData,p)

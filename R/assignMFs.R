@@ -9,7 +9,7 @@
 #' @importFrom lubridate seconds_to_period
 #' @importFrom utils capture.output
 #' @examples 
-#' plan(future::multisession,workers = 2)
+#' plan(future::sequential)
 #' p <- assignmentParameters('FIE')
 #'
 #' assignment <- assignMFs(peakData,p)
