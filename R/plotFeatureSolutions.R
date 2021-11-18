@@ -21,7 +21,8 @@ plotSolutions <- function(graph,selectedComp,feature){
         scale_edge_color_gradient(low = 'white',high = 'black',limits = c(0.5,1)) +
         geom_node_label(aes(label = name,fill = Feat),size = 2,) +
         scale_fill_manual(values = c('white','steelblue')) +
-        theme_graph(title_size = 12,
+        theme_graph(base_family = '',
+                    title_size = 12,
                     title_face = 'plain',
                     foreground = border,
                     plot_margin = margin(5, 5, 5, 5)) +
@@ -36,7 +37,7 @@ plotSolutions <- function(graph,selectedComp,feature){
              max(g$x) + (max(g$x) - min(g$x)) * 0.05) +
         ylim(min(g$y) - (max(g$y) - min(g$y)) * 0.05,
              max(g$y) + (max(g$y) - min(g$y)) * 0.05) +
-        guides(fill = FALSE)
+        guides(fill = 'none')
     }) %>%
     wrap_plots() + plot_annotation(title = str_c('Solutions for feature ',feature))
 }
