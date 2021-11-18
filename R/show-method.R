@@ -9,8 +9,6 @@
 setMethod('show',signature = 'AssignmentParameters',
           function(object){
             cat(yellow('\nAssignment Parameters:'),'\n')
-            cat('\t','No. of cores:\t\t',object@nCores,'\n')
-            cat('\t','Cluster type:\t\t',object@clusterType,'\n')
             cat('\n')
             cat('\t','Technique:\t\t',object@technique,'\n')
             cat('\t','Max M:\t\t\t',object@maxM,'\n')

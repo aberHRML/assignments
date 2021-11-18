@@ -39,19 +39,12 @@ setMethod('transformationAssign',signature = 'Assignment',
               
               nM <- nrow(M)
               
-              slaves <- nrow(M) / 20
-              slaves <- ceiling(slaves)
-              
-              if (slaves > parameters@nCores) {
-                slaves <- parameters@nCores
-              }
-              
-              clus <- makeCluster(slaves,type = parameters@clusterType)
-              
-              MF <- sample_n(M,nM) %>%
+              MF <- M %>%
+                ungroup() %>%
+                slice_sample(n = nM) %>%
                 split(1:nrow(.)) %>%
-                parLapply(cl = clus,function(x,parameters){
-                  mf <- MFgen(x$M,x$mz,ppm = parameters@ppm) 
+                future_map(~{
+                  mf <- MFgen(.x$M,.x$mz,ppm = parameters@ppm) 
                   
                   if (nrow(mf) > 0) {
                     mf %>%
@@ -64,16 +57,18 @@ setMethod('transformationAssign',signature = 'Assignment',
                       rowwise() %>%
                       mutate(Score = MFscore(MF),
                              `PPM Error` = abs(`PPM Error`),
-                             AddIsoScore = addIsoScore(Adduct,Isotope,parameters@adducts,parameters@isotopes)) %>%
-                      tbl_df() %>%
-                      filter(Score == min(Score)) %>%
+                             AddIsoScore = addIsoScore(Adduct,
+                                                       Isotope,
+                                                       parameters@adducts,
+                                                       parameters@isotopes)) %>%
+                      ungroup() %>%
+                      filter(Score == min(Score,na.rm = TRUE)) %>%
                       filter(Score < parameters@maxMFscore)
                   } else {
                     return(NULL)
                   }
-                },parameters = parameters) %>% 
+                },.options = furrr_options(seed = 1234)) %>% 
                 bind_rows()
-              stopCluster(clus)
               
               if (nrow(MF) > 0) {
                 

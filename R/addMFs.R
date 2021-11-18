@@ -13,7 +13,15 @@ addMFs <- function(rel,MF,identMF = T){
     left_join(MF %>%
                 select(Feature,MF,Isotope,Adduct,`Measured m/z`),by = c('Feature1' = 'Feature')) %>%
     rename(MF1 = MF)
-  relations[is.na(relations)] <- ''
+   
+   chr_columns <- relations %>%
+     map_lgl(is.character)
+   
+   relations[,chr_columns] <- relations[,chr_columns] %>%
+     {
+       .[is.na(.)] <- ''
+       .
+     }
   
   relations <- relations %>%
     filter(Isotope1 == Isotope & Adduct1 == Adduct) %>%
@@ -21,7 +29,15 @@ addMFs <- function(rel,MF,identMF = T){
     left_join(MF %>%
                 select(Feature,MF,Isotope,Adduct,`Measured m/z`),by = c('Feature2' = 'Feature')) %>%
     rename(MF2 = MF)
-  relations[is.na(relations)] <- ''
+  
+  chr_columns <- relations %>%
+    map_lgl(is.character)
+  
+  relations[,chr_columns] <- relations[,chr_columns] %>%
+    {
+      .[is.na(.)] <- ''
+      .
+    }
   
   relations <- relations %>%
     filter(Isotope2 == Isotope & Adduct2 == Adduct) %>%

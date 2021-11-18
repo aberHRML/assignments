@@ -4,7 +4,7 @@
 \alias{assignMFs}
 \title{assignMFs}
 \usage{
-assignMFs(dat, parameters, verbose = T)
+assignMFs(dat, parameters, verbose = TRUE)
 }
 \arguments{
 \item{dat}{tibble containing the peak intensities of m/z for which to assign molecular formulas}
@@ -17,8 +17,8 @@ assignMFs(dat, parameters, verbose = T)
 assign molecular formulas to a set of given m/z.
 }
 \examples{
+plan(future::sequential)
 p <- assignmentParameters('FIE')
-p@nCores <- 2
 
 assignment <- assignMFs(peakData,p)
 

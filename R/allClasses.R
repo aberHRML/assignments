@@ -15,8 +15,7 @@
 #' @slot adductRules tibble containing adduct formation rules as returned by mzAnnotation::adducts()
 #' @slot isotopeRules tibble containing isotope rules as returned by mzAnnotation::isotopes()
 #' @slot transformationRules tibble containing transformation rules as returned by mzAnnotation::transformations()
-#' @slot nCores number of cores to use for parallisation
-#' @slot clusterType cluster type to use for parallisation
+#' @importFrom mzAnnotation transformations
 #' @export
 
 setClass('AssignmentParameters',
@@ -34,9 +33,26 @@ setClass('AssignmentParameters',
            transformations = 'character',
            adductRules = 'tbl_df',
            isotopeRules = 'tbl_df',
-           transformationRules = 'tbl_df',
-           nCores = 'numeric',
-           clusterType = 'character'
+           transformationRules = 'tbl_df'
+         ),
+         prototype = list(
+           technique = 'FIE',
+           correlations = list(method = 'pearson',pAdjustMethod = 'bonferroni',corPvalue = 0.05),
+           filter = list(rthresh = 0.7,n = 200000,rIncrement = 0.01,nIncrement = 20000),
+           maxM = 1000,
+           maxMFscore = 5,
+           ppm = 5,
+           limit = 0.001,
+           RTwindow = numeric(),
+           isotopes = c('13C','18O','13C2'),
+           adducts = list(n = c("[M-H]1-", "[M+Cl]1-", "[M+K-2H]1-", 
+                                "[M-2H]2-", "[M+Cl37]1-","[2M-H]1-"),
+                          p = c('[M+H]1+','[M+K]1+','[M+Na]1+','[M+K41]1+',
+                                '[M+NH4]1+','[M+2H]2+','[2M+H]1+')),
+           transformations = transformations()$`MF Change`,
+           adductRules = adducts(),
+           isotopeRules = isotopes(),
+           transformationRules = transformations()
          ))
 
 #' Assignment
@@ -65,4 +81,16 @@ setClass('Assignment',
            addIsoAssign = 'list',
            transAssign = 'list',
            assignments  = 'tbl_df'
+         ),
+         prototype = list(
+           log = list(date = date(),verbose = TRUE),
+           flags = character(),
+           parameters = new('AssignmentParameters'),
+           data = tibble(),
+           correlations = tibble(),
+           preparedCorrelations = tibble(),
+           relationships = tibble(),
+           addIsoAssign = list(),
+           transAssign = list(),
+           assignments  = tibble()
          ))

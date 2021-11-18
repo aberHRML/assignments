@@ -9,17 +9,17 @@
 #' @importFrom lubridate seconds_to_period
 #' @importFrom utils capture.output
 #' @examples 
+#' plan(future::sequential)
 #' p <- assignmentParameters('FIE')
-#' p@nCores <- 2
 #'
 #' assignment <- assignMFs(peakData,p)
 #'
 #' @export
 
-assignMFs <- function(dat,parameters,verbose = T) {
+assignMFs <- function(dat,parameters,verbose = TRUE) {
   options(digits = 10)
   
-  if (verbose == T) {
+  if (verbose == TRUE) {
     startTime <- proc.time()
     message(blue('\nMFassign '),red(str_c('v',packageVersion('MFassign') %>% as.character())),' ',date())
     message(rep('_',console_width()))
@@ -28,7 +28,7 @@ assignMFs <- function(dat,parameters,verbose = T) {
       {.[-1]} %>%
       {
         .[1] <- yellow(.[1])
-        return(.)
+        .
       } %>%
       str_c(collapse = '\n')
     message(params)
@@ -37,17 +37,9 @@ assignMFs <- function(dat,parameters,verbose = T) {
   }
   
   assignment <- new('Assignment',
-                    log = list(date = date(),verbose = verbose),
-                    flags = character(),
-                    parameters = parameters,
                     data = dat,
-                    correlations = tibble(),
-                    preparedCorrelations = tibble(),
-                    relationships = tibble(),
-                    addIsoAssign = list(),
-                    transAssign = list(),
-                    assignments  = tibble()
-  )
+                    parameters = parameters)
+  assignment@log$verbose <- verbose
   
  assignment <- assignment %>%
    doAssignment()

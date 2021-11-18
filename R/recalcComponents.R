@@ -10,19 +10,10 @@ recalcComponents <- function(graph,parameters){
     .$Component %>%
     unique()
   
-  slaves <- length(comp) / 500
-  slaves <-  ceiling(slaves)
-  
-  if (slaves > parameters@nCores) {
-    slaves <- parameters@nCores
-  }
-  
-  clus <- makeCluster(slaves,type = parameters@clusterType)
-  
   weights <- comp %>%
-    parLapply(cl = clus,function(component,graph){
+    future_map(~{
       graph %>%
-        filter(Component == component) %>%
+        filter(Component == .x) %>%
         edges() %>% 
         .$r %>% 
         mean() %>%
@@ -31,8 +22,6 @@ recalcComponents <- function(graph,parameters){
     set_names(comp) %>%
     bind_rows(.id = 'Component') %>%
     mutate(Component = as.numeric(Component))
-  
-  stopCluster(clus)
   
   g %>%
     select(-Weight) %>%

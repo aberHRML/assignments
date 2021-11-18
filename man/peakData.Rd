@@ -4,7 +4,9 @@
 \name{peakData}
 \alias{peakData}
 \title{peakData}
-\format{A tibble containining 60 rows and 1003 variables}
+\format{
+A tibble containining 60 rows and 1003 variables
+}
 \usage{
 peakData
 }
