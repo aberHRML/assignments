@@ -63,5 +63,6 @@ Collate:
         'calcCorrelations-method.R'
         'filterCorrelations-method.R'
         'plotSpectrum-method.R'
+        reexports.R
 Suggests: testthat,
     covr
