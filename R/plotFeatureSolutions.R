@@ -1,3 +1,6 @@
+#' @importFrom patchwork plot_annotation
+#' @importFrom ggraph create_layout scale_edge_color_gradient geom_node_label guide_edge_colourbar
+#' @importFrom ggplot2 scale_fill_manual margin xlim ylim guides
 
 plotSolutions <- function(graph,selectedComp,feature){
   graph %>%
@@ -37,7 +40,9 @@ plotSolutions <- function(graph,selectedComp,feature){
              max(g$y) + (max(g$y) - min(g$y)) * 0.05) +
         guides(fill = 'none')
     }) %>%
-    wrap_plots() + plot_annotation(title = str_c('Solutions for feature ',feature))
+    wrap_plots() + 
+    plot_annotation(title = str_c('Solutions for feature ',
+                                  feature))
 }
 
 #' Plot the solutions for a feature
@@ -46,9 +51,6 @@ plotSolutions <- function(graph,selectedComp,feature){
 #' @param assignment S4 object of class Assignent
 #' @param feature name of feature to plot
 #' @param maxComponents maximum number of components to plot
-#' @importFrom patchwork plot_annotation
-#' @importFrom ggraph create_layout scale_edge_color_gradient geom_node_label
-#' @importFrom ggplot2 scale_fill_manual margin xlim ylim guides
 #' @export
 
 setGeneric('plotFeatureSolutions',
