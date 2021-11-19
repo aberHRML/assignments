@@ -3,7 +3,7 @@
 \docType{class}
 \name{AssignmentParameters-class}
 \alias{AssignmentParameters-class}
-\title{AssignmentParameters}
+\title{S4 class for assignment parameters}
 \description{
 An S4 class to store assignment parameters.
 }

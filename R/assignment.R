@@ -1,4 +1,5 @@
 #' Assignment
+#' @rdname Assignment
 #' @description An S4 class to store assignment results
 #' @slot log list containing assignment logs
 #' @slot flags charactor vector containing completed assignment elements
