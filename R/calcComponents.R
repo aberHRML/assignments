@@ -37,7 +37,7 @@ calcComponents <- function(MFs,rel,parameters) {
            Density = (2 * Size) / (Nodes * (Nodes - 1)),
            Weight = sum(Weight) / Nodes,
            AIS = sum(AddIsoScore) / Nodes,
-           Plausibility = AIS * Size * Weight) %>%
+           Plausibility = plausibility(AIS,Size,Weight)) %>%
     unmorph()
   
   return(graph)
