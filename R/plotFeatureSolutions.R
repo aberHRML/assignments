@@ -40,7 +40,7 @@ plotSolutions <- function(graph,selectedComp,feature){
     wrap_plots() + plot_annotation(title = str_c('Solutions for feature ',feature))
 }
 
-#' plotFeatureSolutions
+#' Plot the solutions for a feature
 #' @rdname plotFeatureSolutions
 #' @description Plot possible MF solutions for a given feature.
 #' @param assignment S4 object of class Assignent
@@ -50,6 +50,13 @@ plotSolutions <- function(graph,selectedComp,feature){
 #' @importFrom ggraph create_layout scale_edge_color_gradient geom_node_label
 #' @importFrom ggplot2 scale_fill_manual margin xlim ylim guides
 #' @export
+
+setGeneric('plotFeatureSolutions',
+           function(assignment,feature,maxComponents = 10)
+             standardGeneric('plotFeatureSolutions')
+)
+
+#' @rdname plotFeatureSolutions
 
 setMethod('plotFeatureSolutions',signature = 'Assignment',
           function(assignment,feature,maxComponents = 10){
