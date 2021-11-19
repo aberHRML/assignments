@@ -1,4 +1,4 @@
-#' @importFrom patchwork plot_annotation
+#' @importFrom patchwork plot_annotation plot_layout
 #' @importFrom ggraph create_layout scale_edge_color_gradient geom_node_label guide_edge_colourbar
 #' @importFrom ggplot2 scale_fill_manual margin xlim ylim guides
 
@@ -29,6 +29,9 @@ plotSolutions <- function(graph,selectedComp,feature){
                     title_face = 'plain',
                     foreground = border,
                     plot_margin = margin(5, 5, 5, 5)) +
+        theme(plot.title = element_text(face = 'bold',
+                                        hjust = 0.5),
+              plot.caption = element_text(hjust = 0)) +
         labs(title = str_c('Component ',stats$Component),
              caption = str_c('Degree = ',stats$Degree %>% round(2),'; ',
                              'Weight = ',stats$Weight %>% round(2),'; ',
@@ -41,8 +44,11 @@ plotSolutions <- function(graph,selectedComp,feature){
         guides(fill = 'none')
     }) %>%
     wrap_plots() + 
+    plot_layout(guides = 'collect') +
     plot_annotation(title = str_c('Solutions for feature ',
-                                  feature))
+                                  feature),
+                    theme = theme(plot.title = element_text(face = 'bold',
+                                                            hjust = 0.5)))
 }
 
 #' Plot the solutions for a feature
