@@ -51,7 +51,7 @@ Collate: parameters.R assignment.R allGenerics.R
         plotNetwork.R
         'addNames.R'
         'eliminate.R'
-        'plotAdductDist-method.R'
+        plotAdductDist.R
         plotFeatureSolutions.R
         'calcCorrelations-method.R'
         'filterCorrelations-method.R'
