@@ -32,14 +32,11 @@ Encoding: UTF-8
 LazyData: true
 Roxygen: list(markdown = TRUE)
 RoxygenNote: 7.1.2
-Collate: parameters.R allGenerics.R allClasses.R
-        'prepCorrelations-method.R'
-        'addIsoAssign-method.R'
-        'transformationAssign-method.R'
-        'relationships-method.R'
-        'assignmentParameters.R'
-        'assignMFs.R'
-        'MFgen.R'
+Collate: parameters.R assignment.R allGenerics.R
+        prepCorrelations-method.R addIsoAssign-method.R
+        transformationAssign-method.R relationships-method.R
+        graph.R assignMFs.R MFgen.R
+        assignmentParameters.R
         'MFscore.R'
         'addIsoScore.R'
         'addMFs.R'
@@ -50,14 +47,12 @@ Collate: parameters.R allGenerics.R allClasses.R
         'MFassign.R'
         'FIEassignment.R'
         'continueAssignment.R'
-        'show-method.R'
-        'access-methods.R'
         'summariseAssignment-method.R'
         plotNetwork.R
         'addNames.R'
         'eliminate.R'
         'plotAdductDist-method.R'
-        'plotFeatureSolutions.R'
+        plotFeatureSolutions.R
         'calcCorrelations-method.R'
         'filterCorrelations-method.R'
         'plotSpectrum-method.R'
