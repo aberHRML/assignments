@@ -5,7 +5,9 @@ setGeneric('doAssignment',function(assignment){
 
 setMethod('doAssignment',signature = 'Assignment',
           function(assignment){
-            assignmentMethod <- assignMethods(assignment@parameters@technique)
+            parameters <- as(assignment,'AssignmentParameters')
+            
+            assignmentMethod <- assignMethods(parameters@technique)
             
             elements <- names(assignmentMethod())
             elements <- elements[!(elements %in% assignment@flags)]
@@ -58,8 +60,8 @@ assignMFs <- function(dat,parameters,verbose = TRUE) {
   }
   
   assignment <- new('Assignment',
-                    data = dat,
-                    parameters = parameters)
+                    parameters,
+                    data = dat)
   assignment@log$verbose <- verbose
   
   assignment <- assignment %>%

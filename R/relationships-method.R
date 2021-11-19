@@ -15,7 +15,7 @@ setMethod('relationships',signature = 'Assignment',
               message(blue('Calculating relationships '),cli::symbol$continue,'\r',appendLF = 'FALSE')
             }
             
-            parameters <- assignment@parameters
+            parameters <- as(assignment,'AssignmentParameters')
             
             cors <- assignment@preparedCorrelations
             

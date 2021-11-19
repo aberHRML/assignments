@@ -13,10 +13,10 @@
 #' @export
 
 setClass('Assignment',
+         contains = 'AssignmentParameters',
          slots = list(
            log = 'list',
            flags = 'character',
-           parameters = 'AssignmentParameters',
            data = 'tbl_df',
            correlations = 'tbl_df',
            preparedCorrelations = 'tbl_df',
@@ -28,7 +28,6 @@ setClass('Assignment',
          prototype = list(
            log = list(date = date(),verbose = TRUE),
            flags = character(),
-           parameters = new('AssignmentParameters'),
            data = tibble(),
            correlations = tibble(),
            preparedCorrelations = tibble(),

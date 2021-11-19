@@ -9,9 +9,11 @@ setMethod('calcCorrelations',signature = 'Assignment',function(assignment){
   }
   
   p <- analysisParameters('correlations')
-  p@correlations <- assignment@parameters@correlations
+  parameters <- as(assignment,'AssignmentParameters')
   
-  if (str_detect(assignment@parameters@technique,'LC')) {
+  p@correlations <- parameters@correlations_parameters
+  
+  if (str_detect(parameters@technique,'LC')) {
     feat <- tibble(Feature = colnames(assignment@data)) %>%
       mutate(RT = str_split_fixed(Feature,'@',2)[,2] %>%
                as.numeric())
@@ -21,7 +23,7 @@ setMethod('calcCorrelations',signature = 'Assignment',function(assignment){
       select(-Feature) %>%
       dist() %>%
       hclust() %>%
-      cutree(h = assignment@parameters@RTwindow) %>%
+      cutree(h = parameters@RTwindow) %>%
       {tibble(Feature = names(.),Group = .)}
     
     RTsum <- RTgroups %>%

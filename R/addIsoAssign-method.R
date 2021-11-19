@@ -12,7 +12,7 @@ setMethod('addIsoAssign',signature = 'Assignment',
               message(blue('Adduct & isotope assignment '),cli::symbol$continue,'\r',appendLF = FALSE)
             }
             
-            parameters <- assignment@parameters
+            parameters <- as(assignment,'AssignmentParameters')
             
             rel <- assignment@relationships %>% 
               filter(is.na(Transformation1) & is.na(Transformation2) & r > 0) %>%

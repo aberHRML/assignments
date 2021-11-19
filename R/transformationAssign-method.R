@@ -5,7 +5,7 @@
 setMethod('transformationAssign',signature = 'Assignment',
           function(assignment){
             
-            parameters <- assignment@parameters
+            parameters <- as(assignment,'AssignmentParameters')
             count <- length(assignment@transAssign)
             assigned <- assignment@assignments
             
