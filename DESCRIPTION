@@ -3,7 +3,8 @@ Title: Molecular formula assignment for high resolution metabolomics
 Version: 0.8.0
 Authors@R: person("Jasen", "Finch", email = "jsf9@aber.ac.uk", role = c("aut", "cre"))
 Description: Molecular formula assignment for high resolution metabolomics.
-Depends: R (>= 3.5.0)
+Depends: R (>= 3.5.0),
+    ggraph
 Imports: CHNOSZ,
     cli,
     crayon,
@@ -11,7 +12,6 @@ Imports: CHNOSZ,
     furrr,
     future,
     ggplot2,
-    ggraph,
     ggrepel,
     ggthemes,
     graphlayouts,
