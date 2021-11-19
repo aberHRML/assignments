@@ -2,7 +2,7 @@
 #' @rdname AssignmentParameters-class
 #' @description An S4 class to store assignment parameters.
 #' @slot technique assignment technique to use
-#' @slot correlations list of correlation parameters to be passed to metabolyseR correlation analysis
+#' @slot correlations_parameters list of correlation parameters to be passed to metabolyseR correlation analysis
 #' @slot filter list of r and n thresholds for filtering correlations
 #' @slot maxM maximum M for which to assign molecular formulas
 #' @slot maxMFscore threshold for molecular formula score

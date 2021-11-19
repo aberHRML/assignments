@@ -12,7 +12,7 @@ An S4 class to store assignment parameters.
 \describe{
 \item{\code{technique}}{assignment technique to use}
 
-\item{\code{correlations}}{list of correlation parameters to be passed to metabolyseR correlation analysis}
+\item{\code{correlations_parameters}}{list of correlation parameters to be passed to metabolyseR correlation analysis}
 
 \item{\code{filter}}{list of r and n thresholds for filtering correlations}
 

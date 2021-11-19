@@ -3,7 +3,6 @@
 #' @description An S4 class to store assignment results
 #' @slot log list containing assignment logs
 #' @slot flags charactor vector containing completed assignment elements
-#' @slot parameters An S4 object of class AssignmentParameters containing the assignment parameters
 #' @slot data A tibble containing the peak intensity matrix
 #' @slot correlations A tibble containing the correlations
 #' @slot preparedCorrelations A tibble containing the prepared correlations ready for analysis

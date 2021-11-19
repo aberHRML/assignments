@@ -14,8 +14,6 @@ An S4 class to store assignment results
 
 \item{\code{flags}}{charactor vector containing completed assignment elements}
 
-\item{\code{parameters}}{An S4 object of class AssignmentParameters containing the assignment parameters}
-
 \item{\code{data}}{A tibble containing the peak intensity matrix}
 
 \item{\code{correlations}}{A tibble containing the correlations}
