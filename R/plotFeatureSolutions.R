@@ -27,10 +27,8 @@ plotSolutions <- function(graph,selectedComp,feature){
                     foreground = border,
                     plot_margin = margin(5, 5, 5, 5)) +
         labs(title = str_c('Component ',stats$Component),
-             caption = str_c('Size = ',stats$Size,'; ',
-                             'Nodes = ',stats$Nodes,'; ',
+             caption = str_c('Degree = ',stats$Degree %>% round(2),'; ',
                              'Weight = ',stats$Weight %>% round(2),'; ',
-                             'Density = ',stats$Density %>% round(2),'; ',
                              'AIS = ',stats$AIS %>% round(2),'; ',
                              'Plausibility = ',stats$Plausibility %>% round(2))) +
         xlim(min(g$x) - (max(g$x) - min(g$x)) * 0.05,
