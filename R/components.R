@@ -1,3 +1,23 @@
+
+degree <- function(n_nodes,n_edges){
+  2 * (n_edges / n_nodes)
+}
+
+plausibility <- function(AIS,degree,weight){
+  AIS + weight + degree/10
+}
+
+componentMetrics <- function(component){
+  component %>% 
+  mutate(Size = graph_size(),
+         Nodes = n(),
+         Degree = degree(Nodes,Size),,
+         Density = (2 * Size) / (Nodes * (Nodes - 1)),
+         Weight = sum(Weight) / Nodes,
+         AIS = sum(AddIsoScore) / Nodes,
+         Plausibility = plausibility(AIS,Degree,Weight))
+}
+
 #' @importFrom tidygraph as_tbl_graph activate morph unmorph graph_size group_components tbl_graph
 #' @importFrom magrittr set_names
 
@@ -32,13 +52,7 @@ calcComponents <- function(MFs,rel,parameters) {
   graph <- graph %>%
     left_join(weights,by = 'Component') %>%
     morph(to_components) %>%
-    mutate(Size = graph_size(),
-           Nodes = n(),
-           Degree = degree(Nodes,Size),,
-           Density = (2 * Size) / (Nodes * (Nodes - 1)),
-           Weight = sum(Weight) / Nodes,
-           AIS = sum(AddIsoScore) / Nodes,
-           Plausibility = plausibility(AIS,Degree,Weight)) %>%
+    componentMetrics() %>%
     unmorph()
   
   return(graph)
@@ -73,12 +87,6 @@ recalcComponents <- function(graph,parameters){
     select(-Weight) %>%
     left_join(weights,by = 'Component') %>%
     morph(to_components) %>%
-    mutate(Size = graph_size(),
-           Nodes = n(),
-           Degree = degree(Nodes,Size),
-           Density = (2 * Size) / (Nodes * (Nodes - 1)),
-           Weight = sum(Weight) / Nodes,
-           AIS = sum(AddIsoScore) / Nodes,
-           Plausibility = plausibility(AIS,Size,Weight)) %>%
+    componentMetrics() %>% 
     unmorph()
 }
