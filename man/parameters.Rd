@@ -5,6 +5,10 @@
 \alias{iso,AssignmentParameters-method}
 \alias{iso<-}
 \alias{iso<-,AssignmentParameters-method}
+\alias{add}
+\alias{add,AssignmentParameters-method}
+\alias{add<-}
+\alias{add<-,AssignmentParameters-method}
 \title{Parameter get and set methods}
 \usage{
 iso(x)
@@ -14,6 +18,14 @@ iso(x)
 iso(x) <- value
 
 \S4method{iso}{AssignmentParameters}(x) <- value
+
+add(x)
+
+\S4method{add}{AssignmentParameters}(x)
+
+add(x) <- value
+
+\S4method{add}{AssignmentParameters}(x) <- value
 }
 \arguments{
 \item{x}{S4 object of class \code{AssignmentParameters}}
@@ -28,5 +40,15 @@ assignment_parameters <- assignmentParameters('FIE')
 
 ## Return isotopes
 iso(assignment_parameters)
+
+## Set isotopes
+iso(assignment_parameters) <- '13C'
+
+## Return adducts
+add(assignment_parameters)
+
+## Set adducts
+add(assignment_parameters) <- list(n = c('[M-H]1-','[M+Cl]1-'),
+                                   p = c('[M+H]1+','[M+K]1+'))
 
 }

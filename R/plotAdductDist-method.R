@@ -17,12 +17,13 @@ setGeneric('plotAdductDist',function(assignment){
 setMethod('plotAdductDist',signature = 'Assignment',
           function(assignment){
             
-            isotopes <- assignmen
-            
             assign <- assignment %>%
               assignments() %>% 
               replace_na(list(Isotope = '')) %>% 
-              mutate(Isotope = factor(Isotope,levels = c()))
+              mutate(Isotope = factor(Isotope,
+                                      levels = c('',iso(assignment))),
+                     Adduct = factor(Adduct,
+                                     levels = ))
             
             assign$Mode[assign$Mode == 'n'] <- 'Negative Mode'
             assign$Mode[assign$Mode == 'p'] <- 'Positive Mode'
@@ -33,7 +34,8 @@ setMethod('plotAdductDist',signature = 'Assignment',
                 ggplot(d,aes(x = Adduct)) + 
                   geom_bar(colour = 'black',fill = ptol_pal()(1)) + 
                   theme_bw() + 
-                  facet_wrap(~Isotope) + 
+                  facet_wrap(~Isotope,
+                             scales = 'free') + 
                   labs(title = d$Mode[1],
                        y = 'Count',
                        caption = str_c('N = ',nrow(d))) +
