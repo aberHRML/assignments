@@ -1,5 +1,5 @@
 #' S4 class for assignment parameters
-#' @rdname AssignmentParameters
+#' @rdname AssignmentParameters-class
 #' @description An S4 class to store assignment parameters.
 #' @slot technique assignment technique to use
 #' @slot correlations list of correlation parameters to be passed to metabolyseR correlation analysis
