@@ -85,9 +85,8 @@ setMethod('show',signature = 'Assignment',
 #' @param assignment S4 object of class Assignment
 #' @export
 
-setGeneric('assignments',function(assignment){
-  standardGeneric('assignments')
-})
+setGeneric('assignments',function(assignment)
+  standardGeneric('assignments'))
 
 #' @rdname assignments
 
@@ -102,9 +101,8 @@ setMethod('assignments',signature = 'Assignment',
 #' @param assignment S4 object of class Assignment
 #' @export
 
-setGeneric('assignmentData',function(assignment){
-  standardGeneric('assignmentData')
-})
+setGeneric('assignmentData',function(assignment)
+  standardGeneric('assignmentData'))
 
 #' @rdname assignmentData
 
@@ -119,9 +117,8 @@ setMethod('assignmentData', signature = 'Assignment',
 #' @param assignment S4 object of class Assignment
 #' @export
 
-setGeneric('assignedData',function(assignment){
-  standardGeneric('assignedData')
-})
+setGeneric('assignedData',function(assignment)
+  standardGeneric('assignedData'))
 
 #' @rdname assignedData
 
