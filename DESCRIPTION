@@ -55,7 +55,7 @@ Collate: parameters.R assignment.R allGenerics.R
         plotFeatureSolutions.R
         'calcCorrelations-method.R'
         'filterCorrelations-method.R'
-        'plotSpectrum-method.R'
+        plotSpectrum.R
         reexports.R
 Suggests: testthat,
     covr
