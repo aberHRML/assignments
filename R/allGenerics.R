@@ -22,24 +22,9 @@ setGeneric("transformationAssign", function(assignment) {
   standardGeneric("transformationAssign")
 })
 
-#' @rdname assignments
-setGeneric('assignments',function(assignment){
-  standardGeneric('assignments')
-})
-
 #' @rdname summariseAssignment
 setGeneric('summariseAssignment',function(assignment){
   standardGeneric('summariseAssignment')
-})
-
-#' @rdname assignmentData
-setGeneric('assignmentData',function(assignment){
-  standardGeneric('assignmentData')
-})
-
-#' @rdname assignedData
-setGeneric('assignedData',function(assignment){
-  standardGeneric('assignedData')
 })
 
 #' @rdname plotSpectrum
