@@ -26,8 +26,3 @@ setGeneric("transformationAssign", function(assignment) {
 setGeneric('summariseAssignment',function(assignment){
   standardGeneric('summariseAssignment')
 })
-
-#' @rdname plotSpectrum
-setGeneric('plotSpectrum',function(assignment,MF){
-  standardGeneric('plotSpectrum')
-})

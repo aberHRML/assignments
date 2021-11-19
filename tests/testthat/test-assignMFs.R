@@ -32,3 +32,9 @@ test_that('adduct distributions can be plotted',{
   
   expect_s3_class(pl,'patchwork')
 })
+
+test_that('assignment spectrum can be plotted',{
+  pl <- plotSpectrum(assignment,'C6H8O7')
+  
+  expect_s3_class(pl,'patchwork')
+})
