@@ -1,3 +1,31 @@
+
+networkPlot <- function(network,layout,rThreshold,assignedNodes,explainedEdges){
+  rt <- str_c('Visualised using threshold of r > ',rThreshold)
+  nn <- str_c('Total nodes = ',sum(assignedNodes))
+  an <- str_c('Assigned nodes = ',
+              assignedNodes[1],
+              ' (',
+              {assignedNodes[1]/sum(assignedNodes) * 100} %>%
+                round(),'%)')
+  ne <- str_c('Total edges = ',sum(explainedEdges))
+  ee <- str_c('Explained edges = ',
+              explainedEdges[1],
+              ' (',
+              {explainedEdges[1]/sum(explainedEdges) * 100} %>%
+                round(),'%)')
+  
+  ggraph(network,layout = layout) +
+    geom_edge_link(alpha = 0.2) +
+    geom_node_point(aes(fill = Assigned),shape = 21) +
+    scale_fill_ptol() +
+    theme_graph() +
+    theme(legend.title = element_blank()) +
+    coord_fixed() +
+    facet_edges(~Explained) +
+    labs(title = str_c('Assignment correlation network'),
+         caption = str_c(rt,nn,an,ne,ee,sep = '\n'))
+}
+
 #' Plot an assignment network
 #' @rdname plotNetwork
 #' @description plot assignment network
@@ -25,13 +53,18 @@ setMethod('plotNetwork',signature = 'Assignment',
             TA <- assignment@transAssign %>%
               map(~{.$filteredGraph})
             
-            graph <- AI %>%
-              bind_graphs({a <- TA[[1]]
-              for (i in 2:length(TA)) {
-                a <- bind_graphs(a,TA[[i]])
-              }
-              a
-              }) 
+            graph <- AI
+            
+            if (length(TA) > 0){
+               graph <- bind_graphs(
+                  {a <- TA[[1]]
+                  for (i in 2:length(TA)) {
+                    a <- bind_graphs(a,TA[[i]])
+                  }
+                  a
+                  }
+                ) 
+            } 
             
             e <- edges(graph) %>%
               mutate(Explained = 'Explained')
@@ -71,28 +104,9 @@ setMethod('plotNetwork',signature = 'Assignment',
               .$Assigned %>%
               table()
             
-            rt <- str_c('Visualised using threshold of r > ',rThreshold)
-            nn <- str_c('Total nodes = ',sum(assignedNodes))
-            an <- str_c('Assigned nodes = ',
-                        assignedNodes[1],
-                        ' (',
-                        {assignedNodes[1]/sum(assignedNodes) * 100} %>%
-                          round(),'%)')
-            ne <- str_c('Total edges = ',sum(explainedEdges))
-            ee <- str_c('Explained edges = ',
-                        explainedEdges[1],
-                        ' (',
-                        {explainedEdges[1]/sum(explainedEdges) * 100} %>%
-                          round(),'%)')
-            
-            ggraph(network,layout = layout) +
-              geom_edge_link(alpha = 0.2) +
-              geom_node_point(aes(fill = Assigned),shape = 21) +
-              scale_fill_ptol() +
-              theme_graph() +
-              theme(legend.title = element_blank()) +
-              coord_fixed() +
-              facet_edges(~Explained) +
-              labs(title = str_c('Assignment correlation network'),
-                   caption = str_c(rt,nn,an,ne,ee,sep = '\n'))
+           networkPlot(network,
+                       layout,
+                       rThreshold,
+                       assignedNodes,
+                       explainedEdges)
           })
