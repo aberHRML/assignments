@@ -5,6 +5,8 @@
 plotDist <- function(x){
   ggplot(x,aes(x = Adduct)) + 
     geom_bar(colour = 'black',fill = ptol_pal()(1)) + 
+    scale_y_continuous(expand = c(0,0)) +
+    scale_x_discrete(expand = c(0,0)) +
     theme_bw() + 
     facet_wrap(~Isotope,
                scales = 'free') + 
