@@ -21,11 +21,11 @@ test_that('feature solutions can be plotted',{
   expect_s3_class(pl,'patchwork')
 })
 
-# test_that('assignment network can be plotted',{
-#   pl <- plotNetwork(assignment)
-#   
-#   expect_s3_class(pl,'patchwork')
-# })
+test_that('assignment network can be plotted',{
+  pl <- plotNetwork(assignment)
+
+  expect_s3_class(pl,'ggraph')
+})
 
 test_that('adduct distributions can be plotted',{
   pl <- plotAdductDist(assignment)
