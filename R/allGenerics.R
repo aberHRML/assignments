@@ -42,11 +42,6 @@ setGeneric('assignedData',function(assignment){
   standardGeneric('assignedData')
 })
 
-#' @rdname plotAdductDist
-setGeneric('plotAdductDist',function(assignment){
-  standardGeneric('plotAdductDist')
-})
-
 #' @rdname plotSpectrum
 setGeneric('plotSpectrum',function(assignment,MF){
   standardGeneric('plotSpectrum')
