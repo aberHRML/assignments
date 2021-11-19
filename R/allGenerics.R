@@ -46,19 +46,9 @@ setGeneric('assignedData',function(assignment){
   standardGeneric('assignedData')
 })
 
-#' @rdname plotNetwork
-setGeneric('plotNetwork',function(assignment, layout = 'stress', rThreshold = 0.7){
-standardGeneric('plotNetwork')
-})
-
 #' @rdname plotAdductDist
 setGeneric('plotAdductDist',function(assignment){
   standardGeneric('plotAdductDist')
-})
-
-#' @rdname plotFeatureSolutions
-setGeneric('plotFeatureSolutions',function(assignment,feature,maxComponents = 10){
-  standardGeneric('plotFeatureSolutions')
 })
 
 #' @rdname plotSpectrum

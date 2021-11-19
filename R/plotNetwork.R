@@ -1,4 +1,4 @@
-#' plotNetwork-Assignment
+#' Plot an assignment network
 #' @rdname plotNetwork
 #' @description plot assignment network
 #' @param assignment of class Assignment
@@ -11,6 +11,12 @@
 #' @importFrom ggplot2 labs aes element_blank coord_fixed
 #' @importFrom graphlayouts layout_igraph_stress
 #' @export
+
+setGeneric('plotNetwork',function(assignment, layout = 'stress', rThreshold = 0.7){
+  standardGeneric('plotNetwork')
+})
+
+#' @rdname plotNetwork
 
 setMethod('plotNetwork',signature = 'Assignment',
           function(assignment, layout = 'stress', rThreshold = 0.7){
