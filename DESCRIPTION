@@ -54,7 +54,6 @@ Collate:
         'access-methods.R'
         'summariseAssignment-method.R'
         'plotNetwork-method.R'
-        'networkComponents.R'
         'addNames.R'
         'eliminate.R'
         'plotAdductDist-method.R'
