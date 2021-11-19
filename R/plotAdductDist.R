@@ -1,6 +1,6 @@
 
 #' @importFrom ggthemes ptol_pal
-#' @importFrom ggplot2 ggplot geom_bar theme_bw facet_wrap theme element_text element_line scale_y_continuous scale_x_continuous
+#' @importFrom ggplot2 ggplot geom_bar theme_bw facet_wrap theme element_text element_line scale_y_continuous scale_x_discrete
 
 plotDist <- function(x){
   ggplot(x,aes(x = Adduct)) + 

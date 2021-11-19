@@ -3,6 +3,7 @@
 #' @importFrom mzAnnotation calcM calcMZ ppmError
 #' @importFrom igraph vertex.attributes V
 #' @importFrom furrr furrr_options
+#' @importFrom methods as
 
 setMethod('addIsoAssign',signature = 'Assignment',
           function(assignment){
