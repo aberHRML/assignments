@@ -30,10 +30,9 @@ Imports: CHNOSZ,
 License: GPL (>= 3)
 Encoding: UTF-8
 LazyData: true
+Roxygen: list(markdown = TRUE)
 RoxygenNote: 7.1.2
-Collate:
-        'allGenerics.R'
-        'allClasses.R'
+Collate: parameters.R allGenerics.R allClasses.R
         'prepCorrelations-method.R'
         'addIsoAssign-method.R'
         'transformationAssign-method.R'
