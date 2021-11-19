@@ -100,6 +100,16 @@ setMethod('show',signature = 'AssignmentParameters',
 #' ## Return isotopes
 #' iso(assignment_parameters)
 #' 
+#' ## Set isotopes
+#' iso(assignment_parameters) <- '13C'
+#' 
+#' ## Return adducts
+#' add(assignment_parameters)
+#' 
+#' ## Set adducts
+#' add(assignment_parameters) <- list(n = c('[M-H]1-','[M+Cl]1-'),
+#'                                    p = c('[M+H]1+','[M+K]1+'))
+#' 
 #' @export
 
 setGeneric('iso',function(x)
@@ -123,5 +133,32 @@ setGeneric('iso<-',function(x,value)
 setMethod('iso<-',signature = 'AssignmentParameters',
           function(x,value){
             x@isotopes <- value
+            return(x)
+          })
+
+#' @rdname parameters
+#' @export
+
+setGeneric('add',function(x)
+  standardGeneric('add'))
+
+#' @rdname parameters
+
+setMethod('add',signature = 'AssignmentParameters',
+          function(x){
+            x@adducts
+          })
+
+#' @rdname parameters
+#' @export
+
+setGeneric('add<-',function(x,value)
+  standardGeneric('add<-'))
+
+#' @rdname parameters
+
+setMethod('add<-',signature = 'AssignmentParameters',
+          function(x,value){
+            x@adducts <- value
             return(x)
           })
