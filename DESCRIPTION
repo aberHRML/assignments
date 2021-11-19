@@ -3,30 +3,30 @@ Title: Molecular formula assignment for high resolution metabolomics
 Version: 0.8.0
 Authors@R: person("Jasen", "Finch", email = "jsf9@aber.ac.uk", role = c("aut", "cre"))
 Description: Molecular formula assignment for high resolution metabolomics.
-Depends: R (>= 3.5.0),
-    ggraph
+Depends: R (>= 3.5.0)
 Imports: CHNOSZ,
-    dplyr,
-    magrittr,
-    stringr,
-    tibble,
-    methods,
-    tidyr,
-    crayon,
-    purrr,
     cli,
-    lubridate,
-    tidygraph,
-    igraph,
-    ggthemes,
+    crayon,
+    dplyr,
+    furrr,
+    future,
     ggplot2,
-    patchwork,
+    ggraph,
+    ggrepel,
+    ggthemes,
+    graphlayouts,
+    igraph,
+    lubridate,
+    magrittr,
+    methods,
     mzAnnotation,
     metabolyseR,
-    ggrepel,
-    graphlayouts,
-    furrr,
-    future
+    patchwork,
+    purrr,
+    stringr,
+    tibble,
+    tidygraph,
+    tidyr
 License: GPL (>= 3)
 Encoding: UTF-8
 LazyData: true
