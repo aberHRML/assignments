@@ -21,6 +21,11 @@ test_that('feature solutions can be plotted',{
   expect_s3_class(pl,'patchwork')
 })
 
+test_that('feature solutions plotting throws an error if an incorrect feature is provided',{
+  expect_error(plotFeatureSolutions(assignment,
+                             'test'))
+})
+
 test_that('assignment network can be plotted',{
   pl <- plotNetwork(assignment)
 

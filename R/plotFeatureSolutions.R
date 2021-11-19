@@ -71,6 +71,11 @@ setMethod('plotFeatureSolutions',signature = 'Assignment',
             
             n <- nodes(assignment@addIsoAssign$graph)
             
+            if (!(feature %in% n$Feature)){
+              stop('Feature not found in assignment graph.',
+                   call. = FALSE)
+            }
+            
             comp <- n %>%
               filter(Feature == feature) %>%
               select(Component,Plausibility) %>%
