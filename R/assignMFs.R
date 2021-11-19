@@ -1,3 +1,24 @@
+
+setGeneric('doAssignment',function(assignment){
+  standardGeneric('doAssignment')
+})
+
+setMethod('doAssignment',signature = 'Assignment',
+          function(assignment){
+            assignmentMethod <- assignMethods(assignment@parameters@technique)
+            
+            elements <- names(assignmentMethod())
+            elements <- elements[!(elements %in% assignment@flags)]
+            
+            for(i in elements){
+              method <- assignmentMethod(i)
+              assignment <- method(assignment)
+              assignment@flags <- c(assignment@flags,i)
+            }
+            
+            return(assignment)
+          })
+
 #' assignMFs
 #' @description assign molecular formulas to a set of given m/z.
 #' @param dat tibble containing the peak intensities of m/z for which to assign molecular formulas
@@ -41,19 +62,19 @@ assignMFs <- function(dat,parameters,verbose = TRUE) {
                     parameters = parameters)
   assignment@log$verbose <- verbose
   
- assignment <- assignment %>%
-   doAssignment()
- 
- if (verbose == T) {
-   endTime <- proc.time()
-   elapsed <- {endTime - startTime} %>%
-     .[3] %>%
-     round(1) %>%
-     seconds_to_period() %>%
-     str_c('[',.,']')
-   message(rep('_',console_width()))
-   message('\n',green('Complete! '),elapsed,'\n')
- }
- 
- return(assignment)
+  assignment <- assignment %>%
+    doAssignment()
+  
+  if (verbose == TRUE) {
+    endTime <- proc.time()
+    elapsed <- {endTime - startTime} %>%
+      .[3] %>%
+      round(1) %>%
+      seconds_to_period() %>%
+      str_c('[',.,']')
+    message(rep('_',console_width()))
+    message('\n',green('Complete! '),elapsed,'\n')
+  }
+  
+  return(assignment)
 }

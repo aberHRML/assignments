@@ -22,10 +22,6 @@ setGeneric("transformationAssign", function(assignment) {
   standardGeneric("transformationAssign")
 })
 
-setGeneric('doAssignment',function(assignment){
-  standardGeneric('doAssignment')
-})
-
 #' @rdname assignments
 setGeneric('assignments',function(assignment){
   standardGeneric('assignments')
