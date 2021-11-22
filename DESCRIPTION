@@ -59,3 +59,5 @@ Collate: parameters.R assignment.R allGenerics.R
         reexports.R
 Suggests: testthat,
     covr
+Remotes: jasenfinch/mzAnnotation@tmp,
+    jasenfinch/metabolyseR
