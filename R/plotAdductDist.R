@@ -44,7 +44,7 @@ setMethod('plotAdductDist',signature = 'Assignment',
               assignments() %>% 
               replace_na(list(Isotope = '')) %>% 
               mutate(Isotope = factor(Isotope,
-                                      levels = c('',iso(assignment)))
+                                      levels = c('',isotopes(assignment)))
                      )
             
             assign$Mode[assign$Mode == 'n'] <- 'Negative Mode'

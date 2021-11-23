@@ -104,26 +104,26 @@ setMethod('show',signature = 'AssignmentParameters',
 #' assignment_parameters <- assignmentParameters('FIE')
 #' 
 #' ## Return isotopes
-#' iso(assignment_parameters)
+#' isotopes(assignment_parameters)
 #' 
 #' ## Set isotopes
-#' iso(assignment_parameters) <- '13C'
+#' isotopes(assignment_parameters) <- '13C'
 #' 
 #' ## Return adducts
-#' add(assignment_parameters)
+#' adducts(assignment_parameters)
 #' 
 #' ## Set adducts
-#' add(assignment_parameters) <- list(n = c('[M-H]1-','[M+Cl]1-'),
+#' adducts(assignment_parameters) <- list(n = c('[M-H]1-','[M+Cl]1-'),
 #'                                    p = c('[M+H]1+','[M+K]1+'))
 #' 
 #' @export
 
-setGeneric('iso',function(x)
-  standardGeneric('iso'))
+setGeneric('isotopes',function(x)
+  standardGeneric('isotopes'))
 
 #' @rdname parameters
 
-setMethod('iso',signature = 'AssignmentParameters',
+setMethod('isotopes',signature = 'AssignmentParameters',
           function(x){
             x@isotopes
           })
@@ -131,12 +131,12 @@ setMethod('iso',signature = 'AssignmentParameters',
 #' @rdname parameters
 #' @export
 
-setGeneric('iso<-',function(x,value)
-  standardGeneric('iso<-'))
+setGeneric('isotopes<-',function(x,value)
+  standardGeneric('isotopes<-'))
 
 #' @rdname parameters
 
-setMethod('iso<-',signature = 'AssignmentParameters',
+setMethod('isotopes<-',signature = 'AssignmentParameters',
           function(x,value){
             x@isotopes <- value
             return(x)
@@ -145,12 +145,12 @@ setMethod('iso<-',signature = 'AssignmentParameters',
 #' @rdname parameters
 #' @export
 
-setGeneric('add',function(x)
-  standardGeneric('add'))
+setGeneric('adducts',function(x)
+  standardGeneric('adducts'))
 
 #' @rdname parameters
 
-setMethod('add',signature = 'AssignmentParameters',
+setMethod('adducts',signature = 'AssignmentParameters',
           function(x){
             x@adducts
           })
@@ -158,12 +158,12 @@ setMethod('add',signature = 'AssignmentParameters',
 #' @rdname parameters
 #' @export
 
-setGeneric('add<-',function(x,value)
-  standardGeneric('add<-'))
+setGeneric('adducts<-',function(x,value)
+  standardGeneric('adducts<-'))
 
 #' @rdname parameters
 
-setMethod('add<-',signature = 'AssignmentParameters',
+setMethod('adducts<-',signature = 'AssignmentParameters',
           function(x,value){
             x@adducts <- value
             return(x)
