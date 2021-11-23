@@ -21,11 +21,22 @@ test_that('assignment works for LC techniques',{
   expect_s4_class(assignment_LC,"Assignment")
 })
 
-test_that('Assignment class show method works',{
+test_that('assignment class show method works',{
   expect_output(print(assignment_FIE),
                 'Assignment:')
 })
 
+test_that('assignment data can be returned',{
+  expect_s3_class(assignmentData(assignment_FIE),'tbl_df')
+})
+
+test_that('data with assigned feature names can be returned',{
+  expect_s3_class(assignedData(assignment_FIE),'tbl_df')
+})
+
+test_that('a summary of assignments can be returned',{
+  expect_s3_class(summariseAssignment(assignment_FIE),'tbl_df')
+})
 test_that('feature solutions can be plotted',{
   pl <- plotFeatureSolutions(assignment_FIE,
                              'n191.01962',
