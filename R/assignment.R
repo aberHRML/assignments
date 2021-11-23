@@ -79,16 +79,38 @@ setMethod('show',signature = 'Assignment',
           }
 )
 
-#' assignments-Assignment
-#' @rdname assignments
-#' @description Get table of assigned features from an Assignment
+#' Assignment accessors
+#' @rdname accessors
+#' @description Access methods for Assignment S4 class
 #' @param assignment S4 object of class Assignment
+#' @export
+
+setGeneric('relationships',function(assignment)
+  standardGeneric('relationships'))
+
+#' @rdname accessors
+
+setMethod('relationships',signature = 'Assignment',
+          function(assignment){
+            assignment@relationships
+          })
+
+setGeneric('relationships<-',function(assignment,value)
+  standardGeneric('relationships<-'))
+
+setMethod('relationships<-',signature = 'Assignment',
+          function(assignment,value){
+            assignment@relationships <- value
+            return(assignment)
+          })
+
+#' @rdname accessors
 #' @export
 
 setGeneric('assignments',function(assignment)
   standardGeneric('assignments'))
 
-#' @rdname assignments
+#' @rdname accessors
 
 setMethod('assignments',signature = 'Assignment',
           function(assignment){

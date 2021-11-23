@@ -15,7 +15,7 @@ LCassignment <- function(element = NULL){
     },
     relationships = function(assignment){
       assignment %>% 
-        relationships(transformations = FALSE)
+        calcRelationships(transformations = FALSE)
     },
     `adduct and isotope assignment` = function(assignment){
       assignment %>%

@@ -15,7 +15,7 @@ FIEassignment <- function(element = NULL) {
     },
     relationships = function(assignment){
       assignment %>% 
-        relationships()
+        calcRelationships()
     },
     `adduct and isotope assignment` = function(assignment){
       assignment %>%
