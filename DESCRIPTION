@@ -36,7 +36,6 @@ Collate: parameters.R assignment.R allGenerics.R
         prepCorrelations-method.R addIsoAssign.R
         transformationAssign-method.R relationships.R
         graph.R assignMFs.R MFgen.R
-        assignmentParameters.R
         'MFscore.R'
         'addIsoScore.R'
         'addMFs.R'
