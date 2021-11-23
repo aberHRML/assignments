@@ -125,6 +125,24 @@ setMethod('show',signature = 'AssignmentParameters',
 #' ## Set limit
 #' limit(assignment_parameters) <- 0.002
 #' 
+#' ## Return max M
+#' maxM(assignment_parameters)
+#' 
+#' ## Set max M
+#' maxM(assignment_parameters) <- 500
+#' 
+#' ## Return max MF score
+#' maxMFscore(assignment_parameters)
+#' 
+#' ## Set max MF score
+#' maxMFscore(assignment_parameters) <- 3
+#' 
+#' ## Return ppm
+#' ppm(assignment_parameters)
+#' 
+#' ## Set ppm
+#' ppm(assignment_parameters) <- 3
+#' 
 #' ## Return isotopes
 #' isotopes(assignment_parameters)
 #' 
@@ -197,6 +215,87 @@ setGeneric('limit<-',function(x,value)
 setMethod('limit<-',signature = 'AssignmentParameters',
           function(x,value){
             x@limit <- value
+            return(x)
+          })
+
+#' @rdname parameters
+#' @export
+
+setGeneric('maxM',function(x)
+  standardGeneric('maxM'))
+
+#' @rdname parameters
+
+setMethod('maxM',signature = 'AssignmentParameters',
+          function(x){
+            x@maxM
+          })
+
+#' @rdname parameters
+#' @export
+
+setGeneric('maxM<-',function(x,value)
+  standardGeneric('maxM<-'))
+
+#' @rdname parameters
+
+setMethod('maxM<-',signature = 'AssignmentParameters',
+          function(x,value){
+            x@maxM <- value
+            return(x)
+          })
+
+#' @rdname parameters
+#' @export
+
+setGeneric('maxMFscore',function(x)
+  standardGeneric('maxMFscore'))
+
+#' @rdname parameters
+
+setMethod('maxMFscore',signature = 'AssignmentParameters',
+          function(x){
+            x@maxMFscore
+          })
+
+#' @rdname parameters
+#' @export
+
+setGeneric('maxMFscore<-',function(x,value)
+  standardGeneric('maxMFscore<-'))
+
+#' @rdname parameters
+
+setMethod('maxMFscore<-',signature = 'AssignmentParameters',
+          function(x,value){
+            x@maxMFscore <- value
+            return(x)
+          })
+
+#' @rdname parameters
+#' @export
+
+setGeneric('ppm',function(x)
+  standardGeneric('ppm'))
+
+#' @rdname parameters
+
+setMethod('ppm',signature = 'AssignmentParameters',
+          function(x){
+            x@ppm
+          })
+
+#' @rdname parameters
+#' @export
+
+setGeneric('ppm<-',function(x,value)
+  standardGeneric('ppm<-'))
+
+#' @rdname parameters
+
+setMethod('ppm<-',signature = 'AssignmentParameters',
+          function(x,value){
+            x@ppm <- value
             return(x)
           })
 

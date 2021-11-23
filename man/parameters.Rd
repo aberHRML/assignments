@@ -7,6 +7,18 @@
 \alias{limit,AssignmentParameters-method}
 \alias{limit<-}
 \alias{limit<-,AssignmentParameters-method}
+\alias{maxM}
+\alias{maxM,AssignmentParameters-method}
+\alias{maxM<-}
+\alias{maxM<-,AssignmentParameters-method}
+\alias{maxMFscore}
+\alias{maxMFscore,AssignmentParameters-method}
+\alias{maxMFscore<-}
+\alias{maxMFscore<-,AssignmentParameters-method}
+\alias{ppm}
+\alias{ppm,AssignmentParameters-method}
+\alias{ppm<-}
+\alias{ppm<-,AssignmentParameters-method}
 \alias{isotopes}
 \alias{isotopes,AssignmentParameters-method}
 \alias{isotopes<-}
@@ -44,6 +56,30 @@ limit(x)
 limit(x) <- value
 
 \S4method{limit}{AssignmentParameters}(x) <- value
+
+maxM(x)
+
+\S4method{maxM}{AssignmentParameters}(x)
+
+maxM(x) <- value
+
+\S4method{maxM}{AssignmentParameters}(x) <- value
+
+maxMFscore(x)
+
+\S4method{maxMFscore}{AssignmentParameters}(x)
+
+maxMFscore(x) <- value
+
+\S4method{maxMFscore}{AssignmentParameters}(x) <- value
+
+ppm(x)
+
+\S4method{ppm}{AssignmentParameters}(x)
+
+ppm(x) <- value
+
+\S4method{ppm}{AssignmentParameters}(x) <- value
 
 isotopes(x)
 
@@ -112,6 +148,24 @@ limit(assignment_parameters)
 
 ## Set limit
 limit(assignment_parameters) <- 0.002
+
+## Return max M
+maxM(assignment_parameters)
+
+## Set max M
+maxM(assignment_parameters) <- 500
+
+## Return max MF score
+maxMFscore(assignment_parameters)
+
+## Set max MF score
+maxMFscore(assignment_parameters) <- 3
+
+## Return ppm
+ppm(assignment_parameters)
+
+## Set ppm
+ppm(assignment_parameters) <- 3
 
 ## Return isotopes
 isotopes(assignment_parameters)

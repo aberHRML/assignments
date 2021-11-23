@@ -16,6 +16,40 @@ test_that("limit can be set", {
   expect_identical(limit(p),new_limit)
 })
 
+test_that("max M can be returned", {
+  expect_type(maxM(p),'double')
+})
+
+test_that("max M can be set", {
+  new_maxM <- 500
+  maxM(p) <- new_maxM
+  
+  expect_identical(maxM(p),new_maxM)
+})
+
+test_that("max MF score can be returned", {
+  expect_type(maxMFscore(p),'double')
+})
+
+test_that("max MF score can be set", {
+  new_maxMFscore <- 3
+  maxMFscore(p) <- new_maxMFscore
+  
+  expect_identical(maxMFscore(p),new_maxMFscore)
+})
+
+
+test_that("ppm can be returned", {
+  expect_type(ppm(p),'double')
+})
+
+test_that("ppm can be set", {
+  new_ppm <- 3
+  ppm(p) <- new_ppm
+  
+  expect_identical(ppm(p),new_ppm)
+})
+
 test_that("adducts can be returned", {
   expect_type(adducts(p),'list')
 })
