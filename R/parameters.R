@@ -61,6 +61,19 @@ setClass('AssignmentParameters',
            transformationRules = transformation_rules()
          ))
 
+# setValidity('AssignmentParameters',function(object){
+#   adducts_present <- adducts(object) %in% adductRules(object)$Name
+#   
+#   if (FALSE %in% adducts_present){
+#     missing_adducts <- adducts(object)[adducts_present] %>% 
+#       str_c(collapse = ', ')
+#     
+#     str_c('Specified adducts ',missing_adducts,' not present in adduct rules.')
+#   } else {
+#     TRUE
+#   }
+# })
+
 #' @importFrom methods show
 #' @importFrom crayon yellow
 #' @importFrom purrr map
@@ -103,6 +116,15 @@ setMethod('show',signature = 'AssignmentParameters',
 #' @examples 
 #' assignment_parameters <- assignmentParameters('FIE')
 #' 
+#' ## Return technique
+#' technique(assignment_parameters)
+#' 
+#' ## Return limit
+#' limit(assignment_parameters)
+#' 
+#' ## Set limit
+#' limit(assignment_parameters) <- 0.002
+#' 
 #' ## Return isotopes
 #' isotopes(assignment_parameters)
 #' 
@@ -115,7 +137,70 @@ setMethod('show',signature = 'AssignmentParameters',
 #' ## Set adducts
 #' adducts(assignment_parameters) <- list(n = c('[M-H]1-','[M+Cl]1-'),
 #'                                    p = c('[M+H]1+','[M+K]1+'))
+#'                                    
+#' ## Return transformations
+#' transformations(assignment_parameters)
 #' 
+#' ## Set transformations
+#' transformations(assignment_parameters) <- "M - [O] + [NH2]"
+#' 
+#' ## Return adduct rules
+#' adductRules(assignment_parameters)
+#' 
+#' ## Set adduct rules
+#' adductRules(assignment_parameters) <- mzAnnotation::adduct_rules())
+#' 
+#' ## Return isotope rules
+#' isotopeRules(assignment_parameters)
+#' 
+#' ## Set isotope rules
+#' isotopeRules(assignment_parameters) <- mzAnnotation::isotope_rules())
+#' 
+#' ## Return transformation rules
+#' transformationRules(assignment_parameters)
+#' 
+#' ## Set transformation rules
+#' transformationRules(assignment_parameters) <- mzAnnotation::transformation_rules())
+#' @export
+
+setGeneric('technique',function(x)
+  standardGeneric('technique'))
+
+#' @rdname parameters
+
+setMethod('technique',signature = 'AssignmentParameters',
+          function(x){
+            x@technique
+          })
+
+#' @rdname parameters
+#' @export
+
+setGeneric('limit',function(x)
+  standardGeneric('limit'))
+
+#' @rdname parameters
+
+setMethod('limit',signature = 'AssignmentParameters',
+          function(x){
+            x@limit
+          })
+
+#' @rdname parameters
+#' @export
+
+setGeneric('limit<-',function(x,value)
+  standardGeneric('limit<-'))
+
+#' @rdname parameters
+
+setMethod('limit<-',signature = 'AssignmentParameters',
+          function(x,value){
+            x@limit <- value
+            return(x)
+          })
+
+#' @rdname parameters
 #' @export
 
 setGeneric('isotopes',function(x)
@@ -166,5 +251,113 @@ setGeneric('adducts<-',function(x,value)
 setMethod('adducts<-',signature = 'AssignmentParameters',
           function(x,value){
             x@adducts <- value
+            return(x)
+          })
+
+#' @rdname parameters
+#' @export
+
+setGeneric('transformations',function(x)
+  standardGeneric('transformations'))
+
+#' @rdname parameters
+
+setMethod('transformations',signature = 'AssignmentParameters',
+          function(x){
+            x@transformations
+          })
+
+#' @rdname parameters
+#' @export
+
+setGeneric('transformations<-',function(x,value)
+  standardGeneric('transformations<-'))
+
+#' @rdname parameters
+
+setMethod('transformations<-',signature = 'AssignmentParameters',
+          function(x,value){
+            x@transformations <- value
+            return(x)
+          })
+
+#' @rdname parameters
+#' @export
+
+setGeneric('adductRules',function(x)
+  standardGeneric('adductRules'))
+
+#' @rdname parameters
+
+setMethod('adductRules',signature = 'AssignmentParameters',
+          function(x){
+            x@adductRules
+          })
+
+#' @rdname parameters
+#' @export
+
+setGeneric('adductRules<-',function(x,value)
+  standardGeneric('adductRules<-'))
+
+#' @rdname parameters
+
+setMethod('adductRules<-',signature = 'AssignmentParameters',
+          function(x,value){
+            x@adductRules <- value
+            return(x)
+          })
+
+#' @rdname parameters
+#' @export
+
+setGeneric('isotopeRules',function(x)
+  standardGeneric('isotopeRules'))
+
+#' @rdname parameters
+
+setMethod('isotopeRules',signature = 'AssignmentParameters',
+          function(x){
+            x@isotopeRules
+          })
+
+#' @rdname parameters
+#' @export
+
+setGeneric('isotopeRules<-',function(x,value)
+  standardGeneric('isotopeRules<-'))
+
+#' @rdname parameters
+
+setMethod('isotopeRules<-',signature = 'AssignmentParameters',
+          function(x,value){
+            x@isotopeRules <- value
+            return(x)
+          })
+
+#' @rdname parameters
+#' @export
+
+setGeneric('transformationRules',function(x)
+  standardGeneric('transformationRules'))
+
+#' @rdname parameters
+
+setMethod('transformationRules',signature = 'AssignmentParameters',
+          function(x){
+            x@isotopeRules
+          })
+
+#' @rdname parameters
+#' @export
+
+setGeneric('transformationRules<-',function(x,value)
+  standardGeneric('transformationRules<-'))
+
+#' @rdname parameters
+
+setMethod('transformationRules<-',signature = 'AssignmentParameters',
+          function(x,value){
+            x@transformationRules <- value
             return(x)
           })
