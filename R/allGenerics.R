@@ -7,9 +7,6 @@ setGeneric('filterCorrelations', function(assignment)
 setGeneric('prepCorrelations', function(assignment)
   standardGeneric('prepCorrelations'))
 
-setGeneric("relationships", function(assignment,transformations = TRUE)
-  standardGeneric("relationships"))
-
 setGeneric("transformationAssign", function(assignment)
   standardGeneric("transformationAssign"))
 

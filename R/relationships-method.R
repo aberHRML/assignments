@@ -1,3 +1,7 @@
+
+setGeneric("relationships", function(assignment,transformations = TRUE)
+  standardGeneric("relationships"))
+
 #' @importFrom furrr future_map
 #' @importFrom dplyr mutate bind_rows filter vars contains
 #' @importFrom dplyr inner_join semi_join select mutate_at
@@ -5,7 +9,6 @@
 #' @importFrom mzAnnotation relationshipCalculator
 #' @importFrom magrittr %>%
 #' @importFrom tibble tibble
-#' @importFrom mzAnnotation adducts isotopes
 
 setMethod('relationships',signature = 'Assignment',
           function(assignment,transformations = T){
