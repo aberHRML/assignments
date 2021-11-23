@@ -2,9 +2,12 @@
 % Please edit documentation in R/assignMFs.R
 \name{assignMFs}
 \alias{assignMFs}
-\title{assignMFs}
+\alias{continueAssignment}
+\title{Assign molecular formulas}
 \usage{
 assignMFs(dat, parameters, verbose = TRUE)
+
+continueAssignment(assignment)
 }
 \arguments{
 \item{dat}{tibble containing the peak intensities of m/z for which to assign molecular formulas}
