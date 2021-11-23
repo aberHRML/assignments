@@ -1,6 +1,4 @@
 
-context('assignMFs')
-
 assignment_parameters_FIE <- assignmentParameters('FIE')
 assignment_parameters_LC <- assignmentParameters('RP-LC')
 
