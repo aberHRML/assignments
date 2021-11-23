@@ -9,7 +9,3 @@ setGeneric('prepCorrelations', function(assignment)
 
 setGeneric("transformationAssign", function(assignment)
   standardGeneric("transformationAssign"))
-
-#' @rdname summariseAssignment
-setGeneric('summariseAssignment',function(assignment)
-  standardGeneric('summariseAssignment'))

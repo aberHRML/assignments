@@ -46,7 +46,6 @@ Collate: parameters.R assignment.R allGenerics.R
         'MFassign.R'
         'FIEassignment.R'
         'continueAssignment.R'
-        'summariseAssignment-method.R'
         plotNetwork.R
         'addNames.R'
         'eliminate.R'
