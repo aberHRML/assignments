@@ -345,7 +345,7 @@ setGeneric('transformationRules',function(x)
 
 setMethod('transformationRules',signature = 'AssignmentParameters',
           function(x){
-            x@isotopeRules
+            x@transformationRules
           })
 
 #' @rdname parameters

@@ -49,3 +49,36 @@ test_that("transformations can be set", {
   
   expect_identical(transformations(p),new_transformations)
 })
+
+test_that("adduct rules can be returned", {
+  expect_s3_class(adductRules(p),'tbl_df')
+})
+
+test_that("adducts rules can be set", {
+  new_adduct_rules <- mzAnnotation::adduct_rules()[1,]
+  adductRules(p) <- new_adduct_rules
+  
+  expect_identical(adductRules(p),new_adduct_rules)
+})
+
+test_that("isotope rules can be returned", {
+  expect_s3_class(isotopeRules(p),'tbl_df')
+})
+
+test_that("isotope rules can be set", {
+  new_isotope_rules <- mzAnnotation::isotope_rules()[1,]
+  isotopeRules(p) <- new_isotope_rules
+  
+  expect_identical(isotopeRules(p),new_isotope_rules)
+})
+
+test_that("transformation rules can be returned", {
+  expect_s3_class(transformationRules(p),'tbl_df')
+})
+
+test_that("transformation rules can be set", {
+  new_transformation_rules <- mzAnnotation::transformation_rules()[1,]
+  transformationRules(p) <- new_transformation_rules
+  
+  expect_identical(transformationRules(p),new_transformation_rules)
+})
