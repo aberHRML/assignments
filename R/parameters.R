@@ -16,7 +16,7 @@
 #' @slot adductRules tibble containing adduct formation rules as returned by mzAnnotation::adducts()
 #' @slot isotopeRules tibble containing isotope rules as returned by mzAnnotation::isotopes()
 #' @slot transformationRules tibble containing transformation rules as returned by mzAnnotation::transformations()
-#' @importFrom mzAnnotation transformations
+#' @importFrom mzAnnotation adduct_rules isotope_rules transformation_rules
 #' @export
 
 setClass('AssignmentParameters',
@@ -50,10 +50,10 @@ setClass('AssignmentParameters',
                                 "[M-2H]2-", "[M+Cl37]1-","[2M-H]1-"),
                           p = c('[M+H]1+','[M+K]1+','[M+Na]1+','[M+K41]1+',
                                 '[M+NH4]1+','[M+2H]2+','[2M+H]1+')),
-           transformations = transformations()$`MF Change`,
-           adductRules = adducts(),
-           isotopeRules = isotopes(),
-           transformationRules = transformations()
+           transformations = transformation_rules()$`MF Change`,
+           adductRules = adduct_rules(),
+           isotopeRules = isotope_rules(),
+           transformationRules = transformation_rules()
          ))
 
 #' @importFrom methods show
