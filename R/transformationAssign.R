@@ -14,24 +14,48 @@ setMethod('transformationAssign',signature = 'Assignment',
             
             if (assignment@log$verbose == T) {
               startTime <- proc.time()
-              message(blue(str_c('Transformation assignment iteration ', count + 1,' ')),cli::symbol$continue,'\r',appendLF = FALSE)
+              message(blue(str_c('Transformation assignment iteration ', 
+                                 count + 1,' ')),
+                      cli::symbol$continue,
+                      '\r',
+                      appendLF = FALSE)
             }
             
-            rel <- assignment@relationships %>%
-              filter((`m/z1` %in% assigned$`Measured m/z` | (`m/z2` %in% assigned$`Measured m/z`)) & !(`m/z1` %in% assigned$`Measured m/z` & (`m/z2` %in% assigned$`Measured m/z`)))
+            rel <- assignment %>% 
+              relationships() %>%
+              filter((`m/z1` %in% assigned$`Measured m/z` | 
+                        (`m/z2` %in% assigned$`Measured m/z`)) & 
+                       !(`m/z1` %in% assigned$`Measured m/z` & 
+                           (`m/z2` %in% assigned$`Measured m/z`)))
             
             mz1 <- rel %>%
-              semi_join(assigned,by = c('m/z1' = 'Measured m/z', 'Adduct1' = 'Adduct', 'Isotope1' = 'Isotope')) %>%
+              semi_join(assigned,
+                        by = c('m/z1' = 'Measured m/z', 
+                               'Adduct1' = 'Adduct', 
+                               'Isotope1' = 'Isotope')) %>%
               filter(is.na(Transformation1))
             mz2 <- rel %>%
-              semi_join(assigned,by = c('m/z2' = 'Measured m/z', 'Adduct2' = 'Adduct', 'Isotope2' = 'Isotope')) %>%
+              semi_join(assigned,
+                        by = c('m/z2' = 'Measured m/z',
+                               'Adduct2' = 'Adduct',
+                               'Isotope2' = 'Isotope')) %>%
               filter(is.na(Transformation2))
             
             rel <- bind_rows(mz1,mz2)
             
             if (nrow(rel) > 0) {
-              M <- bind_rows(select(rel,mz = `m/z1`,RetentionTime = RetentionTime1,Isotope = Isotope1, Adduct = Adduct1, Feature = Feature1),
-                             select(rel,mz = `m/z2`,RetentionTime = RetentionTime2,Isotope = Isotope2, Adduct = Adduct2, Feature = Feature2)) %>%
+              M <- bind_rows(select(rel,
+                                    mz = `m/z1`,
+                                    RetentionTime = RetentionTime1,
+                                    Isotope = Isotope1, 
+                                    Adduct = Adduct1, 
+                                    Feature = Feature1),
+                             select(rel,
+                                    mz = `m/z2`,
+                                    RetentionTime = RetentionTime2,
+                                    Isotope = Isotope2, 
+                                    Adduct = Adduct2, 
+                                    Feature = Feature2)) %>%
                 distinct() %>%
                 arrange(mz) %>%
                 rowwise() %>%
@@ -90,22 +114,46 @@ setMethod('transformationAssign',signature = 'Assignment',
                                                                isotopes(assignment))))
                 rel <- rel %>% 
                   addMFs(MF,identMF = F) %>%
-                  mutate(RetentionTime1 = as.numeric(RetentionTime1),RetentionTime2 = as.numeric(RetentionTime2)) %>%
+                  mutate(RetentionTime1 = as.numeric(RetentionTime1),
+                         RetentionTime2 = as.numeric(RetentionTime2)) %>%
                   addNames()
                 
                 if (nrow(rel) > 0) {
-                  MFs <- bind_rows(select(rel,Name = Name1,Feature = Feature1,mz = `m/z1`,RetentionTime = RetentionTime1,Isotope = Isotope1, Adduct = Adduct1, MF = MF1),
-                                   select(rel,Name = Name2,Feature = Feature2,mz = `m/z2`,RetentionTime = RetentionTime2,Isotope = Isotope2, Adduct = Adduct2,MF = MF2)) %>%
+                  MFs <- bind_rows(select(rel,
+                                          Name = Name1,
+                                          Feature = Feature1,
+                                          mz = `m/z1`,
+                                          RetentionTime = RetentionTime1,
+                                          Isotope = Isotope1, 
+                                          Adduct = Adduct1,
+                                          MF = MF1),
+                                   select(rel,
+                                          Name = Name2,
+                                          Feature = Feature2,
+                                          mz = `m/z2`,
+                                          RetentionTime = RetentionTime2,
+                                          Isotope = Isotope2, 
+                                          Adduct = Adduct2,
+                                          MF = MF2)) %>%
                     mutate(RetentionTime = as.numeric(RetentionTime)) %>%
                     arrange(mz) %>%
                     select(-mz) %>%
-                    left_join(MF, by = c("Feature", "RetentionTime", "Isotope", "Adduct",'MF')) %>%
+                    left_join(MF, 
+                              by = c("Feature", 
+                                     "RetentionTime", 
+                                     "Isotope", 
+                                     "Adduct",
+                                     'MF')) %>%
                     distinct() %>%
                     mutate(ID = 1:nrow(.))
                   
                   graph <- calcComponents(MFs,rel,assignment)
                   
-                  filters <- tibble(Measure = c('Plausibility','Size','AIS','Score','PPM Error'),
+                  filters <- tibble(Measure = c('Plausibility',
+                                                'Size',
+                                                'AIS',
+                                                'Score',
+                                                'PPM Error'),
                                     Direction = c(rep('max',3),rep('min',2)))
                   
                   filteredGraph <- graph
