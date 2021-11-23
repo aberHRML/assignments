@@ -41,7 +41,7 @@ Collate: parameters.R assignment.R allGenerics.R
         'addMFs.R'
         components.R
         'assignMethods.R'
-        'peakData.R'
+        feature_data.R
         'LCassignment.R'
         'MFassign.R'
         'FIEassignment.R'
