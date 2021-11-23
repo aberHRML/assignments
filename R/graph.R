@@ -1,6 +1,7 @@
 #' nodes
 #' @description extract node table from tbl_graph object.
 #' @param graph object of class tbl_graph
+#' @importFrom tibble as_tibble
 #' @export
 
 nodes <- function(graph){
