@@ -98,7 +98,7 @@ setMethod('calcRelationships',signature = 'Assignment',
                      ID) %>%
               mutate_at(vars(RetentionTime1,RetentionTime2),as.numeric)
             
-            assignment@relationships <- rel
+            relationships(assignment) <- rel
             
             if (assignment@log$verbose == T) {
               endTime <- proc.time()

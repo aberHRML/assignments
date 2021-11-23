@@ -48,7 +48,7 @@ setMethod('show',signature = 'Assignment',
             cat(yellow('Assignment:'),'\n')
             cat('\t','Features:\t\t',ncol(object@data),'\n')
             cat('\t','Correlations:\t\t',nrow(object@correlations),'\n')
-            cat('\t','Relationships:\t\t',nrow(object@relationships),'\n')
+            cat('\t','Relationships:\t\t',nrow(relationships(object)),'\n')
             cat('\n')
             if (length(object@addIsoAssign) > 0) {
               cat('\t',green('Adduct & isotope assignment:'),'\n')

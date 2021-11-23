@@ -1,16 +1,13 @@
 
-assignMethods <- function(method = NULL) {
+assignMethods <- function(method) {
   methods <- list(
     FIE = FIEassignment,
     `RP-LC` = LCassignment,
     `NP-LC` = LCassignment
   )
   
-  if (is.null(method)) {
-    method <- methods
-  } else {
-    method <- methods[[method]]
-  }
+  method <- methods[[method]]
+  
   return(method)
 }
 
