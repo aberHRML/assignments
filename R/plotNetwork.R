@@ -53,10 +53,9 @@ setMethod('plotNetwork',signature = 'Assignment',
             TA <- assignment@transAssign %>%
               map(~{.$filteredGraph})
             
-            graph <- AI
-            
             if (length(TA) > 0){
-               graph <- bind_graphs(
+              if (length(TA) > 1) {
+                graph <- bind_graphs(graph,
                   {a <- TA[[1]]
                   for (i in 2:length(TA)) {
                     a <- bind_graphs(a,TA[[i]])
@@ -64,6 +63,9 @@ setMethod('plotNetwork',signature = 'Assignment',
                   a
                   }
                 ) 
+              } else {
+                graph <- bind_graphs(AI,TA[[1]])
+              }
             } 
             
             e <- edges(graph) %>%
@@ -104,9 +106,10 @@ setMethod('plotNetwork',signature = 'Assignment',
               .$Assigned %>%
               table()
             
-           networkPlot(network,
-                       layout,
-                       rThreshold,
-                       assignedNodes,
-                       explainedEdges)
+            networkPlot(network,
+                        layout,
+                        rThreshold,
+                        assignedNodes,
+                        explainedEdges)
           })
+            
