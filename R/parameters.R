@@ -362,35 +362,50 @@ setMethod('transformationRules<-',signature = 'AssignmentParameters',
             return(x)
           })
 
+#' Available techniques
+#' @description Available techniques for molecular formula assignment.
+#' @return A `character` vector of technique names.
+#' @examples 
+#' availableTechniques()
+#' @export
+
+availableTechniques <- function(){
+  c('FIE','RP-LC','NP-LC')
+}
+
 #' Assignment parameters
 #' @description Return default assignment parameters for a given technique.
-#' @param technique technique to use for assignment. \code{NULL} prints available techniques
+#' @param technique technique to use for assignment
 #' @importFrom parallel detectCores
 #' @importFrom methods new
 #' @export
 
-assignmentParameters <- function(technique = NULL){
-  availTechniques <- c('FIE','RP-LC','NP-LC')
-  if (is.null(technique)) {
-    cat('\nAvailable Techniques:',str_c('\n\t\t\t',str_c(availTechniques,collapse = '\n\t\t\t'),'\n'))
-    p <- NULL
-  } else {
+assignmentParameters <- function(technique){
+  
+  if (!(technique %in% availableTechniques())) {
+    techniques <- availableTechniques() %>% 
+      str_c(collapse = ', ')
     
-    if (technique == 'FIE') {
-      p <- new('AssignmentParameters')
-    }
-    if (technique == 'RP-LC') {
-      p <- new('AssignmentParameters',
-               technique = 'RP-LC',
-               RTwindow = 1/60
-      )
-    }
-    if (technique == 'NP-LC') {
-      p <- new('AssignmentParameters',
-               technique = 'NP-LC',
-               RTwindow = 1/60
-      )
-    }
+    stop(str_c('Argument `technique` should be one of ',techniques,'.'),call. = FALSE)
   }
+  
+  if (technique == 'FIE') {
+    p <- new('AssignmentParameters')
+  }
+  
+  if (technique == 'RP-LC') {
+    p <- new('AssignmentParameters',
+             technique = 'RP-LC',
+             RTwindow = 1/60
+    )
+  }
+  
+  if (technique == 'NP-LC') {
+    p <- new('AssignmentParameters',
+             technique = 'NP-LC',
+             RTwindow = 1/60
+    )
+  }
+  
   return(p)
 } 
