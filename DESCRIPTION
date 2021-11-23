@@ -34,8 +34,7 @@ Roxygen: list(markdown = TRUE)
 RoxygenNote: 7.1.2
 Collate: parameters.R assignment.R correlations.R 
         addIsoAssign.R transformationAssign.R relationships.R
-        graph.R assign.R MFgen.R internals.R
-        MFscore.R components.R
+        graph.R assign.R internals.R components.R
         feature_data.R LCassignment.R MFassign.R
         FIEassignment.R plotNetwork.R plotAdductDist.R
         plotFeatureSolutions.R plotSpectrum.R reexports.R

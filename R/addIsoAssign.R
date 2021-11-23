@@ -5,7 +5,7 @@ setGeneric("addIsoAssign", function(assignment)
 
 #' @importFrom dplyr arrange rowwise slice_sample left_join ungroup
 #' @importFrom stringr str_detect
-#' @importFrom mzAnnotation calcM calcMZ ppmError
+#' @importFrom mzAnnotation calcM ipMF MFscore
 #' @importFrom igraph vertex.attributes V
 #' @importFrom furrr furrr_options
 #' @importFrom methods as
@@ -18,9 +18,8 @@ setMethod('addIsoAssign',signature = 'Assignment',
               message(blue('Adduct & isotope assignment '),cli::symbol$continue,'\r',appendLF = FALSE)
             }
             
-            parameters <- as(assignment,'AssignmentParameters')
-            
-            rel <- assignment@relationships %>% 
+            rel <- assignment %>% 
+              relationships() %>% 
               filter(is.na(Transformation1) & 
                        is.na(Transformation2) & 
                        r > 0) %>%
@@ -51,7 +50,7 @@ setMethod('addIsoAssign',signature = 'Assignment',
                                adduct = Adduct,
                                isotope = Isotope)) %>% 
               arrange(M) %>%
-              filter(M <= parameters@maxM)
+              filter(M <= maxM(assignment))
             
             nM <- nrow(M)
             
@@ -60,26 +59,31 @@ setMethod('addIsoAssign',signature = 'Assignment',
               slice_sample(n = nM) %>%
               split(1:nrow(.)) %>%
               future_map(~{
-                mf <- MFgen(.x$M,.x$mz,ppm = parameters@ppm) 
+                mf <- ipMF(mz = .x$mz,
+                           adduct = .x$Adduct,
+                           isotope = .x$Isotope,
+                           ppm = ppm(assignment)) 
                 
                 if (nrow(mf) > 0) {
                   mf %>%
-                    left_join(M,by = c('Measured M' = 'M','Measured m/z' = 'mz')) %>% 
+                    left_join(select(M,
+                                     Feature,
+                                     RetentionTime,
+                                     M,
+                                     mz),
+                              by = c('Measured M' = 'M','Measured m/z' = 'mz')) %>% 
                     rowwise() %>%
-                    mutate(`Theoretical m/z` = calcMZ(`Theoretical M`,Adduct,Isotope), 
-                           `PPM Error` = ppmError(`Measured m/z`,`Theoretical m/z`)) %>%
                     select(Feature,RetentionTime,MF,Isotope,Adduct,`Theoretical M`,
-                           `Measured M`,`Theoretical m/z`,`Measured m/z`, `PPM Error`) %>%
+                           `Measured M`,`Theoretical m/z`,`Measured m/z`, `PPM Error`,
+                           Score) %>%
                     rowwise() %>%
-                    mutate(Score = MFscore(MF),
-                           `PPM Error` = abs(`PPM Error`),
-                           AddIsoScore = addIsoScore(Adduct,
+                    mutate(AddIsoScore = addIsoScore(Adduct,
                                                      Isotope,
-                                                     parameters@adducts,
-                                                     parameters@isotopes)) %>%
+                                                     adducts(assignment),
+                                                     isotopes(assignment))) %>%
                     ungroup() %>%
                     filter(Score == min(Score,na.rm = TRUE)) %>%
-                    filter(Score < parameters@maxMFscore)
+                    filter(Score < maxMFscore(assignment))
                 } else {
                   return(NULL)
                 }
