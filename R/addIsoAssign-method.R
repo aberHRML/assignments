@@ -1,3 +1,8 @@
+
+setGeneric("addIsoAssign", function(assignment)
+  standardGeneric("addIsoAssign")
+)
+
 #' @importFrom dplyr arrange rowwise slice_sample left_join ungroup
 #' @importFrom stringr str_detect
 #' @importFrom mzAnnotation calcM calcMZ ppmError
