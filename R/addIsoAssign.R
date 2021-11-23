@@ -21,16 +21,35 @@ setMethod('addIsoAssign',signature = 'Assignment',
             parameters <- as(assignment,'AssignmentParameters')
             
             rel <- assignment@relationships %>% 
-              filter(is.na(Transformation1) & is.na(Transformation2) & r > 0) %>%
-              filter(!(is.na(Isotope1) & !is.na(Isotope2) & Adduct1 == Adduct2 & log2IntensityRatio < 0)) %>%
-              filter(!(!is.na(Isotope1) & is.na(Isotope2) & Adduct1 == Adduct2)) 
+              filter(is.na(Transformation1) & 
+                       is.na(Transformation2) & 
+                       r > 0) %>%
+              filter(!(is.na(Isotope1) & 
+                         !is.na(Isotope2) & 
+                         Adduct1 == Adduct2 & 
+                         log2IntensityRatio < 0)) %>%
+              filter(!(!is.na(Isotope1) & 
+                         is.na(Isotope2) & 
+                         Adduct1 == Adduct2)) 
             
-            M <- bind_rows(select(rel,mz = `m/z1`,RetentionTime = RetentionTime1,Isotope = Isotope1, Adduct = Adduct1, Feature = Feature1),
-                           select(rel,mz = `m/z2`,RetentionTime = RetentionTime2,Isotope = Isotope2, Adduct = Adduct2, Feature = Feature2)) %>%
+            M <- bind_rows(select(rel,
+                                  mz = `m/z1`,
+                                  RetentionTime = RetentionTime1,
+                                  Isotope = Isotope1,
+                                  Adduct = Adduct1, 
+                                  Feature = Feature1),
+                           select(rel,
+                                  mz = `m/z2`,
+                                  RetentionTime = RetentionTime2,
+                                  Isotope = Isotope2, 
+                                  Adduct = Adduct2, 
+                                  Feature = Feature2)) %>%
               filter(!duplicated(.)) %>%
               arrange(mz) %>%
               rowwise() %>%
-              mutate(M = calcM(mz,adduct = Adduct,isotope = Isotope)) %>% 
+              mutate(M = calcM(mz,
+                               adduct = Adduct,
+                               isotope = Isotope)) %>% 
               arrange(M) %>%
               filter(M <= parameters@maxM)
             
@@ -70,21 +89,46 @@ setMethod('addIsoAssign',signature = 'Assignment',
             rel <- rel %>% 
               addMFs(MF) %>%
               filter(MF1 == MF2) %>%
-              mutate(RetentionTime1 = as.numeric(RetentionTime1),RetentionTime2 = as.numeric(RetentionTime2)) %>%
+              mutate(RetentionTime1 = as.numeric(RetentionTime1),
+                     RetentionTime2 = as.numeric(RetentionTime2)) %>%
               addNames()
             
-            MFs <- bind_rows(select(rel,Name = Name1,Feature = Feature1,mz = `m/z1`,RetentionTime = RetentionTime1,Isotope = Isotope1, Adduct = Adduct1, MF = MF1),
-                             select(rel,Name = Name2,Feature = Feature2,mz = `m/z2`,RetentionTime = RetentionTime2,Isotope = Isotope2, Adduct = Adduct2,MF = MF2)) %>%
+            MFs <- bind_rows(select(rel,
+                                    Name = Name1,
+                                    Feature = Feature1,
+                                    mz = `m/z1`,
+                                    RetentionTime = RetentionTime1,
+                                    Isotope = Isotope1, 
+                                    Adduct = Adduct1, 
+                                    MF = MF1),
+                             select(rel,
+                                    Name = Name2,
+                                    Feature = Feature2,
+                                    mz = `m/z2`,
+                                    RetentionTime = RetentionTime2,
+                                    Isotope = Isotope2, 
+                                    Adduct = Adduct2,
+                                    MF = MF2)) %>%
               mutate(RetentionTime = as.numeric(RetentionTime)) %>%
               arrange(mz) %>%
               select(-mz) %>%
-              left_join(MF, by = c("Feature", "RetentionTime", "Isotope", "Adduct",'MF')) %>%
+              left_join(MF, by = c("Feature", 
+                                   "RetentionTime",
+                                   "Isotope", 
+                                   "Adduct",
+                                   'MF')) %>%
               distinct() %>%
               mutate(ID = 1:nrow(.))
             
-            graph <- calcComponents(MFs,rel,parameters)
+            graph <- calcComponents(MFs,
+                                    rel,
+                                    parameters)
   
-            filters <- tibble(Measure = c('Plausibility','Size','AIS','Score','PPM Error'),
+            filters <- tibble(Measure = c('Plausibility',
+                                          'Size',
+                                          'AIS',
+                                          'Score',
+                                          'PPM Error'),
                               Direction = c(rep('max',3),rep('min',2)))
             
             filteredGraph <- graph
