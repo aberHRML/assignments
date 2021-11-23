@@ -40,7 +40,6 @@ Collate: parameters.R assignment.R allGenerics.R
         'addIsoScore.R'
         'addMFs.R'
         components.R
-        'assignMethods.R'
         feature_data.R
         'LCassignment.R'
         'MFassign.R'
