@@ -1,28 +1,18 @@
-setGeneric('calcCorrelations', function(assignment){
-  standardGeneric('calcCorrelations')
-})
+setGeneric('calcCorrelations', function(assignment)
+  standardGeneric('calcCorrelations'))
 
-setGeneric('filterCorrelations', function(assignment){
-  standardGeneric('filterCorrelations')
-})
+setGeneric('filterCorrelations', function(assignment)
+  standardGeneric('filterCorrelations'))
 
-setGeneric('prepCorrelations', function(assignment){
-  standardGeneric('prepCorrelations')
-})
+setGeneric('prepCorrelations', function(assignment)
+  standardGeneric('prepCorrelations'))
 
-setGeneric("relationships", function(assignment,transformations = TRUE) {
-  standardGeneric("relationships")
-})
+setGeneric("relationships", function(assignment,transformations = TRUE)
+  standardGeneric("relationships"))
 
-setGeneric("addIsoAssign", function(assignment) {
-  standardGeneric("addIsoAssign")
-})
-
-setGeneric("transformationAssign", function(assignment) {
-  standardGeneric("transformationAssign")
-})
+setGeneric("transformationAssign", function(assignment)
+  standardGeneric("transformationAssign"))
 
 #' @rdname summariseAssignment
-setGeneric('summariseAssignment',function(assignment){
-  standardGeneric('summariseAssignment')
-})
+setGeneric('summariseAssignment',function(assignment)
+  standardGeneric('summariseAssignment'))
