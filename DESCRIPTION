@@ -33,9 +33,9 @@ LazyData: true
 Roxygen: list(markdown = TRUE)
 RoxygenNote: 7.1.2
 Collate: parameters.R assignment.R allGenerics.R
-        prepCorrelations-method.R addIsoAssign.R
+        correlations.R addIsoAssign.R
         transformationAssign-method.R relationships.R
-        graph.R assignMFs.R MFgen.R internals.R
+        graph.R assign.R MFgen.R internals.R
         'MFscore.R'
         components.R
         feature_data.R
@@ -45,8 +45,6 @@ Collate: parameters.R assignment.R allGenerics.R
         plotNetwork.R
         plotAdductDist.R
         plotFeatureSolutions.R
-        'calcCorrelations-method.R'
-        'filterCorrelations-method.R'
         plotSpectrum.R
         reexports.R
 Suggests: testthat,
