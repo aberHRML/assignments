@@ -1,12 +1,10 @@
 
 context('assignMFs')
 
-p <- assignmentParameters('FIE')
+assignment_parameters <- assignmentParameters('FIE')
 
-plan(future::multisession,workers = 2)
-
-assignment <- assignMFs(peakData,
-                        p,
+assignment <- assignMFs(feature_data,
+                        assignment_parameters,
                         verbose = TRUE)
 
 test_that('assignMFs works',{
