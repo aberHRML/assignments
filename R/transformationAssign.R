@@ -9,7 +9,6 @@ setGeneric("transformationAssign", function(assignment)
 setMethod('transformationAssign',signature = 'Assignment',
           function(assignment){
             
-            parameters <- as(assignment,'AssignmentParameters')
             count <- length(assignment@transAssign)
             assigned <- assignment@assignments
             
@@ -38,7 +37,7 @@ setMethod('transformationAssign',signature = 'Assignment',
                 rowwise() %>%
                 mutate(M = calcM(mz,Adduct,Isotope)) %>% 
                 arrange(M) %>%
-                filter(M <= parameters@maxM) %>%
+                filter(M <= maxM(assignment)) %>%
                 filter(!(mz %in% assigned$`Measured m/z`))
               
               nM <- nrow(M)
@@ -48,26 +47,31 @@ setMethod('transformationAssign',signature = 'Assignment',
                 slice_sample(n = nM) %>%
                 split(1:nrow(.)) %>%
                 future_map(~{
-                  mf <- MFgen(.x$M,.x$mz,ppm = parameters@ppm) 
+                  mf <- ipMF(mz = .x$mz,
+                             adduct = .x$Adduct,
+                             isotope = .x$Isotope,
+                             ppm = ppm(assignment)) 
                   
                   if (nrow(mf) > 0) {
                     mf %>%
-                      left_join(M,by = c('Measured M' = 'M','Measured m/z' = 'mz')) %>% 
+                      left_join(select(M,
+                                       Feature,
+                                       RetentionTime,
+                                       M,
+                                       mz),
+                                by = c('Measured M' = 'M','Measured m/z' = 'mz')) %>% 
                       rowwise() %>%
-                      mutate(`Theoretical m/z` = calcMZ(`Theoretical M`,Adduct,Isotope), 
-                             `PPM Error` = ppmError(`Measured m/z`,`Theoretical m/z`)) %>%
                       select(Feature,RetentionTime,MF,Isotope,Adduct,`Theoretical M`,
-                             `Measured M`,`Theoretical m/z`,`Measured m/z`, `PPM Error`) %>%
+                             `Measured M`,`Theoretical m/z`,`Measured m/z`, `PPM Error`,
+                             Score) %>%
                       rowwise() %>%
-                      mutate(Score = MFscore(MF),
-                             `PPM Error` = abs(`PPM Error`),
-                             AddIsoScore = addIsoScore(Adduct,
+                      mutate(AddIsoScore = addIsoScore(Adduct,
                                                        Isotope,
-                                                       parameters@adducts,
-                                                       parameters@isotopes)) %>%
+                                                       adducts(assignment),
+                                                       isotopes(assignment))) %>%
                       ungroup() %>%
                       filter(Score == min(Score,na.rm = TRUE)) %>%
-                      filter(Score < parameters@maxMFscore)
+                      filter(Score < maxMFscore(assignment))
                   } else {
                     return(NULL)
                   }
@@ -80,7 +84,10 @@ setMethod('transformationAssign',signature = 'Assignment',
                   bind_rows(assigned %>%
                               select(names(MF)[!(names(MF) == 'AddIsoScore')]) %>%
                               rowwise() %>%
-                              mutate(AddIsoScore = addIsoScore(Adduct,Isotope,parameters@adducts,parameters@isotopes)))
+                              mutate(AddIsoScore = addIsoScore(Adduct,
+                                                               Isotope,
+                                                               adducts(assignment),
+                                                               isotopes(assignment))))
                 rel <- rel %>% 
                   addMFs(MF,identMF = F) %>%
                   mutate(RetentionTime1 = as.numeric(RetentionTime1),RetentionTime2 = as.numeric(RetentionTime2)) %>%
@@ -96,7 +103,7 @@ setMethod('transformationAssign',signature = 'Assignment',
                     distinct() %>%
                     mutate(ID = 1:nrow(.))
                   
-                  graph <- calcComponents(MFs,rel,parameters)
+                  graph <- calcComponents(MFs,rel,assignment)
                   
                   filters <- tibble(Measure = c('Plausibility','Size','AIS','Score','PPM Error'),
                                     Direction = c(rep('max',3),rep('min',2)))
@@ -114,7 +121,7 @@ setMethod('transformationAssign',signature = 'Assignment',
                           .$name}) 
                     if (V(filteredGraph) %>% length() > 0) {
                       filteredGraph <- filteredGraph %>%
-                        recalcComponents(parameters)
+                        recalcComponents(assignment)
                     } else {
                       break()
                     }
