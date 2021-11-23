@@ -1,4 +1,8 @@
 #' @importFrom stringr str_c
+
+setGeneric("transformationAssign", function(assignment)
+  standardGeneric("transformationAssign"))
+
 #' @importFrom dplyr full_join select distinct
 #' @importFrom mzAnnotation transformMF
 

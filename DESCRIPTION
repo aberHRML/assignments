@@ -32,9 +32,8 @@ Encoding: UTF-8
 LazyData: true
 Roxygen: list(markdown = TRUE)
 RoxygenNote: 7.1.2
-Collate: parameters.R assignment.R allGenerics.R
-        correlations.R addIsoAssign.R
-        transformationAssign-method.R relationships.R
+Collate: parameters.R assignment.R correlations.R 
+        addIsoAssign.R transformationAssign.R relationships.R
         graph.R assign.R MFgen.R internals.R
         'MFscore.R'
         components.R
