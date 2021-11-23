@@ -1,6 +1,6 @@
 
-setGeneric("relationships", function(assignment,transformations = TRUE)
-  standardGeneric("relationships"))
+setGeneric("calcRelationships", function(assignment,transformations = TRUE)
+  standardGeneric("calcRelationships"))
 
 #' @importFrom furrr future_map
 #' @importFrom dplyr mutate bind_rows filter vars contains
@@ -10,7 +10,7 @@ setGeneric("relationships", function(assignment,transformations = TRUE)
 #' @importFrom magrittr %>%
 #' @importFrom tibble tibble enframe
 
-setMethod('relationships',signature = 'Assignment',
+setMethod('calcRelationships',signature = 'Assignment',
           function(assignment,transformations = T){
             
             if (assignment@log$verbose == T) {
