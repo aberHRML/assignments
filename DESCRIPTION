@@ -35,19 +35,14 @@ RoxygenNote: 7.1.2
 Collate: parameters.R assignment.R allGenerics.R
         prepCorrelations-method.R addIsoAssign.R
         transformationAssign-method.R relationships.R
-        graph.R assignMFs.R MFgen.R
+        graph.R assignMFs.R MFgen.R internals.R
         'MFscore.R'
-        'addIsoScore.R'
-        'addMFs.R'
         components.R
         feature_data.R
         'LCassignment.R'
         'MFassign.R'
         'FIEassignment.R'
-        'continueAssignment.R'
         plotNetwork.R
-        'addNames.R'
-        'eliminate.R'
         plotAdductDist.R
         plotFeatureSolutions.R
         'calcCorrelations-method.R'
