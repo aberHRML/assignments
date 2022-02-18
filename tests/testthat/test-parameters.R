@@ -27,15 +27,15 @@ test_that("max M can be set", {
   expect_identical(maxM(p),new_maxM)
 })
 
-test_that("max MF score can be returned", {
-  expect_type(maxMFscore(p),'double')
+test_that("MF rank threshold can be returned", {
+  expect_type(MFrankThreshold(p),'double')
 })
 
-test_that("max MF score can be set", {
-  new_maxMFscore <- 3
-  maxMFscore(p) <- new_maxMFscore
+test_that("MF rank threshold can be set", {
+  new_MFrankThreshold <- 3
+  MFrankThreshold(p) <- new_MFrankThreshold
   
-  expect_identical(maxMFscore(p),new_maxMFscore)
+  expect_identical(MFrankThreshold(p),new_MFrankThreshold)
 })
 
 

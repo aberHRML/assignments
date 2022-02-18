@@ -4,18 +4,18 @@
 #' @slot technique assignment technique to use
 #' @slot correlations_parameters list of correlation parameters to be passed to metabolyseR correlation analysis
 #' @slot filter list of r and n thresholds for filtering correlations
-#' @slot maxM maximum M for which to assign molecular formulas
-#' @slot maxMFscore threshold for molecular formula score
+#' @slot max_M maximum M for which to assign molecular formulas
+#' @slot MF_rank_threshold rank threshold for molecular formula selection
 #' @slot ppm ppm threshold
 #' #' @slot adducts named list of character vectors containing the adducuts to use for each mode
 #' @slot limit amu deviation limit for relationship prediction
-#' @slot RTwindow retention time window for chromatographic associations
+#' @slot RT_window retention time window for chromatographic associations
 #' @slot adducts list of character vectors containing the adducts to use. List element names should denote ionisation mode.
 #' @slot isotopes character vector of isotopes to use
 #' @slot transformations character vector of transformations to use
-#' @slot adductRules tibble containing adduct formation rules as returned by mzAnnotation::adducts()
-#' @slot isotopeRules tibble containing isotope rules as returned by mzAnnotation::isotopes()
-#' @slot transformationRules tibble containing transformation rules as returned by mzAnnotation::transformations()
+#' @slot adduct_rules tibble containing adduct formation rules as returned by mzAnnotation::adducts()
+#' @slot isotope_rules tibble containing isotope rules as returned by mzAnnotation::isotopes()
+#' @slot transformation_rules tibble containing transformation rules as returned by mzAnnotation::transformations()
 #' @importFrom mzAnnotation adduct_rules isotope_rules transformation_rules
 #' @export
 
@@ -24,17 +24,17 @@ setClass('AssignmentParameters',
            technique = 'character',
            correlations_parameters = 'list',
            filter = 'list',
-           maxM = 'numeric',
-           maxMFscore = 'numeric',
+           max_M = 'numeric',
+           MF_rank_threshold = 'numeric',
            ppm = 'numeric',
            limit = 'numeric',
-           RTwindow = 'numeric',
+           RT_window = 'numeric',
            adducts = 'list',
            isotopes = 'character',
            transformations = 'character',
-           adductRules = 'tbl_df',
-           isotopeRules = 'tbl_df',
-           transformationRules = 'tbl_df'
+           adduct_rules = 'tbl_df',
+           isotope_rules = 'tbl_df',
+           transformation_rules = 'tbl_df'
          ),
          prototype = list(
            technique = 'FIE',
@@ -45,20 +45,20 @@ setClass('AssignmentParameters',
                          n = 200000,
                          rIncrement = 0.01,
                          nIncrement = 20000),
-           maxM = 1000,
-           maxMFscore = 5,
+           max_M = 1000,
+           MF_rank_threshold = 1,
            ppm = 5,
            limit = 0.001,
-           RTwindow = numeric(),
+           RT_window = numeric(),
            isotopes = c('13C','18O','13C2'),
            adducts = list(n = c("[M-H]1-", "[M+Cl]1-", "[M+K-2H]1-", 
                                 "[M-2H]2-", "[M+Cl37]1-","[2M-H]1-"),
                           p = c('[M+H]1+','[M+K]1+','[M+Na]1+','[M+K41]1+',
                                 '[M+NH4]1+','[M+2H]2+','[2M+H]1+')),
            transformations = transformation_rules()$`MF Change`,
-           adductRules = adduct_rules(),
-           isotopeRules = isotope_rules(),
-           transformationRules = transformation_rules()
+           adduct_rules = adduct_rules(),
+           isotope_rules = isotope_rules(),
+           transformation_rules = transformation_rules()
          ))
 
 # setValidity('AssignmentParameters',function(object){
@@ -83,13 +83,13 @@ setMethod('show',signature = 'AssignmentParameters',
             cat(yellow('\nAssignment Parameters:'),'\n')
             cat('\n')
             cat('\t','Technique:\t\t',object@technique,'\n')
-            cat('\t','Max M:\t\t\t',object@maxM,'\n')
-            cat('\t','Max MF score:\t\t',object@maxMFscore,'\n')
+            cat('\t','Max M:\t\t\t',object@max_M,'\n')
+            cat('\t','MF rank threshold:\t\t',object@MF_rank_threshold,'\n')
             cat('\t','PPM threshold:\t\t',object@ppm,'\n')
             cat('\t','Relationship limit:\t',object@limit,'\n')
             
             if (object@technique != 'FIE') {
-              cat('\t','RT window:\t\t',object@RTwindow,'\n')
+              cat('\t','RT window:\t\t',object@RT_window,'\n')
             }
             
             cat('\n\t','Adducts:','\n')
@@ -131,11 +131,11 @@ setMethod('show',signature = 'AssignmentParameters',
 #' ## Set max M
 #' maxM(assignment_parameters) <- 500
 #' 
-#' ## Return max MF score
-#' maxMFscore(assignment_parameters)
+#' ## Return MF rank threshold
+#' MFrankThreshold(assignment_parameters)
 #' 
-#' ## Set max MF score
-#' maxMFscore(assignment_parameters) <- 3
+#' ## Set MF rank threshold
+#' MFrankThreshold(assignment_parameters) <- 3
 #' 
 #' ## Return ppm
 #' ppm(assignment_parameters)
@@ -228,7 +228,7 @@ setGeneric('maxM',function(x)
 
 setMethod('maxM',signature = 'AssignmentParameters',
           function(x){
-            x@maxM
+            x@max_M
           })
 
 #' @rdname parameters
@@ -241,34 +241,34 @@ setGeneric('maxM<-',function(x,value)
 
 setMethod('maxM<-',signature = 'AssignmentParameters',
           function(x,value){
-            x@maxM <- value
+            x@max_M <- value
             return(x)
           })
 
 #' @rdname parameters
 #' @export
 
-setGeneric('maxMFscore',function(x)
-  standardGeneric('maxMFscore'))
+setGeneric('MFrankThreshold',function(x)
+  standardGeneric('MFrankThreshold'))
 
 #' @rdname parameters
 
-setMethod('maxMFscore',signature = 'AssignmentParameters',
+setMethod('MFrankThreshold',signature = 'AssignmentParameters',
           function(x){
-            x@maxMFscore
+            x@MF_rank_threshold
           })
 
 #' @rdname parameters
 #' @export
 
-setGeneric('maxMFscore<-',function(x,value)
-  standardGeneric('maxMFscore<-'))
+setGeneric('MFrankThreshold<-',function(x,value)
+  standardGeneric('MFrankThreshold<-'))
 
 #' @rdname parameters
 
-setMethod('maxMFscore<-',signature = 'AssignmentParameters',
+setMethod('MFrankThreshold<-',signature = 'AssignmentParameters',
           function(x,value){
-            x@maxMFscore <- value
+            x@MF_rank_threshold <- value
             return(x)
           })
 
@@ -390,7 +390,7 @@ setGeneric('adductRules',function(x)
 
 setMethod('adductRules',signature = 'AssignmentParameters',
           function(x){
-            x@adductRules
+            x@adduct_rules
           })
 
 #' @rdname parameters
@@ -403,7 +403,7 @@ setGeneric('adductRules<-',function(x,value)
 
 setMethod('adductRules<-',signature = 'AssignmentParameters',
           function(x,value){
-            x@adductRules <- value
+            x@adduct_rules <- value
             return(x)
           })
 
@@ -417,7 +417,7 @@ setGeneric('isotopeRules',function(x)
 
 setMethod('isotopeRules',signature = 'AssignmentParameters',
           function(x){
-            x@isotopeRules
+            x@isotope_rules
           })
 
 #' @rdname parameters
@@ -430,7 +430,7 @@ setGeneric('isotopeRules<-',function(x,value)
 
 setMethod('isotopeRules<-',signature = 'AssignmentParameters',
           function(x,value){
-            x@isotopeRules <- value
+            x@isotope_rules <- value
             return(x)
           })
 
@@ -444,7 +444,7 @@ setGeneric('transformationRules',function(x)
 
 setMethod('transformationRules',signature = 'AssignmentParameters',
           function(x){
-            x@transformationRules
+            x@transformation_rules
           })
 
 #' @rdname parameters
@@ -457,7 +457,7 @@ setGeneric('transformationRules<-',function(x,value)
 
 setMethod('transformationRules<-',signature = 'AssignmentParameters',
           function(x,value){
-            x@transformationRules <- value
+            x@transformation_rules <- value
             return(x)
           })
 

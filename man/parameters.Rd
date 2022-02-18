@@ -11,10 +11,10 @@
 \alias{maxM,AssignmentParameters-method}
 \alias{maxM<-}
 \alias{maxM<-,AssignmentParameters-method}
-\alias{maxMFscore}
-\alias{maxMFscore,AssignmentParameters-method}
-\alias{maxMFscore<-}
-\alias{maxMFscore<-,AssignmentParameters-method}
+\alias{MFrankThreshold}
+\alias{MFrankThreshold,AssignmentParameters-method}
+\alias{MFrankThreshold<-}
+\alias{MFrankThreshold<-,AssignmentParameters-method}
 \alias{ppm}
 \alias{ppm,AssignmentParameters-method}
 \alias{ppm<-}
@@ -65,13 +65,13 @@ maxM(x) <- value
 
 \S4method{maxM}{AssignmentParameters}(x) <- value
 
-maxMFscore(x)
+MFrankThreshold(x)
 
-\S4method{maxMFscore}{AssignmentParameters}(x)
+\S4method{MFrankThreshold}{AssignmentParameters}(x)
 
-maxMFscore(x) <- value
+MFrankThreshold(x) <- value
 
-\S4method{maxMFscore}{AssignmentParameters}(x) <- value
+\S4method{MFrankThreshold}{AssignmentParameters}(x) <- value
 
 ppm(x)
 
@@ -155,11 +155,11 @@ maxM(assignment_parameters)
 ## Set max M
 maxM(assignment_parameters) <- 500
 
-## Return max MF score
-maxMFscore(assignment_parameters)
+## Return MF rank threshold
+MFrankThreshold(assignment_parameters)
 
-## Set max MF score
-maxMFscore(assignment_parameters) <- 3
+## Set MF rank threshold
+MFrankThreshold(assignment_parameters) <- 3
 
 ## Return ppm
 ppm(assignment_parameters)
