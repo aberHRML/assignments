@@ -86,7 +86,7 @@ setMethod('transformationAssign',signature = 'Assignment',
                                 by = c('Measured M' = 'M','Measured m/z' = 'mz')) %>% 
                       rowwise() %>%
                       select(Feature,RetentionTime,MF,Isotope,Adduct,`Theoretical M`,
-                             `Measured M`,`Theoretical m/z`,`Measured m/z`, `PPM Error`,
+                             `Measured M`,`Theoretical m/z`,`Measured m/z`, `PPM error`,
                              Score) %>%
                       rowwise() %>%
                       mutate(AddIsoScore = addIsoScore(Adduct,
@@ -153,7 +153,7 @@ setMethod('transformationAssign',signature = 'Assignment',
                                                 'Size',
                                                 'AIS',
                                                 'Score',
-                                                'PPM Error'),
+                                                'PPM error'),
                                     Direction = c(rep('max',3),rep('min',2)))
                   
                   filteredGraph <- graph
