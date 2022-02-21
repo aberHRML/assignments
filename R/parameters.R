@@ -84,7 +84,7 @@ setMethod('show',signature = 'AssignmentParameters',
             cat('\n')
             cat('\t','Technique:\t\t',object@technique,'\n')
             cat('\t','Max M:\t\t\t',object@max_M,'\n')
-            cat('\t','MF rank threshold:\t\t',object@MF_rank_threshold,'\n')
+            cat('\t','MF rank threshold:\t',object@MF_rank_threshold,'\n')
             cat('\t','PPM threshold:\t\t',object@ppm,'\n')
             cat('\t','Relationship limit:\t',object@limit,'\n')
             
@@ -495,14 +495,14 @@ assignmentParameters <- function(technique){
   if (technique == 'RP-LC') {
     p <- new('AssignmentParameters',
              technique = 'RP-LC',
-             RTwindow = 1/60
+             RT_window = 1/60
     )
   }
   
   if (technique == 'NP-LC') {
     p <- new('AssignmentParameters',
              technique = 'NP-LC',
-             RTwindow = 1/60
+             RT_window = 1/60
     )
   }
   
