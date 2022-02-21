@@ -49,7 +49,7 @@ setGeneric('plotNetwork',function(assignment, layout = 'stress', rThreshold = 0.
 setMethod('plotNetwork',signature = 'Assignment',
           function(assignment, layout = 'stress', rThreshold = 0.7){
             
-            AI <- assignment@addIsoAssign$filteredGraph
+            AI <- assignment@addIsoAssign$filtered_graph
             TA <- assignment@transAssign %>%
               map(~{.$filteredGraph})
             
@@ -71,7 +71,7 @@ setMethod('plotNetwork',signature = 'Assignment',
             e <- edges(graph) %>%
               mutate(Explained = 'Explained')
             n <- nodes(graph) %>%
-              select(name:Score) %>%
+              select(name:`MF Plausibility (%)`) %>%
               distinct() %>%
               mutate(Assigned = 'Assigned')
             

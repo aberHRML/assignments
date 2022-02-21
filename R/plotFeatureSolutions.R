@@ -6,7 +6,7 @@ plotSolutions <- function(graph,selectedComp,feature){
   graph %>%
     map(~{
       stats <- nodes(.) %>%
-        select(Component:Plausibility) %>%
+        select(Component:`Component Plausibility`) %>%
         .[1,]
       
       if (stats$Component[1] == selectedComp){
@@ -36,7 +36,7 @@ plotSolutions <- function(graph,selectedComp,feature){
              caption = str_c('Degree = ',stats$Degree %>% round(2),'; ',
                              'Weight = ',stats$Weight %>% round(2),'; ',
                              'AIS = ',stats$AIS %>% round(2),'; ',
-                             'Plausibility = ',stats$Plausibility %>% round(2))) +
+                             'Plausibility = ',stats$`Component Plausibility` %>% round(2))) +
         xlim(min(g$x) - (max(g$x) - min(g$x)) * 0.05,
              max(g$x) + (max(g$x) - min(g$x)) * 0.05) +
         ylim(min(g$y) - (max(g$y) - min(g$y)) * 0.05,
@@ -78,7 +78,7 @@ setMethod('plotFeatureSolutions',signature = 'Assignment',
             
             comp <- n %>%
               filter(Feature == feature) %>%
-              select(Component,Plausibility) %>%
+              select(Component,`Component Plausibility`) %>%
               distinct() %>%
               arrange(Component)
             
@@ -95,7 +95,7 @@ setMethod('plotFeatureSolutions',signature = 'Assignment',
               })
             
             comp <- comp %>%
-              arrange(desc(Plausibility)) %>%
+              arrange(desc(`Component Plausibility`)) %>%
               .$Component
             
             graph <- graph %>%
@@ -106,7 +106,7 @@ setMethod('plotFeatureSolutions',signature = 'Assignment',
               graph <- graph[1:maxComponents]
             }
             
-            selectedComp <- assignment@addIsoAssign$filteredGraph %>%
+            selectedComp <- assignment@addIsoAssign$filtered_graph %>%
               nodes() %>%
               select(Feature,Component) %>%
               filter(Feature == feature) %>%
