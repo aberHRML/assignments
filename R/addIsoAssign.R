@@ -5,7 +5,7 @@ setGeneric("addIsoAssign", function(assignment)
 
 #' @importFrom dplyr arrange rowwise slice_sample left_join ungroup
 #' @importFrom stringr str_detect
-#' @importFrom mzAnnotation calcM ipMF MFscore
+#' @importFrom mzAnnotation calcM ipMF
 #' @importFrom igraph vertex.attributes V
 #' @importFrom furrr furrr_options
 #' @importFrom methods as
@@ -74,16 +74,16 @@ setMethod('addIsoAssign',signature = 'Assignment',
                               by = c('Measured M' = 'M','Measured m/z' = 'mz')) %>% 
                     rowwise() %>%
                     select(Feature,RetentionTime,MF,Isotope,Adduct,`Theoretical M`,
-                           `Measured M`,`Theoretical m/z`,`Measured m/z`, `PPM Error`,
-                           Score) %>%
+                           `Measured M`,`Theoretical m/z`,`Measured m/z`, `PPM error`,
+                           `MF Plausability (%)` = `Plausability (%)`) %>%
+                    
                     rowwise() %>%
                     mutate(AddIsoScore = addIsoScore(Adduct,
                                                      Isotope,
                                                      adducts(assignment),
                                                      isotopes(assignment))) %>%
                     ungroup() %>%
-                    filter(Score == min(Score,na.rm = TRUE)) %>%
-                    filter(Score < maxMFscore(assignment))
+                    filter(`MF Plausability (%)` == max(`MF Plausability (%)`)) 
                 } else {
                   return(NULL)
                 }
@@ -132,7 +132,7 @@ setMethod('addIsoAssign',signature = 'Assignment',
                                           'Size',
                                           'AIS',
                                           'Score',
-                                          'PPM Error'),
+                                          'PPM error'),
                               Direction = c(rep('max',3),rep('min',2)))
             
             filteredGraph <- graph
