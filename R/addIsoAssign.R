@@ -13,7 +13,7 @@ setGeneric("addIsoAssign", function(assignment)
 setMethod('addIsoAssign',signature = 'Assignment',
           function(assignment){
             
-            if (assignment@log$verbose == T) {
+            if (isTRUE(assignment@log$verbose)) {
               startTime <- proc.time()
               message(blue('Adduct & isotope assignment '),cli::symbol$continue,'\r',appendLF = FALSE)
             }
@@ -31,144 +31,45 @@ setMethod('addIsoAssign',signature = 'Assignment',
                          is.na(Isotope2) & 
                          Adduct1 == Adduct2)) 
             
-            M <- bind_rows(select(rel,
-                                  mz = `m/z1`,
-                                  RetentionTime = RetentionTime1,
-                                  Isotope = Isotope1,
-                                  Adduct = Adduct1, 
-                                  Feature = Feature1),
-                           select(rel,
-                                  mz = `m/z2`,
-                                  RetentionTime = RetentionTime2,
-                                  Isotope = Isotope2, 
-                                  Adduct = Adduct2, 
-                                  Feature = Feature2)) %>%
-              filter(!duplicated(.)) %>%
-              arrange(mz) %>%
-              rowwise() %>%
-              mutate(M = calcM(mz,
-                               adduct = Adduct,
-                               isotope = Isotope)) %>% 
-              arrange(M) %>%
-              filter(M <= maxM(assignment))
+            M <- collateM(rel,
+                          maxM(assignment))
             
-            nM <- nrow(M)
-            
-            MF <- M %>%
-              ungroup() %>%
-              slice_sample(n = nM) %>%
-              split(1:nrow(.)) %>%
-              future_map(~{
-                mf <- ipMF(mz = .x$mz,
-                           adduct = .x$Adduct,
-                           isotope = .x$Isotope,
-                           ppm = ppm(assignment)) 
-                
-                if (nrow(mf) > 0) {
-                  mf %>%
-                    left_join(select(M,
-                                     Feature,
-                                     RetentionTime,
-                                     M,
-                                     mz),
-                              by = c('Measured M' = 'M','Measured m/z' = 'mz')) %>% 
-                    rowwise() %>%
-                    select(Feature,RetentionTime,MF,Isotope,Adduct,`Theoretical M`,
-                           `Measured M`,`Theoretical m/z`,`Measured m/z`, `PPM error`,
-                           `MF Plausability (%)` = `Plausability (%)`) %>%
-                    
-                    rowwise() %>%
-                    mutate(AddIsoScore = addIsoScore(Adduct,
-                                                     Isotope,
-                                                     adducts(assignment),
-                                                     isotopes(assignment))) %>%
-                    ungroup() %>%
-                    filter(`MF Plausability (%)` == max(`MF Plausability (%)`)) 
-                } else {
-                  return(NULL)
-                }
-              },.options = furrr_options(seed = 1234)) %>% 
-              bind_rows()
+            MFs <- generateMFs(M,
+                              ppm(assignment),
+                              MFrankThreshold(assignment),
+                              adducts(assignment),
+                              isotopes(assignment))
               
-            rel <- rel %>% 
-              addMFs(MF) %>%
+            graph_edges <- rel %>% 
+              addMFs(MFs) %>%
               filter(MF1 == MF2) %>%
               mutate(RetentionTime1 = as.numeric(RetentionTime1),
                      RetentionTime2 = as.numeric(RetentionTime2)) %>%
               addNames()
             
-            MFs <- bind_rows(select(rel,
-                                    Name = Name1,
-                                    Feature = Feature1,
-                                    mz = `m/z1`,
-                                    RetentionTime = RetentionTime1,
-                                    Isotope = Isotope1, 
-                                    Adduct = Adduct1, 
-                                    MF = MF1),
-                             select(rel,
-                                    Name = Name2,
-                                    Feature = Feature2,
-                                    mz = `m/z2`,
-                                    RetentionTime = RetentionTime2,
-                                    Isotope = Isotope2, 
-                                    Adduct = Adduct2,
-                                    MF = MF2)) %>%
-              mutate(RetentionTime = as.numeric(RetentionTime)) %>%
-              arrange(mz) %>%
-              select(-mz) %>%
-              left_join(MF, by = c("Feature", 
-                                   "RetentionTime",
-                                   "Isotope", 
-                                   "Adduct",
-                                   'MF')) %>%
-              distinct() %>%
-              mutate(ID = 1:nrow(.))
+            graph_nodes <- collateMFs(graph_edges,MFs)
             
-            graph <- calcComponents(MFs,
-                                    rel,
-                                    parameters)
+            graph <- calcComponents(graph_nodes,
+                                    graph_edges,
+                                    assignment)
   
-            filters <- tibble(Measure = c('Plausibility',
-                                          'Size',
-                                          'AIS',
-                                          'Score',
-                                          'PPM error'),
-                              Direction = c(rep('max',3),rep('min',2)))
-            
-            filteredGraph <- graph
-            
-            for (i in 1:nrow(filters)) { 
-              f <- filters[i,]
-              filteredGraph <- filteredGraph %>%
-                activate(nodes) %>%
-                filter(name %in% {filteredGraph %>% 
-                    vertex.attributes() %>% 
-                    as_tibble() %>%
-                    eliminate(f$Measure,f$Direction) %>%
-                    .$name}) 
-                if (V(filteredGraph) %>% length() > 0) {
-                filteredGraph <- filteredGraph %>%
-                  recalcComponents(parameters)
-                } else {
-                  break()
-                }
-            }
+            filtered_graph <- filterComponents(graph,
+                                               assignment)
             
             assignment@addIsoAssign <- list(
               graph = graph,
-              filteredGraph = filteredGraph,
-              assigned = filteredGraph %>% 
-                vertex.attributes() %>% 
-                as_tibble() %>%
+              filtered_graph = filtered_graph,
+              assigned = filtered_graph %>% 
+                nodes() %>% 
                 rename(Name = name) %>%
                 mutate(Mode = str_sub(Feature,1,1))
             )
             
             assignment@assignments <- assignment@addIsoAssign$assigned %>%
-              select(Name:Score,Mode) %>%
+              select(Name:`MF Plausibility (%)`,Mode) %>%
               mutate(Iteration = 'A&I')
             
-            if (assignment@log$verbose == T) {
+            if (assignment@log$verbose == TRUE) {
               endTime <- proc.time()
               elapsed <- {endTime - startTime} %>%
                 .[3] %>%

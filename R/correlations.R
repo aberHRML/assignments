@@ -27,7 +27,7 @@ setMethod('calcCorrelations',signature = 'Assignment',function(assignment){
       select(-Feature) %>%
       dist() %>%
       hclust() %>%
-      cutree(h = parameters@RTwindow) %>%
+      cutree(h = parameters@RT_window) %>%
       {tibble(Feature = names(.),Group = .)}
     
     RTsum <- RTgroups %>%

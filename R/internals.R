@@ -1,40 +1,14 @@
-#' @importFrom purrr map_lgl
-
-addIsoScore <- function(add,iso,addRank,isoRank){
-  add <- tibble(Adduct = add)
-  iso <- tibble(Isotope = iso)
-  iso$Isotope[is.na(iso$Isotope)] <- 'NA'
-  addRank <- addRank[map_lgl(addRank,~{add %in% .})] %>%
-    .[[1]] %>%
-    {tibble(Adduct = ., 
-            Rank = (length(.) - 1):0)}
-  isoRank <- tibble(Isotope = c('NA',isoRank), Rank = length(isoRank):0)
-  
-  add <- left_join(add, addRank,by = 'Adduct') %>%
-    .$Rank
-  iso <- left_join(iso, isoRank,by = 'Isotope') %>%
-    .$Rank
-  
-  maxScore <- max(addRank$Rank) + max(isoRank$Rank)
-  score <- (add + iso)/maxScore
-  
-  return(score)
-}
-
 #' @importFrom dplyr bind_cols
 
 eliminate <- function(MFs,by,direction){
+  direct <- get(direction)
+  
   MFs %>%
     bind_cols(MFs %>% select(by = by)) %>%
-    split(.$Feature) %>%
-    map(~{
-      d <- .
-      direct <- get(direction)
-      d %>%
-        filter(by == direct(by))
-    }) %>%
-    bind_rows() %>%
-    select(-by)
+    group_by(Feature) %>% 
+    filter(by == direct(by)) %>% 
+    select(-by) %>% 
+    ungroup()
 }
 
 #' @importFrom dplyr rename
@@ -100,4 +74,172 @@ addNames <- function(rel){
     bind_cols(iso %>%
                 select(Name1,Name2)) %>%
     select(Name1,Name2,Feature1:MF2)
+}
+
+collateM <- function(rel,max_M){
+  bind_rows(select(rel,
+                   mz = `m/z1`,
+                   RetentionTime = RetentionTime1,
+                   Isotope = Isotope1,
+                   Adduct = Adduct1, 
+                   Feature = Feature1),
+            select(rel,
+                   mz = `m/z2`,
+                   RetentionTime = RetentionTime2,
+                   Isotope = Isotope2, 
+                   Adduct = Adduct2, 
+                   Feature = Feature2)) %>%
+    distinct() %>%
+    arrange(mz) %>%
+    rowwise() %>%
+    mutate(M = calcM(mz,
+                     adduct = Adduct,
+                     isotope = Isotope)) %>% 
+    arrange(M) %>%
+    filter(M <= max_M)
+}
+
+collateMFs <- function(rel,MF){
+  bind_rows(select(rel,
+                   Name = Name1,
+                   Feature = Feature1,
+                   mz = `m/z1`,
+                   RetentionTime = RetentionTime1,
+                   Isotope = Isotope1, 
+                   Adduct = Adduct1, 
+                   MF = MF1),
+            select(rel,
+                   Name = Name2,
+                   Feature = Feature2,
+                   mz = `m/z2`,
+                   RetentionTime = RetentionTime2,
+                   Isotope = Isotope2, 
+                   Adduct = Adduct2,
+                   MF = MF2)) %>%
+    mutate(RetentionTime = as.numeric(RetentionTime)) %>%
+    arrange(mz) %>%
+    select(-mz) %>%
+    left_join(MF, by = c("Feature", 
+                         "RetentionTime",
+                         "Isotope", 
+                         "Adduct",
+                         'MF')) %>%
+    distinct() %>%
+    mutate(ID = 1:nrow(.))
+}
+
+#' @importFrom purrr map_lgl
+
+addIsoScore <- function(add,iso,addRank,isoRank){
+  add <- tibble(Adduct = add)
+  iso <- tibble(Isotope = iso)
+  iso$Isotope[is.na(iso$Isotope)] <- 'NA'
+  addRank <- addRank[map_lgl(addRank,~{add %in% .})] %>%
+    .[[1]] %>%
+    {tibble(Adduct = ., 
+            Rank = (length(.) - 1):0)}
+  isoRank <- tibble(Isotope = c('NA',isoRank), Rank = length(isoRank):0)
+  
+  add <- left_join(add, addRank,by = 'Adduct') %>%
+    .$Rank
+  iso <- left_join(iso, isoRank,by = 'Isotope') %>%
+    .$Rank
+  
+  maxScore <- max(addRank$Rank) + max(isoRank$Rank)
+  score <- (add + iso)/maxScore
+  
+  return(score)
+}
+
+#' @importFrom tidyr expand_grid
+#' @importFrom purrr flatten_chr
+
+maxAddIsoScore <- function(assignment){
+  
+  assignment_adducts <- adducts(assignment)
+  assignment_isotopes <- isotopes(assignment)
+  
+  adduct_scores <- assignment_adducts %>% 
+    map(~tibble(adduct = .) %>% 
+          mutate(adduct_rank = (nrow(.) - 1):0)) %>% 
+    bind_rows(.id = 'mode')
+  
+  isotope_scores <- assignment_isotopes %>% 
+    c('NA',.) %>% 
+    tibble(isotope = .) %>% 
+    mutate(isotope_rank = (nrow(.) - 1):0)
+  
+  max_total <- assignment_adducts %>% 
+    map_dfr(~tibble(max_total = length(.x) - 1),
+            .id = 'mode') %>% 
+    mutate(max_total = max_total + 
+             length(assignment_isotopes))
+  
+  add_iso_combs <- expand_grid(adduct = assignment_adducts %>% 
+                                 flatten_chr(),
+                               isotope = c('NA',assignment_isotopes)
+  )
+  
+  add_iso_scores <- add_iso_combs %>% 
+    left_join(adduct_scores, 
+              by = "adduct") %>% 
+    left_join(isotope_scores, 
+              by = "isotope") %>% 
+    mutate(total = adduct_rank + 
+             isotope_rank) %>% 
+    left_join(max_total,by = 'mode') %>% 
+    mutate(score = total / max_total)
+  
+  max_score <- sum(add_iso_scores$score)
+  
+  return(max_score)
+}
+
+
+#' @importFrom furrr future_map_dfr
+
+generateMFs <- function(M,
+                        ppm,
+                        rank_threshold,
+                        adducts,
+                        isotopes){
+  nM <- nrow(M)
+  
+  M %>%
+    ungroup() %>%
+    slice_sample(n = nM) %>%
+    split(1:nrow(.)) %>%
+    future_map_dfr(~{
+      mf <- ipMF(mz = .x$mz,
+                 adduct = .x$Adduct,
+                 isotope = .x$Isotope,
+                 ppm = ppm) %>% 
+        mutate(Rank = rank(100 - `Plausibility (%)`,
+                           ties.method = 'min')) %>% 
+        filter(Rank <= rank_threshold)
+      
+      if (nrow(mf) > 0) {
+        mf %>%
+          left_join(select(M,
+                           Feature,
+                           RetentionTime,
+                           M,
+                           mz),
+                    by = c('Measured M' = 'M','Measured m/z' = 'mz')) %>% 
+          rowwise() %>%
+          select(Feature,RetentionTime,MF,Isotope,Adduct,`Theoretical M`,
+                 `Measured M`,`Theoretical m/z`,`Measured m/z`, `PPM error`,
+                 `MF Plausibility (%)` = `Plausibility (%)`) %>%
+          
+          rowwise() %>%
+          mutate(AddIsoScore = addIsoScore(Adduct,
+                                           Isotope,
+                                           adducts(assignment),
+                                           isotopes(assignment))) %>%
+          ungroup()
+      } else {
+        return(NULL)
+      }
+    },
+    .options = furrr_options(seed = 1234))
 }

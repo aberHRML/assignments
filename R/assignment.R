@@ -53,7 +53,7 @@ setMethod('show',signature = 'Assignment',
             if (length(object@addIsoAssign) > 0) {
               cat('\t',green('Adduct & isotope assignment:'),'\n')
               cat('\t\t','MFs:\t\t',length(unique(object@addIsoAssign$assigned$MF)),'\n')
-              cat('\t\t','Relationships:\t',object@addIsoAssign$filteredGraph %>% E() %>% length(),'\n')
+              cat('\t\t','Relationships:\t',object@addIsoAssign$filtered_graph %>% E() %>% length(),'\n')
               cat('\t\t','Assigned:\t',nrow(object@addIsoAssign$assigned),'\n')
               cat('\n')
             }
