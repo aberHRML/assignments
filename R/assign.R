@@ -37,6 +37,7 @@ setMethod('doAssignment',signature = 'Assignment',
 #' @rdname assign
 #' @description assign molecular formulas to a set of given m/z.
 #' @param dat tibble containing the peak intensities of m/z for which to assign molecular formulas
+#' @param assignment an S4 object of class `Assignment`
 #' @param parameters an S4 object of class AssignmentParamters containing the parameters for molecular formula assignment
 #' @param verbose should output be printed to the console
 #' @importFrom tibble tibble
@@ -48,7 +49,7 @@ setMethod('doAssignment',signature = 'Assignment',
 #' plan(future::sequential)
 #' p <- assignmentParameters('FIE')
 #'
-#' assignment <- assignMFs(peakData,p)
+#' assignment <- assignMFs(feature_data,p)
 #'
 #' @export
 
@@ -101,6 +102,7 @@ setGeneric('continueAssignment',function(assignment)
   standardGeneric('continueAssignment')
 )
 
+#' @rdname assign
 
 setMethod('continueAssignment',signature = 'Assignment',
           function(assignment){

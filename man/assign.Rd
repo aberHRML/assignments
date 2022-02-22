@@ -3,11 +3,14 @@
 \name{assignMFs}
 \alias{assignMFs}
 \alias{continueAssignment}
+\alias{continueAssignment,Assignment-method}
 \title{Assign molecular formulas}
 \usage{
 assignMFs(dat, parameters, verbose = TRUE)
 
 continueAssignment(assignment)
+
+\S4method{continueAssignment}{Assignment}(assignment)
 }
 \arguments{
 \item{dat}{tibble containing the peak intensities of m/z for which to assign molecular formulas}
@@ -15,6 +18,8 @@ continueAssignment(assignment)
 \item{parameters}{an S4 object of class AssignmentParamters containing the parameters for molecular formula assignment}
 
 \item{verbose}{should output be printed to the console}
+
+\item{assignment}{an S4 object of class \code{Assignment}}
 }
 \description{
 assign molecular formulas to a set of given m/z.
@@ -23,6 +28,6 @@ assign molecular formulas to a set of given m/z.
 plan(future::sequential)
 p <- assignmentParameters('FIE')
 
-assignment <- assignMFs(peakData,p)
+assignment <- assignMFs(feature_data,p)
 
 }
