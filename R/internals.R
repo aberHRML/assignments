@@ -152,7 +152,7 @@ addIsoScore <- function(add,iso,addRank,isoRank){
 }
 
 #' @importFrom tidyr expand_grid
-#' @importFrom purrr flatten_chr
+#' @importFrom purrr flatten_chr map_dfr
 
 maxAddIsoScore <- function(assignment){
   
