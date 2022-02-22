@@ -10,5 +10,7 @@ globalVariables(c(
   'Mode2','ID','Adducts','Isotopes','Transformations','Error',
   'Count','TransformedMF1', 'TransformedMF2','Plausibility','absPPM',
   'Name1','Name2','Size','AverageAddIsoScore','nodes','rtDiff',
-  'Component','Weight','AIS','Name','Assigned','Intensity','Label','Relative Abundance','m/z','Group','N'
+  'Component','Weight','AIS','Name','Assigned','Intensity','Label',
+  'Relative Abundance','m/z','Group','N','M','adduct_rank','isotope_rank',
+  'total','MF Plausibility (%)','Component Plausibility'
 ))
