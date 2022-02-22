@@ -48,12 +48,12 @@ setMethod('show',signature = 'Assignment',
             cat(yellow('Assignment:'),'\n')
             cat('\t','Features:\t\t',ncol(object@data),'\n')
             cat('\t','Correlations:\t\t',nrow(object@correlations),'\n')
-            cat('\t','Relationships:\t\t',nrow(object@relationships),'\n')
+            cat('\t','Relationships:\t\t',nrow(relationships(object)),'\n')
             cat('\n')
             if (length(object@addIsoAssign) > 0) {
               cat('\t',green('Adduct & isotope assignment:'),'\n')
               cat('\t\t','MFs:\t\t',length(unique(object@addIsoAssign$assigned$MF)),'\n')
-              cat('\t\t','Relationships:\t',object@addIsoAssign$filteredGraph %>% E() %>% length(),'\n')
+              cat('\t\t','Relationships:\t',object@addIsoAssign$filtered_graph %>% E() %>% length(),'\n')
               cat('\t\t','Assigned:\t',nrow(object@addIsoAssign$assigned),'\n')
               cat('\n')
             }
@@ -79,16 +79,38 @@ setMethod('show',signature = 'Assignment',
           }
 )
 
-#' assignments-Assignment
-#' @rdname assignments
-#' @description Get table of assigned features from an Assignment
+#' Assignment accessors
+#' @rdname accessors
+#' @description Access methods for Assignment S4 class
 #' @param assignment S4 object of class Assignment
+#' @export
+
+setGeneric('relationships',function(assignment)
+  standardGeneric('relationships'))
+
+#' @rdname accessors
+
+setMethod('relationships',signature = 'Assignment',
+          function(assignment){
+            assignment@relationships
+          })
+
+setGeneric('relationships<-',function(assignment,value)
+  standardGeneric('relationships<-'))
+
+setMethod('relationships<-',signature = 'Assignment',
+          function(assignment,value){
+            assignment@relationships <- value
+            return(assignment)
+          })
+
+#' @rdname accessors
 #' @export
 
 setGeneric('assignments',function(assignment)
   standardGeneric('assignments'))
 
-#' @rdname assignments
+#' @rdname accessors
 
 setMethod('assignments',signature = 'Assignment',
           function(assignment){
@@ -145,4 +167,34 @@ setMethod('assignedData', signature = 'Assignment',
             colnames(d) <- assignedFeats$Name 
             
             return(d)
+          })
+
+#' Summarise assignments
+#' @rdname summariseAssignment
+#' @description Summarise features assigned to molecular formulas.
+#' @param assignment S4 object of class Assignment
+#' @importFrom dplyr desc
+#' @export
+
+setGeneric('summariseAssignment',function(assignment)
+  standardGeneric('summariseAssignment'))
+
+#' @rdname summariseAssignment
+
+setMethod('summariseAssignment',signature = 'Assignment',
+          function(assignment){
+            assigned <- assignment %>%
+              assignments() %>%
+              split(.$MF) %>%
+              map(~{
+                d <- .
+                d$Isotope[is.na(d$Isotope)] <- ''
+                d <- d %>%
+                  mutate(IIP = str_c(Isotope,Adduct,sep = ' ')) %>%
+                  arrange(`Measured m/z`)
+                tibble(MF = d$MF[1],Features = str_c(d$Feature,collapse = '; '),`Isotopes & Ionisation Products` = str_c(d$IIP,collapse = '; '),Count = nrow(d))
+              }) %>%
+              bind_rows() %>%
+              arrange(desc(Count))
+            return(assigned)
           })

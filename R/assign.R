@@ -1,7 +1,19 @@
 
-setGeneric('doAssignment',function(assignment){
+assignMethods <- function(method) {
+  methods <- list(
+    FIE = FIEassignment,
+    `RP-LC` = LCassignment,
+    `NP-LC` = LCassignment
+  )
+  
+  method <- methods[[method]]
+  
+  return(method)
+}
+
+setGeneric('doAssignment',function(assignment)
   standardGeneric('doAssignment')
-})
+)
 
 setMethod('doAssignment',signature = 'Assignment',
           function(assignment){
@@ -21,7 +33,8 @@ setMethod('doAssignment',signature = 'Assignment',
             return(assignment)
           })
 
-#' assignMFs
+#' Assign molecular formulas
+#' @rdname assign
 #' @description assign molecular formulas to a set of given m/z.
 #' @param dat tibble containing the peak intensities of m/z for which to assign molecular formulas
 #' @param parameters an S4 object of class AssignmentParamters containing the parameters for molecular formula assignment
@@ -80,3 +93,16 @@ assignMFs <- function(dat,parameters,verbose = TRUE) {
   
   return(assignment)
 }
+
+#' @rdname assign
+#' @export
+
+setGeneric('continueAssignment',function(assignment)
+  standardGeneric('continueAssignment')
+)
+
+
+setMethod('continueAssignment',signature = 'Assignment',
+          function(assignment){
+            doAssignment(assignment)
+          })

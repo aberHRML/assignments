@@ -1,13 +1,16 @@
+
+setGeneric("calcRelationships", function(assignment,transformations = TRUE)
+  standardGeneric("calcRelationships"))
+
 #' @importFrom furrr future_map
 #' @importFrom dplyr mutate bind_rows filter vars contains
-#' @importFrom dplyr inner_join semi_join select mutate_at
-#' @importFrom stringr str_sub str_replace_all
+#' @importFrom dplyr inner_join semi_join select mutate_at relocate
+#' @importFrom stringr str_sub str_replace_all str_remove
 #' @importFrom mzAnnotation relationshipCalculator
 #' @importFrom magrittr %>%
-#' @importFrom tibble tibble
-#' @importFrom mzAnnotation adducts isotopes
+#' @importFrom tibble tibble enframe
 
-setMethod('relationships',signature = 'Assignment',
+setMethod('calcRelationships',signature = 'Assignment',
           function(assignment,transformations = T){
             
             if (assignment@log$verbose == T) {
@@ -20,7 +23,7 @@ setMethod('relationships',signature = 'Assignment',
             cors <- assignment@preparedCorrelations
             
             if (isTRUE(transformations)) {
-              trans <- c(NA,parameters@transformations)
+              trans <- c(NA,transformations(assignment))
             } else {
               trans <- NA
             }
@@ -33,39 +36,39 @@ setMethod('relationships',signature = 'Assignment',
                 mzs <- bind_rows(
                   .x %>% 
                     select(contains('1')) %>% 
-                    setNames(stringr::str_remove(names(.),'1')),
+                    setNames(str_remove(names(.),'1')),
                   .x %>% 
                     select(contains('2')) %>% 
-                    setNames(stringr::str_remove(names(.),'2'))
+                    setNames(str_remove(names(.),'2'))
                 )
                 
                 modes <- mzs$Mode %>% 
                   unique()
                 
                 if (length(modes) > 1){
-                  adducts <- parameters@adducts %>% 
+                  specified_adducts <- adducts(assignment) %>% 
                     unlist()
                 } else {
-                  adducts <- parameters@adducts[[modes]]
+                  specified_adducts <- adducts(assignment)[[modes]]
                 }
                 
                 relationships <- relationshipCalculator(mzs$`m/z`,
-                                                        limit = parameters@limit,
-                                                        adducts = adducts, 
-                                                        isotopes = c(NA,parameters@isotopes),
+                                                        limit = limit(assignment),
+                                                        adducts = specified_adducts, 
+                                                        isotopes = c(NA,isotopes(assignment)),
                                                         transformations = trans,
-                                                        adductTable = parameters@adductRules,
-                                                        isotopeTable = parameters@isotopeRules,
-                                                        transformationTable = parameters@transformationRules) %>% 
+                                                        adduct_rules_table = adductRules(assignment),
+                                                        isotope_rules_table = isotopeRules(assignment),
+                                                        transformation_rules_table = transformationRules(assignment)) %>% 
                   left_join(mzs,by = c('m/z1' = 'm/z')) %>% 
                   rename(Mode1 = Mode) %>% 
                   left_join(mzs,by = c('m/z2' = 'm/z')) %>% 
                   rename(Mode2 = Mode) %>% 
-                  dplyr::relocate(contains('Mode'),.after = `m/z2`)
+                  relocate(contains('Mode'),.after = `m/z2`)
                 
                 if (length(modes) > 1){
-                  adduct_modes <- parameters@adducts %>% 
-                    map(tibble::enframe,value = 'Adduct') %>% 
+                  adduct_modes <- adducts(assignment) %>% 
+                    map(enframe,value = 'Adduct') %>% 
                     bind_rows(.id = 'Mode') %>% 
                     select(-name)
                   
@@ -95,7 +98,7 @@ setMethod('relationships',signature = 'Assignment',
                      ID) %>%
               mutate_at(vars(RetentionTime1,RetentionTime2),as.numeric)
             
-            assignment@relationships <- rel
+            relationships(assignment) <- rel
             
             if (assignment@log$verbose == T) {
               endTime <- proc.time()

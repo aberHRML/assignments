@@ -4,19 +4,19 @@
 #' @slot technique assignment technique to use
 #' @slot correlations_parameters list of correlation parameters to be passed to metabolyseR correlation analysis
 #' @slot filter list of r and n thresholds for filtering correlations
-#' @slot maxM maximum M for which to assign molecular formulas
-#' @slot maxMFscore threshold for molecular formula score
+#' @slot max_M maximum M for which to assign molecular formulas
+#' @slot MF_rank_threshold rank threshold for molecular formula selection
 #' @slot ppm ppm threshold
 #' #' @slot adducts named list of character vectors containing the adducuts to use for each mode
 #' @slot limit amu deviation limit for relationship prediction
-#' @slot RTwindow retention time window for chromatographic associations
+#' @slot RT_window retention time window for chromatographic associations
 #' @slot adducts list of character vectors containing the adducts to use. List element names should denote ionisation mode.
 #' @slot isotopes character vector of isotopes to use
 #' @slot transformations character vector of transformations to use
-#' @slot adductRules tibble containing adduct formation rules as returned by mzAnnotation::adducts()
-#' @slot isotopeRules tibble containing isotope rules as returned by mzAnnotation::isotopes()
-#' @slot transformationRules tibble containing transformation rules as returned by mzAnnotation::transformations()
-#' @importFrom mzAnnotation transformations
+#' @slot adduct_rules tibble containing adduct formation rules as returned by mzAnnotation::adducts()
+#' @slot isotope_rules tibble containing isotope rules as returned by mzAnnotation::isotopes()
+#' @slot transformation_rules tibble containing transformation rules as returned by mzAnnotation::transformations()
+#' @importFrom mzAnnotation adduct_rules isotope_rules transformation_rules
 #' @export
 
 setClass('AssignmentParameters',
@@ -24,37 +24,55 @@ setClass('AssignmentParameters',
            technique = 'character',
            correlations_parameters = 'list',
            filter = 'list',
-           maxM = 'numeric',
-           maxMFscore = 'numeric',
+           max_M = 'numeric',
+           MF_rank_threshold = 'numeric',
            ppm = 'numeric',
            limit = 'numeric',
-           RTwindow = 'numeric',
+           RT_window = 'numeric',
            adducts = 'list',
            isotopes = 'character',
            transformations = 'character',
-           adductRules = 'tbl_df',
-           isotopeRules = 'tbl_df',
-           transformationRules = 'tbl_df'
+           adduct_rules = 'tbl_df',
+           isotope_rules = 'tbl_df',
+           transformation_rules = 'tbl_df'
          ),
          prototype = list(
            technique = 'FIE',
-           correlations_parameters = list(method = 'pearson',pAdjustMethod = 'bonferroni',corPvalue = 0.05),
-           filter = list(rthresh = 0.7,n = 200000,rIncrement = 0.01,nIncrement = 20000),
-           maxM = 1000,
-           maxMFscore = 5,
+           correlations_parameters = list(method = 'pearson',
+                                          pAdjustMethod = 'bonferroni',
+                                          corPvalue = 0.05),
+           filter = list(rthresh = 0.7,
+                         n = 200000,
+                         rIncrement = 0.01,
+                         nIncrement = 20000),
+           max_M = 1000,
+           MF_rank_threshold = 1,
            ppm = 5,
            limit = 0.001,
-           RTwindow = numeric(),
+           RT_window = numeric(),
            isotopes = c('13C','18O','13C2'),
            adducts = list(n = c("[M-H]1-", "[M+Cl]1-", "[M+K-2H]1-", 
                                 "[M-2H]2-", "[M+Cl37]1-","[2M-H]1-"),
                           p = c('[M+H]1+','[M+K]1+','[M+Na]1+','[M+K41]1+',
                                 '[M+NH4]1+','[M+2H]2+','[2M+H]1+')),
-           transformations = transformations()$`MF Change`,
-           adductRules = adducts(),
-           isotopeRules = isotopes(),
-           transformationRules = transformations()
+           transformations = transformation_rules()$`MF Change`,
+           adduct_rules = adduct_rules(),
+           isotope_rules = isotope_rules(),
+           transformation_rules = transformation_rules()
          ))
+
+# setValidity('AssignmentParameters',function(object){
+#   adducts_present <- adducts(object) %in% adductRules(object)$Name
+#   
+#   if (FALSE %in% adducts_present){
+#     missing_adducts <- adducts(object)[adducts_present] %>% 
+#       str_c(collapse = ', ')
+#     
+#     str_c('Specified adducts ',missing_adducts,' not present in adduct rules.')
+#   } else {
+#     TRUE
+#   }
+# })
 
 #' @importFrom methods show
 #' @importFrom crayon yellow
@@ -65,13 +83,13 @@ setMethod('show',signature = 'AssignmentParameters',
             cat(yellow('\nAssignment Parameters:'),'\n')
             cat('\n')
             cat('\t','Technique:\t\t',object@technique,'\n')
-            cat('\t','Max M:\t\t\t',object@maxM,'\n')
-            cat('\t','Max MF score:\t\t',object@maxMFscore,'\n')
+            cat('\t','Max M:\t\t\t',object@max_M,'\n')
+            cat('\t','MF rank threshold:\t',object@MF_rank_threshold,'\n')
             cat('\t','PPM threshold:\t\t',object@ppm,'\n')
             cat('\t','Relationship limit:\t',object@limit,'\n')
             
             if (object@technique != 'FIE') {
-              cat('\t','RT window:\t\t',object@RTwindow,'\n')
+              cat('\t','RT window:\t\t',object@RT_window,'\n')
             }
             
             cat('\n\t','Adducts:','\n')
@@ -98,27 +116,198 @@ setMethod('show',signature = 'AssignmentParameters',
 #' @examples 
 #' assignment_parameters <- assignmentParameters('FIE')
 #' 
+#' ## Return technique
+#' technique(assignment_parameters)
+#' 
+#' ## Return limit
+#' limit(assignment_parameters)
+#' 
+#' ## Set limit
+#' limit(assignment_parameters) <- 0.002
+#' 
+#' ## Return max M
+#' maxM(assignment_parameters)
+#' 
+#' ## Set max M
+#' maxM(assignment_parameters) <- 500
+#' 
+#' ## Return MF rank threshold
+#' MFrankThreshold(assignment_parameters)
+#' 
+#' ## Set MF rank threshold
+#' MFrankThreshold(assignment_parameters) <- 3
+#' 
+#' ## Return ppm
+#' ppm(assignment_parameters)
+#' 
+#' ## Set ppm
+#' ppm(assignment_parameters) <- 3
+#' 
 #' ## Return isotopes
-#' iso(assignment_parameters)
+#' isotopes(assignment_parameters)
 #' 
 #' ## Set isotopes
-#' iso(assignment_parameters) <- '13C'
+#' isotopes(assignment_parameters) <- '13C'
 #' 
 #' ## Return adducts
-#' add(assignment_parameters)
+#' adducts(assignment_parameters)
 #' 
 #' ## Set adducts
-#' add(assignment_parameters) <- list(n = c('[M-H]1-','[M+Cl]1-'),
+#' adducts(assignment_parameters) <- list(n = c('[M-H]1-','[M+Cl]1-'),
 #'                                    p = c('[M+H]1+','[M+K]1+'))
+#'                                    
+#' ## Return transformations
+#' transformations(assignment_parameters)
 #' 
+#' ## Set transformations
+#' transformations(assignment_parameters) <- "M - [O] + [NH2]"
+#' 
+#' ## Return adduct rules
+#' adductRules(assignment_parameters)
+#' 
+#' ## Set adduct rules
+#' adductRules(assignment_parameters) <- mzAnnotation::adduct_rules())
+#' 
+#' ## Return isotope rules
+#' isotopeRules(assignment_parameters)
+#' 
+#' ## Set isotope rules
+#' isotopeRules(assignment_parameters) <- mzAnnotation::isotope_rules())
+#' 
+#' ## Return transformation rules
+#' transformationRules(assignment_parameters)
+#' 
+#' ## Set transformation rules
+#' transformationRules(assignment_parameters) <- mzAnnotation::transformation_rules())
 #' @export
 
-setGeneric('iso',function(x)
-  standardGeneric('iso'))
+setGeneric('technique',function(x)
+  standardGeneric('technique'))
 
 #' @rdname parameters
 
-setMethod('iso',signature = 'AssignmentParameters',
+setMethod('technique',signature = 'AssignmentParameters',
+          function(x){
+            x@technique
+          })
+
+#' @rdname parameters
+#' @export
+
+setGeneric('limit',function(x)
+  standardGeneric('limit'))
+
+#' @rdname parameters
+
+setMethod('limit',signature = 'AssignmentParameters',
+          function(x){
+            x@limit
+          })
+
+#' @rdname parameters
+#' @export
+
+setGeneric('limit<-',function(x,value)
+  standardGeneric('limit<-'))
+
+#' @rdname parameters
+
+setMethod('limit<-',signature = 'AssignmentParameters',
+          function(x,value){
+            x@limit <- value
+            return(x)
+          })
+
+#' @rdname parameters
+#' @export
+
+setGeneric('maxM',function(x)
+  standardGeneric('maxM'))
+
+#' @rdname parameters
+
+setMethod('maxM',signature = 'AssignmentParameters',
+          function(x){
+            x@max_M
+          })
+
+#' @rdname parameters
+#' @export
+
+setGeneric('maxM<-',function(x,value)
+  standardGeneric('maxM<-'))
+
+#' @rdname parameters
+
+setMethod('maxM<-',signature = 'AssignmentParameters',
+          function(x,value){
+            x@max_M <- value
+            return(x)
+          })
+
+#' @rdname parameters
+#' @export
+
+setGeneric('MFrankThreshold',function(x)
+  standardGeneric('MFrankThreshold'))
+
+#' @rdname parameters
+
+setMethod('MFrankThreshold',signature = 'AssignmentParameters',
+          function(x){
+            x@MF_rank_threshold
+          })
+
+#' @rdname parameters
+#' @export
+
+setGeneric('MFrankThreshold<-',function(x,value)
+  standardGeneric('MFrankThreshold<-'))
+
+#' @rdname parameters
+
+setMethod('MFrankThreshold<-',signature = 'AssignmentParameters',
+          function(x,value){
+            x@MF_rank_threshold <- value
+            return(x)
+          })
+
+#' @rdname parameters
+#' @export
+
+setGeneric('ppm',function(x)
+  standardGeneric('ppm'))
+
+#' @rdname parameters
+
+setMethod('ppm',signature = 'AssignmentParameters',
+          function(x){
+            x@ppm
+          })
+
+#' @rdname parameters
+#' @export
+
+setGeneric('ppm<-',function(x,value)
+  standardGeneric('ppm<-'))
+
+#' @rdname parameters
+
+setMethod('ppm<-',signature = 'AssignmentParameters',
+          function(x,value){
+            x@ppm <- value
+            return(x)
+          })
+
+#' @rdname parameters
+#' @export
+
+setGeneric('isotopes',function(x)
+  standardGeneric('isotopes'))
+
+#' @rdname parameters
+
+setMethod('isotopes',signature = 'AssignmentParameters',
           function(x){
             x@isotopes
           })
@@ -126,12 +315,12 @@ setMethod('iso',signature = 'AssignmentParameters',
 #' @rdname parameters
 #' @export
 
-setGeneric('iso<-',function(x,value)
-  standardGeneric('iso<-'))
+setGeneric('isotopes<-',function(x,value)
+  standardGeneric('isotopes<-'))
 
 #' @rdname parameters
 
-setMethod('iso<-',signature = 'AssignmentParameters',
+setMethod('isotopes<-',signature = 'AssignmentParameters',
           function(x,value){
             x@isotopes <- value
             return(x)
@@ -140,12 +329,12 @@ setMethod('iso<-',signature = 'AssignmentParameters',
 #' @rdname parameters
 #' @export
 
-setGeneric('add',function(x)
-  standardGeneric('add'))
+setGeneric('adducts',function(x)
+  standardGeneric('adducts'))
 
 #' @rdname parameters
 
-setMethod('add',signature = 'AssignmentParameters',
+setMethod('adducts',signature = 'AssignmentParameters',
           function(x){
             x@adducts
           })
@@ -153,13 +342,169 @@ setMethod('add',signature = 'AssignmentParameters',
 #' @rdname parameters
 #' @export
 
-setGeneric('add<-',function(x,value)
-  standardGeneric('add<-'))
+setGeneric('adducts<-',function(x,value)
+  standardGeneric('adducts<-'))
 
 #' @rdname parameters
 
-setMethod('add<-',signature = 'AssignmentParameters',
+setMethod('adducts<-',signature = 'AssignmentParameters',
           function(x,value){
             x@adducts <- value
             return(x)
           })
+
+#' @rdname parameters
+#' @export
+
+setGeneric('transformations',function(x)
+  standardGeneric('transformations'))
+
+#' @rdname parameters
+
+setMethod('transformations',signature = 'AssignmentParameters',
+          function(x){
+            x@transformations
+          })
+
+#' @rdname parameters
+#' @export
+
+setGeneric('transformations<-',function(x,value)
+  standardGeneric('transformations<-'))
+
+#' @rdname parameters
+
+setMethod('transformations<-',signature = 'AssignmentParameters',
+          function(x,value){
+            x@transformations <- value
+            return(x)
+          })
+
+#' @rdname parameters
+#' @export
+
+setGeneric('adductRules',function(x)
+  standardGeneric('adductRules'))
+
+#' @rdname parameters
+
+setMethod('adductRules',signature = 'AssignmentParameters',
+          function(x){
+            x@adduct_rules
+          })
+
+#' @rdname parameters
+#' @export
+
+setGeneric('adductRules<-',function(x,value)
+  standardGeneric('adductRules<-'))
+
+#' @rdname parameters
+
+setMethod('adductRules<-',signature = 'AssignmentParameters',
+          function(x,value){
+            x@adduct_rules <- value
+            return(x)
+          })
+
+#' @rdname parameters
+#' @export
+
+setGeneric('isotopeRules',function(x)
+  standardGeneric('isotopeRules'))
+
+#' @rdname parameters
+
+setMethod('isotopeRules',signature = 'AssignmentParameters',
+          function(x){
+            x@isotope_rules
+          })
+
+#' @rdname parameters
+#' @export
+
+setGeneric('isotopeRules<-',function(x,value)
+  standardGeneric('isotopeRules<-'))
+
+#' @rdname parameters
+
+setMethod('isotopeRules<-',signature = 'AssignmentParameters',
+          function(x,value){
+            x@isotope_rules <- value
+            return(x)
+          })
+
+#' @rdname parameters
+#' @export
+
+setGeneric('transformationRules',function(x)
+  standardGeneric('transformationRules'))
+
+#' @rdname parameters
+
+setMethod('transformationRules',signature = 'AssignmentParameters',
+          function(x){
+            x@transformation_rules
+          })
+
+#' @rdname parameters
+#' @export
+
+setGeneric('transformationRules<-',function(x,value)
+  standardGeneric('transformationRules<-'))
+
+#' @rdname parameters
+
+setMethod('transformationRules<-',signature = 'AssignmentParameters',
+          function(x,value){
+            x@transformation_rules <- value
+            return(x)
+          })
+
+#' Available techniques
+#' @description Available techniques for molecular formula assignment.
+#' @return A `character` vector of technique names.
+#' @examples 
+#' availableTechniques()
+#' @export
+
+availableTechniques <- function(){
+  c('FIE','RP-LC','NP-LC')
+}
+
+#' Assignment parameters
+#' @description Return default assignment parameters for a given technique.
+#' @param technique technique to use for assignment
+#' @importFrom parallel detectCores
+#' @importFrom methods new
+#' @export
+
+assignmentParameters <- function(technique){
+  
+  if (!(technique %in% availableTechniques())) {
+    techniques <- availableTechniques() %>% 
+      str_c(collapse = ', ')
+    
+    stop(str_c('Argument `technique` should be one of ',techniques,'.'),call. = FALSE)
+  }
+  
+  if (technique == 'FIE') {
+    p <- new('AssignmentParameters')
+  }
+  
+  if (technique == 'RP-LC') {
+    p <- new('AssignmentParameters',
+             technique = 'RP-LC',
+             RT_window = 1/60
+    )
+  }
+  
+  if (technique == 'NP-LC') {
+    p <- new('AssignmentParameters',
+             technique = 'NP-LC',
+             RT_window = 1/60
+    )
+  }
+  
+  return(p)
+} 

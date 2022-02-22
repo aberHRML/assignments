@@ -16,16 +16,16 @@ An S4 class to store assignment parameters.
 
 \item{\code{filter}}{list of r and n thresholds for filtering correlations}
 
-\item{\code{maxM}}{maximum M for which to assign molecular formulas}
+\item{\code{max_M}}{maximum M for which to assign molecular formulas}
 
-\item{\code{maxMFscore}}{threshold for molecular formula score}
+\item{\code{MF_rank_threshold}}{rank threshold for molecular formula selection}
 
 \item{\code{ppm}}{ppm threshold
 #' @slot adducts named list of character vectors containing the adducuts to use for each mode}
 
 \item{\code{limit}}{amu deviation limit for relationship prediction}
 
-\item{\code{RTwindow}}{retention time window for chromatographic associations}
+\item{\code{RT_window}}{retention time window for chromatographic associations}
 
 \item{\code{adducts}}{list of character vectors containing the adducts to use. List element names should denote ionisation mode.}
 
@@ -33,10 +33,10 @@ An S4 class to store assignment parameters.
 
 \item{\code{transformations}}{character vector of transformations to use}
 
-\item{\code{adductRules}}{tibble containing adduct formation rules as returned by mzAnnotation::adducts()}
+\item{\code{adduct_rules}}{tibble containing adduct formation rules as returned by mzAnnotation::adducts()}
 
-\item{\code{isotopeRules}}{tibble containing isotope rules as returned by mzAnnotation::isotopes()}
+\item{\code{isotope_rules}}{tibble containing isotope rules as returned by mzAnnotation::isotopes()}
 
-\item{\code{transformationRules}}{tibble containing transformation rules as returned by mzAnnotation::transformations()}
+\item{\code{transformation_rules}}{tibble containing transformation rules as returned by mzAnnotation::transformations()}
 }}
 
