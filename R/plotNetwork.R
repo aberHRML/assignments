@@ -51,7 +51,7 @@ setMethod('plotNetwork',signature = 'Assignment',
             
             AI <- assignment@addIsoAssign$filtered_graph
             TA <- assignment@transAssign %>%
-              map(~{.$filteredGraph})
+              map(~{.$filtered_graph})
             
             if (length(TA) > 0){
               if (length(TA) > 1) {

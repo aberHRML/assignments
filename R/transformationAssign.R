@@ -54,25 +54,24 @@ setMethod('transformationAssign',signature = 'Assignment',
                                  adducts(assignment),
                                  isotopes(assignment))
               
-              if (nrow(MF) > 0) {
+              if (nrow(MFs) > 0) {
                 
                 MFs <- MFs %>%
                   bind_rows(assigned %>%
-                              select(names(MF)[!(names(MF) == 'AddIsoScore')]) %>%
+                              select(names(MFs)[!(names(MFs) == 'AddIsoScore')]) %>%
                               rowwise() %>%
                               mutate(AddIsoScore = addIsoScore(Adduct,
                                                                Isotope,
                                                                adducts(assignment),
                                                                isotopes(assignment))))
                 graph_edges <- rel %>% 
-                  addMFs(MF,identMF = F) %>%
+                  addMFs(MFs,identMF = F) %>%
                   mutate(RetentionTime1 = as.numeric(RetentionTime1),
                          RetentionTime2 = as.numeric(RetentionTime2)) %>%
                   addNames()
                 
                 if (nrow(graph_edges) > 0) {
-                  graph_nodes <- collateMFs(rel,
-                                    MF)
+                  graph_nodes <- collateMFs(graph_edges,MFs)
                   
                   graph <- calcComponents(graph_nodes,
                                           graph_edges,

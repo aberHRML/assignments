@@ -201,8 +201,8 @@ maxAddIsoScore <- function(assignment){
 generateMFs <- function(M,
                         ppm,
                         rank_threshold,
-                        adducts,
-                        isotopes){
+                        assignment_adducts,
+                        assignment_isotopes){
   nM <- nrow(M)
   
   M %>%
@@ -234,8 +234,8 @@ generateMFs <- function(M,
           rowwise() %>%
           mutate(AddIsoScore = addIsoScore(Adduct,
                                            Isotope,
-                                           adducts(assignment),
-                                           isotopes(assignment))) %>%
+                                           assignment_adducts,
+                                           assignment_isotopes)) %>%
           ungroup()
       } else {
         return(NULL)
