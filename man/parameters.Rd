@@ -190,17 +190,17 @@ transformations(assignment_parameters) <- "M - [O] + [NH2]"
 adductRules(assignment_parameters)
 
 ## Set adduct rules
-adductRules(assignment_parameters) <- mzAnnotation::adduct_rules())
+adductRules(assignment_parameters) <- mzAnnotation::adduct_rules()
 
 ## Return isotope rules
 isotopeRules(assignment_parameters)
 
 ## Set isotope rules
-isotopeRules(assignment_parameters) <- mzAnnotation::isotope_rules())
+isotopeRules(assignment_parameters) <- mzAnnotation::isotope_rules()
 
 ## Return transformation rules
 transformationRules(assignment_parameters)
 
 ## Set transformation rules
-transformationRules(assignment_parameters) <- mzAnnotation::transformation_rules())
+transformationRules(assignment_parameters) <- mzAnnotation::transformation_rules()
 }
