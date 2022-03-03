@@ -2,27 +2,61 @@
 % Please edit documentation in R/assign.R
 \name{assignMFs}
 \alias{assignMFs}
+\alias{assignMFs,tbl_df-method}
+\alias{assignMFs,AnalysisData-method}
+\alias{assignMFs,Analysis-method}
 \alias{continueAssignment}
 \title{Assign molecular formulas}
 \usage{
-assignMFs(dat, parameters, verbose = TRUE)
+assignMFs(
+  feature_data,
+  parameters = assignmentParameters("FIE"),
+  verbose = TRUE,
+  ...
+)
+
+\S4method{assignMFs}{tbl_df}(
+  feature_data,
+  parameters = assignmentParameters("FIE"),
+  verbose = TRUE
+)
+
+\S4method{assignMFs}{AnalysisData}(
+  feature_data,
+  parameters = assignmentParameters("FIE"),
+  verbose = TRUE
+)
+
+\S4method{assignMFs}{Analysis}(
+  feature_data,
+  parameters = assignmentParameters("FIE"),
+  verbose = TRUE,
+  type = c("raw", "pre-treated")
+)
 
 continueAssignment(assignment)
 }
 \arguments{
-\item{dat}{tibble containing the peak intensities of m/z for which to assign molecular formulas}
+\item{feature_data}{a tibble or an object of S4 class \code{AnalysisData} or \code{Analysis} containing the feature intensity matrix of m/z for which to assign molecular formulas. See details.}
 
-\item{parameters}{an S4 object of class AssignmentParamters containing the parameters for molecular formula assignment}
+\item{parameters}{an S4 object of class \code{AssignmentParamters} containing the parameters for molecular formula assignment}
 
-\item{verbose}{should output be printed to the console}
+\item{verbose}{should progress output be printed to the console}
+
+\item{...}{arguments to pass to the relevant method}
+
+\item{type}{\code{raw} or \code{pre-treated} data on which to perform assignment when argument \code{feature_data} is of class \code{Analysis}}
 }
 \description{
 assign molecular formulas to a set of given m/z.
+}
+\details{
+If argument \code{feature_data} is specified as a tibble, this should be a feature intensity matrix where the columns are the \code{m/z} features to assign and the rows are the individual observations, with the cells as abundance values.
 }
 \examples{
 plan(future::sequential)
 p <- assignmentParameters('FIE')
 
-assignment <- assignMFs(peakData,p)
+assignment <- assignMFs(feature_data,p)
 
 }

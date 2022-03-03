@@ -2,16 +2,25 @@
 assignment_parameters_FIE <- assignmentParameters('FIE')
 assignment_parameters_LC <- assignmentParameters('RP-LC')
 
-LC_features <- feature_data
-colnames(LC_features) <- str_c(colnames(LC_features),'@1.00')
+LC_features <- new('Analysis')
+metabolyseR::raw(LC_features) <- metabolyseR::analysisData(
+  feature_data %>% 
+    {magrittr::set_colnames(.,
+                            paste0(colnames(.),
+                                   '@1.00'))},
+  info = tibble::tibble(
+    ID = feature_data %>% 
+      nrow() %>% 
+      seq_len()))
+
 
 assignment_FIE <- assignMFs(feature_data,
-                        assignment_parameters_FIE,
-                        verbose = TRUE)
+                            assignment_parameters_FIE,
+                            verbose = TRUE)
 
 assignment_LC <- assignMFs(LC_features,
-                            assignment_parameters_LC,
-                            verbose = TRUE)
+                           assignment_parameters_LC,
+                           verbose = TRUE)
 
 test_that('assignment works for FIE technique',{
   expect_s4_class(assignment_FIE,"Assignment")
@@ -47,12 +56,12 @@ test_that('feature solutions can be plotted',{
 
 test_that('feature solutions plotting throws an error if an incorrect feature is provided',{
   expect_error(plotFeatureSolutions(assignment_FIE,
-                             'test'))
+                                    'test'))
 })
 
 test_that('assignment network can be plotted',{
   pl <- plotNetwork(assignment_FIE)
-
+  
   expect_s3_class(pl,'ggraph')
 })
 
