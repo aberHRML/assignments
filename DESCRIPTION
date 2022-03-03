@@ -38,6 +38,7 @@ Collate: parameters.R assignment.R correlations.R
         feature_data.R LCassignment.R MFassign.R
         FIEassignment.R plotNetwork.R plotAdductDist.R
         plotFeatureSolutions.R plotSpectrum.R reexports.R
+        zzz.R
 Suggests: testthat,
     covr
 Remotes: jasenfinch/mzAnnotation@tmp,
