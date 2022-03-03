@@ -140,16 +140,3 @@ setMethod('assignMFs',signature = 'Analysis',
               assignMFs(parameters = parameters,
                         verbose = verbose)
           })
-
-#' @rdname assign
-#' @export
-
-setGeneric('continueAssignment',function(assignment)
-  standardGeneric('continueAssignment')
-)
-
-
-setMethod('continueAssignment',signature = 'Assignment',
-          function(assignment){
-            doAssignment(assignment)
-          })

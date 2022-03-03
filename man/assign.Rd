@@ -5,7 +5,6 @@
 \alias{assignMFs,tbl_df-method}
 \alias{assignMFs,AnalysisData-method}
 \alias{assignMFs,Analysis-method}
-\alias{continueAssignment}
 \title{Assign molecular formulas}
 \usage{
 assignMFs(
@@ -33,8 +32,6 @@ assignMFs(
   verbose = TRUE,
   type = c("raw", "pre-treated")
 )
-
-continueAssignment(assignment)
 }
 \arguments{
 \item{feature_data}{a tibble or an object of S4 class \code{AnalysisData} or \code{Analysis} containing the feature intensity matrix of m/z for which to assign molecular formulas. See details.}
