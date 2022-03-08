@@ -1,6 +1,6 @@
 
-assignment_parameters_FIE <- assignmentParameters('FIE')
-assignment_parameters_LC <- assignmentParameters('RP-LC')
+assignment_parameters_FIE <- assignmentParameters()
+assignment_parameters_LC <- assignmentParameters('RP-LC-HRMS')
 
 LC_features <- new('Analysis')
 metabolyseR::raw(LC_features) <- metabolyseR::analysisData(

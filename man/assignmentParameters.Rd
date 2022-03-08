@@ -4,7 +4,7 @@
 \alias{assignmentParameters}
 \title{Assignment parameters}
 \usage{
-assignmentParameters(technique)
+assignmentParameters(technique = availableTechniques())
 }
 \arguments{
 \item{technique}{technique to use for assignment}

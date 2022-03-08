@@ -1,16 +1,4 @@
 
-assignMethods <- function(method) {
-  methods <- list(
-    FIE = FIEassignment,
-    `RP-LC` = LCassignment,
-    `NP-LC` = LCassignment
-  )
-  
-  method <- methods[[method]]
-  
-  return(method)
-}
-
 setGeneric('doAssignment',function(assignment)
   standardGeneric('doAssignment')
 )
@@ -19,7 +7,10 @@ setMethod('doAssignment',signature = 'Assignment',
           function(assignment){
             parameters <- as(assignment,'AssignmentParameters')
             
-            assignmentMethod <- assignMethods(parameters@technique)
+            assignmentMethod <- switch(technique(assignment),
+                                        `FIE-HRMS` = FIEassignment,
+                                        `RP-LC-HRMS` = LCassignment,
+                                        `NP-LC-HRMS` = LCassignment)
             
             elements <- names(assignmentMethod())
             elements <- elements[!(elements %in% assignment@flags)]
@@ -50,7 +41,7 @@ setMethod('doAssignment',signature = 'Assignment',
 #' @importFrom utils capture.output
 #' @examples 
 #' plan(future::sequential)
-#' p <- assignmentParameters('FIE')
+#' p <- assignmentParameters('FIE-HRMS')
 #'
 #' assignment <- assignMFs(feature_data,p)
 #'

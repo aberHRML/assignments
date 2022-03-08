@@ -37,7 +37,7 @@ setClass('AssignmentParameters',
            transformation_rules = 'tbl_df'
          ),
          prototype = list(
-           technique = 'FIE',
+           technique = 'FIE-HRMS',
            correlations_parameters = list(method = 'pearson',
                                           pAdjustMethod = 'bonferroni',
                                           corPvalue = 0.05),
@@ -54,25 +54,23 @@ setClass('AssignmentParameters',
            adducts = list(n = c("[M-H]1-", "[M+Cl]1-", "[M+K-2H]1-", 
                                 "[M-2H]2-", "[M+Cl37]1-","[2M-H]1-"),
                           p = c('[M+H]1+','[M+K]1+','[M+Na]1+','[M+K41]1+',
-                                '[M+NH4]1+','[M+2H]2+','[2M+H]1+')),
+                                '[M+2H]2+','[2M+H]1+')),
            transformations = transformation_rules()$`MF Change`,
            adduct_rules = adduct_rules(),
            isotope_rules = isotope_rules(),
            transformation_rules = transformation_rules()
          ))
 
-# setValidity('AssignmentParameters',function(object){
-#   adducts_present <- adducts(object) %in% adductRules(object)$Name
-#   
-#   if (FALSE %in% adducts_present){
-#     missing_adducts <- adducts(object)[adducts_present] %>% 
-#       str_c(collapse = ', ')
-#     
-#     str_c('Specified adducts ',missing_adducts,' not present in adduct rules.')
-#   } else {
-#     TRUE
-#   }
-# })
+setValidity('AssignmentParameters',function(object){
+  technique_correct <- technique(object) %in% availableTechniques()
+  
+  if (isFALSE(technique_correct)) {
+    availableTechniques() %>% 
+      paste(collapse = ', ') %>% 
+      paste0('Technique should be one of ',.)
+    }
+  else TRUE
+})
 
 #' @importFrom methods show
 #' @importFrom crayon yellow
@@ -469,42 +467,32 @@ setMethod('transformationRules<-',signature = 'AssignmentParameters',
 #' @export
 
 availableTechniques <- function(){
-  c('FIE','RP-LC','NP-LC')
+  c('FIE-HRMS','RP-LC-HRMS','NP-LC-HRMS')
 }
 
 #' Assignment parameters
 #' @description Return default assignment parameters for a given technique.
 #' @param technique technique to use for assignment
-#' @importFrom parallel detectCores
 #' @importFrom methods new
 #' @export
 
-assignmentParameters <- function(technique){
+assignmentParameters <- function(technique = availableTechniques()){
   
-  if (!(technique %in% availableTechniques())) {
-    techniques <- availableTechniques() %>% 
-      str_c(collapse = ', ')
-    
-    stop(str_c('Argument `technique` should be one of ',techniques,'.'),call. = FALSE)
-  }
+  technique <- match.arg(technique,
+                         choices = availableTechniques())
   
-  if (technique == 'FIE') {
-    p <- new('AssignmentParameters')
-  }
+  parameters <- switch(technique,
+                         `FIE-HRMS` = new('AssignmentParameters'),
+                         `RP-LC-HRMS` = new('AssignmentParameters',
+                                            technique = 'RP-LC-HRMS',
+                                            RT_window = 1/60),
+                         `NP-LC-HRMS` = new('AssignmentParameters',
+                                            technique = 'NP-LC-HRMS',
+                                            RT_window = 1/60,
+                                            adducts = list(n = c("[M-H]1-", "[M+Cl]1-", "[M+K-2H]1-", 
+                                                                 "[M-2H]2-", "[M+Cl37]1-","[2M-H]1-"),
+                                                           p = c('[M+H]1+','[M+K]1+','[M+Na]1+','[M+K41]1+',
+                                                                 '[M+NH4]1+','[M+2H]2+','[2M+H]1+'))))
   
-  if (technique == 'RP-LC') {
-    p <- new('AssignmentParameters',
-             technique = 'RP-LC',
-             RT_window = 1/60
-    )
-  }
-  
-  if (technique == 'NP-LC') {
-    p <- new('AssignmentParameters',
-             technique = 'NP-LC',
-             RT_window = 1/60
-    )
-  }
-  
-  return(p)
+  return(parameters)
 } 

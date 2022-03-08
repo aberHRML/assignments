@@ -52,7 +52,7 @@ If argument \code{feature_data} is specified as a tibble, this should be a featu
 }
 \examples{
 plan(future::sequential)
-p <- assignmentParameters('FIE')
+p <- assignmentParameters('FIE-HRMS')
 
 assignment <- assignMFs(feature_data,p)
 
