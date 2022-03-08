@@ -62,7 +62,8 @@ setMethod('addIsoAssign',signature = 'Assignment',
               assigned = filtered_graph %>% 
                 nodes() %>% 
                 rename(Name = name) %>%
-                mutate(Mode = str_sub(Feature,1,1))
+                mutate(Mode = str_sub(Feature,1,1)) %>% 
+                clean()
             )
             
             assignment@assignments <- assignment@addIsoAssign$assigned %>%

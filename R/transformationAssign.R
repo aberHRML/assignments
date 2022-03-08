@@ -65,7 +65,8 @@ setMethod('transformationAssign',signature = 'Assignment',
                                                                adducts(assignment),
                                                                isotopes(assignment))))
                 graph_edges <- rel %>% 
-                  addMFs(MFs,identMF = F) %>%
+                  addMFs(MFs,
+                         identMF = FALSE) %>%
                   mutate(RetentionTime1 = as.numeric(RetentionTime1),
                          RetentionTime2 = as.numeric(RetentionTime2)) %>%
                   addNames()
@@ -86,7 +87,8 @@ setMethod('transformationAssign',signature = 'Assignment',
                     mutate(Mode = str_sub(Feature,1,1)) %>%
                     filter(!(Name %in% assigned$Name)) %>%
                     select(Name:`MF Plausibility (%)`,Mode) %>%
-                    mutate(Iteration = str_c('T',count + 1))
+                    mutate(Iteration = str_c('T',count + 1)) %>% 
+                    clean()
                   
                   outputs <- list(
                     graph = graph,
@@ -123,7 +125,12 @@ setMethod('transformationAssign',signature = 'Assignment',
                 round(1) %>%
                 seconds_to_period() %>%
                 str_c('[',.,']')
-              message(blue(str_c('Transformation assignment iteration ', count + 1,' ')),'\t',green(cli::symbol$tick),' ',elapsed)
+              message(blue(str_c('Transformation assignment iteration ', 
+                                 count + 1,' ')),
+                      '\t',
+                      green(cli::symbol$tick),
+                      ' ',
+                      elapsed)
             }
             
             return(assignment)

@@ -9,14 +9,14 @@
 \usage{
 assignMFs(
   feature_data,
-  parameters = assignmentParameters("FIE"),
+  parameters = assignmentParameters("FIE-HRMS"),
   verbose = TRUE,
   ...
 )
 
 \S4method{assignMFs}{tbl_df}(
   feature_data,
-  parameters = assignmentParameters("FIE"),
+  parameters = assignmentParameters("FIE-HRMS"),
   verbose = TRUE
 )
 
