@@ -2,6 +2,17 @@
 assignment_parameters_FIE <- assignmentParameters()
 assignment_parameters_LC <- assignmentParameters('RP-LC-HRMS')
 
+test_adducts <- list(
+  n = c("[M-H]1-",
+        "[M+Cl]1-",
+        "[M+K-2H]1-",
+        "[2M-H]1-",
+        "[M+Cl37]1-"),
+  p = c("[M+H]1+"))
+  
+adducts(assignment_parameters_FIE) <- test_adducts
+adducts(assignment_parameters_LC) <- test_adducts
+
 LC_features <- new('Analysis')
 metabolyseR::raw(LC_features) <- metabolyseR::analysisData(
   feature_data %>% 
