@@ -48,7 +48,7 @@ setMethod('doAssignment',signature = 'Assignment',
 #' @export
 
 setGeneric('assignMFs',function(feature_data,
-                                parameters = assignmentParameters('FIE'),
+                                parameters = assignmentParameters('FIE-HRMS'),
                                 verbose = TRUE,
                                 ...)
   standardGeneric('assignMFs')
@@ -58,7 +58,7 @@ setGeneric('assignMFs',function(feature_data,
 
 setMethod('assignMFs',signature = 'tbl_df',
           function(feature_data,
-                   parameters = assignmentParameters('FIE'),
+                   parameters = assignmentParameters('FIE-HRMS'),
                    verbose = TRUE) {
   
   if (verbose == TRUE) {
@@ -75,7 +75,7 @@ setMethod('assignMFs',signature = 'tbl_df',
       str_c(collapse = '\n')
     message(params)
     message(rep('_',console_width()),'\n')
-    message('No. m/z:\t',ncol(dat),'\n')
+    message('No. m/z:\t',ncol(feature_data),'\n')
   }
   
   assignment <- new('Assignment',
