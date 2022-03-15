@@ -202,7 +202,9 @@ generateMFs <- function(M,
                         ppm,
                         rank_threshold,
                         assignment_adducts,
-                        assignment_isotopes){
+                        adduct_rules,
+                        assignment_isotopes,
+                        isotope_rules){
   nM <- nrow(M)
   
   M %>%
@@ -213,7 +215,9 @@ generateMFs <- function(M,
       mf <- ipMF(mz = .x$mz,
                  adduct = .x$Adduct,
                  isotope = .x$Isotope,
-                 ppm = ppm) %>% 
+                 ppm = ppm,
+                 adduct_rules_table = adduct_rules,
+                 isotope_rules_table = isotope_rules) %>% 
         mutate(Rank = rank(100 - `Plausibility (%)`,
                            ties.method = 'min')) %>% 
         filter(Rank <= rank_threshold)
@@ -254,3 +258,5 @@ clean <- function(assigned){
       else NULL
     })
 }
+
+isotopicCheck <- function(){}
