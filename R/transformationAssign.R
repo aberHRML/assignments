@@ -52,7 +52,9 @@ setMethod('transformationAssign',signature = 'Assignment',
                                  ppm(assignment),
                                  MFrankThreshold(assignment),
                                  adducts(assignment),
-                                 isotopes(assignment))
+                                 adductRules(assignment),
+                                 isotopes(assignment),
+                                 isotopeRules(assignment))
               
               if (nrow(MFs) > 0) {
                 

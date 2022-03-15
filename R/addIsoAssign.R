@@ -38,7 +38,9 @@ setMethod('addIsoAssign',signature = 'Assignment',
                               ppm(assignment),
                               MFrankThreshold(assignment),
                               adducts(assignment),
-                              isotopes(assignment))
+                              adductRules(assignment),
+                              isotopes(assignment),
+                              isotopeRules(assignment))
               
             graph_edges <- rel %>% 
               addMFs(MFs) %>%
