@@ -56,29 +56,31 @@ calcComponents <- function(graph_nodes,
     mutate(Component = group_components()) %>% 
     clean()
   
-  comp <- graph %>%
-    nodes() %>%
-    .$Component %>%
-    unique()
-  
-  weights <- comp %>%
-    future_map(~{
-      graph %>%
-        filter(Component == .x) %>%
-        edges() %>% 
-        .$r %>% 
-        mean() %>%
-        tibble(Weight = .)
+  if (length(graph) > 0){
+    comp <- graph %>%
+      nodes() %>%
+      .$Component %>%
+      unique()
+    
+    weights <- comp %>%
+      future_map(~{
+        graph %>%
+          filter(Component == .x) %>%
+          edges() %>% 
+          .$r %>% 
+          mean() %>%
+          tibble(Weight = .)
       },graph = graph) %>%
-    set_names(comp) %>%
-    bind_rows(.id = 'Component') %>%
-    mutate(Component = as.numeric(Component))
-  
-  graph <- graph %>%
-    left_join(weights,by = 'Component') %>%
-    morph(to_components) %>%
-    componentMetrics(max_add_iso_total = maxAddIsoScore(assignment)) %>%
-    unmorph()
+      set_names(comp) %>%
+      bind_rows(.id = 'Component') %>%
+      mutate(Component = as.numeric(Component))
+    
+    graph <- graph %>%
+      left_join(weights,by = 'Component') %>%
+      morph(to_components) %>%
+      componentMetrics(max_add_iso_total = maxAddIsoScore(assignment)) %>%
+      unmorph() 
+  }
   
   return(graph)
 }
@@ -91,33 +93,37 @@ recalcComponents <- function(graph,
   graph <- graph %>% 
     clean()
   
-  g <- graph %>%
-    activate(nodes)
+  if (length(graph) > 0){
+    g <- graph %>%
+      activate(nodes)
+    
+    comp <- g %>%
+      nodes() %>%
+      .$Component %>%
+      unique()
+    
+    weights <- comp %>%
+      future_map(~{
+        graph %>%
+          filter(Component == .x) %>%
+          edges() %>% 
+          .$r %>% 
+          mean() %>%
+          tibble(Weight = .)
+      },graph = g) %>%
+      set_names(comp) %>%
+      bind_rows(.id = 'Component') %>%
+      mutate(Component = as.numeric(Component))
+    
+    graph <- g %>%
+      select(-Weight) %>%
+      left_join(weights,by = 'Component') %>%
+      morph(to_components) %>%
+      componentMetrics(max_add_iso_total = maxAddIsoScore(assignment)) %>% 
+      unmorph() 
+  }
   
-  comp <- g %>%
-    nodes() %>%
-    .$Component %>%
-    unique()
-  
-  weights <- comp %>%
-    future_map(~{
-      graph %>%
-        filter(Component == .x) %>%
-        edges() %>% 
-        .$r %>% 
-        mean() %>%
-        tibble(Weight = .)
-    },graph = g) %>%
-    set_names(comp) %>%
-    bind_rows(.id = 'Component') %>%
-    mutate(Component = as.numeric(Component))
-  
-  g %>%
-    select(-Weight) %>%
-    left_join(weights,by = 'Component') %>%
-    morph(to_components) %>%
-    componentMetrics(max_add_iso_total = maxAddIsoScore(assignment)) %>% 
-    unmorph()
+  return(graph)
 }
 
 filterComponents <- function(graph,
