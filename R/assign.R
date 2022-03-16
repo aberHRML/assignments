@@ -119,10 +119,10 @@ setMethod('assignMFs',signature = 'Analysis',
           function(feature_data,
                    parameters = assignmentParameters('FIE'),
                    verbose = TRUE,
-                   type = c('raw','pre-treated')){
+                   type = c('pre-treated','raw')){
             
             type <- match.arg(type,
-                              choices = c('raw','pre-treated'))
+                              choices = c('pre-treated','raw'))
             
             if (type == 'raw') feature_data <- raw(feature_data)
             if (type == 'pre-treated') feature_data <- preTreated(feature_data)
