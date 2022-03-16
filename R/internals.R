@@ -247,16 +247,3 @@ generateMFs <- function(M,
     },
     .options = furrr_options(seed = 1234))
 }
-
-#' @importFrom dplyr group_split
-
-clean <- function(assigned){
-  assigned %>% 
-    group_split(MF) %>% 
-    map_dfr(~{
-      if (NA %in% .x$Isotope) return(.x)
-      else NULL
-    })
-}
-
-isotopicCheck <- function(){}

@@ -7,6 +7,21 @@ plausibility <- function(AIS,degree,weight){
   AIS + weight
 }
 
+#' @importFrom purrr compact
+
+clean <- function(graph){
+  graph %>% 
+    morph(to_components) %>% 
+    map(~{
+      component_nodes <- nodes(.x)
+      
+      if (NA %in% component_nodes$Isotope) return(.x)
+      else NULL
+    }) %>% 
+    compact() %>% 
+    bind_graphs() 
+}
+
 componentMetrics <- function(component,max_add_iso_total){
   component %>% 
   mutate(Size = graph_size(),
@@ -37,7 +52,8 @@ calcComponents <- function(graph_nodes,
   graph <- as_tbl_graph(graph_edges,directed = FALSE) %>%
     activate(nodes) %>%
     left_join(graph_nodes,by = c('name' = 'Name')) %>%
-    mutate(Component = group_components()) 
+    mutate(Component = group_components()) %>% 
+    clean()
   
   comp <- graph %>%
     nodes() %>%

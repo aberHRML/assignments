@@ -89,8 +89,7 @@ setMethod('transformationAssign',signature = 'Assignment',
                     mutate(Mode = str_sub(Feature,1,1)) %>%
                     filter(!(Name %in% assigned$Name)) %>%
                     select(Name:`MF Plausibility (%)`,Mode) %>%
-                    mutate(Iteration = str_c('T',count + 1)) %>% 
-                    clean()
+                    mutate(Iteration = str_c('T',count + 1))
                   
                   outputs <- list(
                     graph = graph,
