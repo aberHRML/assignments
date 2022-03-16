@@ -15,7 +15,8 @@ clean <- function(graph){
     map(~{
       component_nodes <- nodes(.x)
       
-      if (NA %in% component_nodes$Isotope) return(.x)
+      if (nrow(component_nodes) > 1 &
+          NA %in% component_nodes$Isotope) return(.x)
       else NULL
     }) %>% 
     compact() %>% 
