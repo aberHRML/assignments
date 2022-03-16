@@ -3,7 +3,7 @@
 setGeneric("transformationAssign", function(assignment)
   standardGeneric("transformationAssign"))
 
-#' @importFrom dplyr full_join select distinct
+#' @importFrom dplyr full_join select distinct group_split
 #' @importFrom mzAnnotation transformMF
 
 setMethod('transformationAssign',signature = 'Assignment',
@@ -89,7 +89,12 @@ setMethod('transformationAssign',signature = 'Assignment',
                     mutate(Mode = str_sub(Feature,1,1)) %>%
                     filter(!(Name %in% assigned$Name)) %>%
                     select(Name:`MF Plausibility (%)`,Mode) %>%
-                    mutate(Iteration = str_c('T',count + 1))
+                    mutate(Iteration = str_c('T',count + 1)) %>% 
+                    group_split(MF) %>% 
+                    map_dfr(~{
+                      if (NA %in% .x$Isotope) return(.x)
+                      else NULL
+                    })
                   
                   outputs <- list(
                     graph = graph,
