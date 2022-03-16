@@ -47,7 +47,7 @@ setMethod('show',signature = 'Assignment',
             cat(blue('\nMFassign'),red(str_c('v',packageVersion('MFassign') %>% as.character())),'\n')
             cat(yellow('Assignment:'),'\n')
             cat('\t','Features:\t\t',ncol(object@data),'\n')
-            cat('\t','Correlations:\t\t',nrow(object@correlations),'\n')
+            cat('\t','Correlations:\t\t',nrow(object@preparedCorrelations),'\n')
             cat('\t','Relationships:\t\t',nrow(relationships(object)),'\n')
             cat('\n')
             if (length(object@addIsoAssign) > 0) {
