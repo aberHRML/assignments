@@ -23,6 +23,12 @@ clean <- function(graph){
     bind_graphs() 
 }
 
+nComponents <- function(graph){
+  graph %>% 
+    morph(to_components) %>% 
+    length()
+}
+
 componentMetrics <- function(component,max_add_iso_total){
   component %>% 
   mutate(Size = graph_size(),
@@ -56,7 +62,7 @@ calcComponents <- function(graph_nodes,
     mutate(Component = group_components()) %>% 
     clean()
   
-  if (length(graph) > 0){
+  if (nComponents(graph) > 0){
     comp <- graph %>%
       nodes() %>%
       .$Component %>%
@@ -90,10 +96,11 @@ calcComponents <- function(graph_nodes,
 
 recalcComponents <- function(graph,
                              assignment){
+  
   graph <- graph %>% 
     clean()
   
-  if (length(graph) > 0){
+  if (nComponents(graph) > 0){
     g <- graph %>%
       activate(nodes)
     
@@ -121,7 +128,7 @@ recalcComponents <- function(graph,
       morph(to_components) %>%
       componentMetrics(max_add_iso_total = maxAddIsoScore(assignment)) %>% 
       unmorph() 
-  }
+  } 
   
   return(graph)
 }
@@ -140,7 +147,7 @@ filterComponents <- function(graph,
           eliminate(f$Measure,f$Direction) %>%
           .$name}) 
     if (V(filtered_graph) %>% length() > 0) {
-      filteredGraph <- filtered_graph %>%
+      filtered_graph <- filtered_graph %>%
         recalcComponents(assignment)
     } else {
       break()
