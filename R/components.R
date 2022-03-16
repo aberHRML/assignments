@@ -87,6 +87,9 @@ calcComponents <- function(graph_nodes,
 
 recalcComponents <- function(graph,
                              assignment){
+  graph <- graph %>% 
+    clean()
+  
   g <- graph %>%
     activate(nodes)
   
