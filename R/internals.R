@@ -92,9 +92,12 @@ collateM <- function(rel,max_M){
     distinct() %>%
     arrange(mz) %>%
     rowwise() %>%
-    mutate(M = calcM(mz,
-                     adduct = Adduct,
-                     isotope = Isotope)) %>% 
+    group_split() %>% 
+    furrr::future_map_dfr(~.x %>% 
+                            mutate(M = calcM(mz,
+                                             adduct = Adduct,
+                                             isotope = Isotope))
+                            ) %>% 
     arrange(M) %>%
     filter(M <= max_M)
 }
