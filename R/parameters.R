@@ -38,7 +38,7 @@ setClass('AssignmentParameters',
          ),
          prototype = list(
            technique = 'FIE-HRMS',
-           correlations_parameters = list(method = 'pearson',
+           correlations_parameters = list(method = 'spearman',
                                           pAdjustMethod = 'bonferroni',
                                           corPvalue = 0.05),
            filter = list(rthresh = 0.7,
