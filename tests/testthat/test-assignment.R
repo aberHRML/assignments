@@ -14,7 +14,7 @@ adducts(assignment_parameters_FIE) <- test_adducts
 adducts(assignment_parameters_LC) <- test_adducts
 
 LC_features <- new('Analysis')
-metabolyseR::raw(LC_features) <- metabolyseR::analysisData(
+metabolyseR::preTreated(LC_features) <- metabolyseR::analysisData(
   feature_data %>% 
     {magrittr::set_colnames(.,
                             paste0(colnames(.),
