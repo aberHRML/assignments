@@ -15,11 +15,22 @@ setMethod('addIsoAssign',signature = 'Assignment',
             
             if (isTRUE(assignment@log$verbose)) {
               startTime <- proc.time()
-              message(blue('Adduct & isotopic assignment '),cli::symbol$continue,'\r',appendLF = FALSE)
+              message(blue('Adduct & isotopic assignment '),
+                      cli::symbol$continue,'\r',
+                      appendLF = FALSE)
             }
             
+            assignment_technique <- technique(assignment)
+            
             rel <- assignment %>% 
-              relationships() %>% 
+              relationships()
+            
+            if (str_detect(assignment_technique,'LC')){
+              rel <- rel %>% 
+                filter(RetentiontimeDiff <= assignment@RT_diff_limit)
+            }
+            
+            rel <- rel %>% 
               filter(is.na(Transformation1) & 
                        is.na(Transformation2) & 
                        r > 0) %>%

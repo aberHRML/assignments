@@ -9,7 +9,7 @@
 #' @slot ppm ppm threshold
 #' #' @slot adducts named list of character vectors containing the adducuts to use for each mode
 #' @slot limit amu deviation limit for relationship prediction
-#' @slot RT_window retention time window for chromatographic associations
+#' @slot RT_diff_limit limit for retention time differences for correlated features in adduct and isotopic assignment
 #' @slot adducts list of character vectors containing the adducts to use. List element names should denote ionisation mode.
 #' @slot isotopes character vector of isotopes to use
 #' @slot transformations character vector of transformations to use
@@ -28,7 +28,7 @@ setClass('AssignmentParameters',
            MF_rank_threshold = 'numeric',
            ppm = 'numeric',
            limit = 'numeric',
-           RT_window = 'numeric',
+           RT_diff_limit = 'numeric',
            adducts = 'list',
            isotopes = 'character',
            transformations = 'character',
@@ -49,7 +49,7 @@ setClass('AssignmentParameters',
            MF_rank_threshold = 1,
            ppm = 6,
            limit = 0.001,
-           RT_window = numeric(),
+           RT_diff_limit = numeric(),
            isotopes = c('13C','18O','13C2'),
            adducts = list(n = c("[M-H]1-", "[M+Cl]1-", "[M+K-2H]1-", 
                                 "[M-2H]2-", "[M+Cl37]1-","[2M-H]1-"),
@@ -87,7 +87,7 @@ setMethod('show',signature = 'AssignmentParameters',
             cat('\t','Relationship limit:\t',object@limit,'\n')
             
             if (object@technique != 'FIE') {
-              cat('\t','RT window:\t\t',object@RT_window,'\n')
+              cat('\t','RT limit:\t\t',object@RT_diff_limit,'\n')
             }
             
             cat('\n\t','Adducts:','\n')
@@ -485,10 +485,10 @@ assignmentParameters <- function(technique = availableTechniques()){
                          `FIE-HRMS` = new('AssignmentParameters'),
                          `RP-LC-HRMS` = new('AssignmentParameters',
                                             technique = 'RP-LC-HRMS',
-                                            RT_window = 1/60),
+                                            RT_diff_limit = 1/60),
                          `NP-LC-HRMS` = new('AssignmentParameters',
                                             technique = 'NP-LC-HRMS',
-                                            RT_window = 1/60,
+                                            RT_diff_limit = 1/60,
                                             adducts = list(n = c("[M-H]1-", "[M+Cl]1-", "[M+K-2H]1-", 
                                                                  "[M-2H]2-", "[M+Cl37]1-","[2M-H]1-"),
                                                            p = c('[M+H]1+','[M+K]1+','[M+Na]1+','[M+K41]1+',
