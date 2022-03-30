@@ -92,9 +92,12 @@ setMethod('prepCorrelations',signature = 'Assignment',
                      RetentionTime2 = str_split_fixed(Feature2,'@',2) %>% 
                        .[,2] %>%
                        as.numeric(),
+                     RetentionTimeDiff = abs(RetentionTime1 - RetentionTime2),
                      ID = 1:nrow(.)
               ) %>%
-              select(Feature1,Feature2,Mode1:RetentionTime2,log2IntensityRatio,r,ID)
+              select(Feature1,Feature2,
+                     Mode1:RetentionTimeDiff,
+                     log2IntensityRatio,r,ID)
             
             assignment@preparedCorrelations <- correlations
             
