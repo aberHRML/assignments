@@ -30,7 +30,7 @@ assignMFs(
   feature_data,
   parameters = assignmentParameters("FIE"),
   verbose = TRUE,
-  type = c("raw", "pre-treated")
+  type = c("pre-treated", "raw")
 )
 }
 \arguments{
