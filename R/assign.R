@@ -5,20 +5,27 @@ setGeneric('doAssignment',function(assignment)
 
 setMethod('doAssignment',signature = 'Assignment',
           function(assignment){
-            parameters <- as(assignment,'AssignmentParameters')
             
-            assignmentMethod <- switch(technique(assignment),
-                                        `FIE-HRMS` = FIEassignment,
-                                        `RP-LC-HRMS` = LCassignment,
-                                        `NP-LC-HRMS` = LCassignment)
+            assignment <- assignment %>% 
+              calcCorrelations() %>% 
+              filterCorrelations() %>% 
+              prepCorrelations() %>% 
+              relationships() %>% 
+              addIsoAssign()
             
-            elements <- names(assignmentMethod())
-            elements <- elements[!(elements %in% assignment@flags)]
-            
-            for(i in elements){
-              method <- assignmentMethod(i)
-              assignment <- method(assignment)
-              assignment@flags <- c(assignment@flags,i)
+            count <- 0
+            while (TRUE) {
+              count <- count + 1
+              assignment <- suppressWarnings(transformationAssign(assignment))
+              if (length(assignment@transAssign[[count]]) == 0) {
+                assignment@transAssign <- assignment@transAssign[-count] 
+                break()
+              }
+              if (nrow(assignment@transAssign[[count]]$assigned) == 0) {
+                assignment@transAssign <- assignment@transAssign[-count]  
+                break()
+              }
+              
             }
             
             return(assignment)
