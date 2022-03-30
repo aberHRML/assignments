@@ -27,7 +27,7 @@ setMethod('addIsoAssign',signature = 'Assignment',
             
             if (str_detect(assignment_technique,'LC')){
               rel <- rel %>% 
-                filter(RetentiontimeDiff <= assignment@RT_diff_limit)
+                filter(RetentionTimeDiff <= assignment@RT_diff_limit)
             }
             
             rel <- rel %>% 
