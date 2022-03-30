@@ -59,7 +59,7 @@ setMethod('assignMFs',signature = 'tbl_df',
   
   assignment <- assignment %>% 
     calcCorrelations() %>% 
-    relationships() %>% 
+    calcRelationships() %>% 
     addIsoAssign()
   
   count <- 0
