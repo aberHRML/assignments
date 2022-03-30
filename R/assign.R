@@ -101,6 +101,7 @@ setMethod('assignMFs',signature = 'tbl_df',
 })
 
 #' @rdname assign
+#' @importFrom metabolyseR dat
 
 setMethod('assignMFs',signature = 'AnalysisData',
           function(feature_data,
