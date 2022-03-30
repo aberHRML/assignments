@@ -1,36 +1,3 @@
-
-setGeneric('doAssignment',function(assignment)
-  standardGeneric('doAssignment')
-)
-
-setMethod('doAssignment',signature = 'Assignment',
-          function(assignment){
-            
-            assignment <- assignment %>% 
-              calcCorrelations() %>% 
-              filterCorrelations() %>% 
-              prepCorrelations() %>% 
-              relationships() %>% 
-              addIsoAssign()
-            
-            count <- 0
-            while (TRUE) {
-              count <- count + 1
-              assignment <- suppressWarnings(transformationAssign(assignment))
-              if (length(assignment@transAssign[[count]]) == 0) {
-                assignment@transAssign <- assignment@transAssign[-count] 
-                break()
-              }
-              if (nrow(assignment@transAssign[[count]]$assigned) == 0) {
-                assignment@transAssign <- assignment@transAssign[-count]  
-                break()
-              }
-              
-            }
-            
-            return(assignment)
-          })
-
 #' Assign molecular formulas
 #' @rdname assign
 #' @description assign molecular formulas to a set of given m/z.
@@ -90,8 +57,25 @@ setMethod('assignMFs',signature = 'tbl_df',
                     data = feature_data)
   assignment@log$verbose <- verbose
   
-  assignment <- assignment %>%
-    doAssignment()
+  assignment <- assignment %>% 
+    calcCorrelations() %>% 
+    relationships() %>% 
+    addIsoAssign()
+  
+  count <- 0
+  while (TRUE) {
+    count <- count + 1
+    assignment <- suppressWarnings(transformationAssign(assignment))
+    if (length(assignment@transAssign[[count]]) == 0) {
+      assignment@transAssign <- assignment@transAssign[-count] 
+      break()
+    }
+    if (nrow(assignment@transAssign[[count]]$assigned) == 0) {
+      assignment@transAssign <- assignment@transAssign[-count]  
+      break()
+    }
+    
+  }
   
   if (verbose == TRUE) {
     endTime <- proc.time()

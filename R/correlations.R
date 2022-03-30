@@ -21,14 +21,18 @@ setMethod('calcCorrelations',signature = 'Assignment',function(assignment){
                      verbose = FALSE) %>%
     analysisResults(element = 'correlations') 
   
-  if (assignment@log$verbose == T) {
+  assignment <- assignment %>% 
+    filterCorrelations() %>% 
+    prepCorrelations()
+  
+  if (assignment@log$verbose == TRUE) {
     endTime <- proc.time()
     elapsed <- {endTime - startTime} %>%
       .[3] %>%
       round(1) %>%
       seconds_to_period() %>%
       str_c('[',.,']')
-    ncors <- nrow(assignment@correlations) %>%
+    ncors <- nrow(assignment@preparedCorrelations) %>%
       str_c('[',.,' correlations',']')
     message(blue('Calculating correlations '),'\t',green(cli::symbol$tick),' ',ncors,' ',elapsed)
   }
@@ -101,16 +105,6 @@ setMethod('prepCorrelations',signature = 'Assignment',
             
             assignment@preparedCorrelations <- correlations
             
-            if (assignment@log$verbose == T) {
-              endTime <- proc.time()
-              elapsed <- {endTime - startTime} %>%
-                .[3] %>%
-                round(1) %>%
-                seconds_to_period() %>%
-                str_c('[',.,']')
-              message(blue('Preparing correlations '),'\t\t',green(cli::symbol$tick),' ',elapsed)
-            }
-            
             return(assignment)
           })
 
@@ -118,11 +112,7 @@ setGeneric('filterCorrelations', function(assignment)
   standardGeneric('filterCorrelations'))
 
 setMethod('filterCorrelations',signature = 'Assignment',function(assignment){
-  if (assignment@log$verbose == T) {
-    startTime <- proc.time()
-    message(blue('Filtering correlations '),cli::symbol$continue,'\r',appendLF = FALSE)
-  }
-  
+
   parameters <- as(assignment,'AssignmentParameters')
   
   if (str_detect(parameters@technique,'LC')) {
@@ -139,16 +129,5 @@ setMethod('filterCorrelations',signature = 'Assignment',function(assignment){
   
   assignment@preparedCorrelations <- cors
   
-  if (assignment@log$verbose == T) {
-    endTime <- proc.time()
-    elapsed <- {endTime - startTime} %>%
-      .[3] %>%
-      round(1) %>%
-      seconds_to_period() %>%
-      str_c('[',.,']')
-    ncors <- nrow(assignment@preparedCorrelations) %>%
-      str_c('[',.,' correlations',']')
-    message(blue('Filtering correlations '),'\t\t',green(cli::symbol$tick),' ',ncors,' ',elapsed)
-  }
   return(assignment)
 })
