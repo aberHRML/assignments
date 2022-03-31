@@ -16,9 +16,9 @@ setMethod('calcCorrelations',signature = 'Assignment',function(assignment){
   p@correlations <- parameters@correlations_parameters
   
   assignment@correlations <- metabolyse(assignment@data,
-                     tibble(ID = 1:nrow(assignment@data)),
-                     p,
-                     verbose = FALSE) %>%
+                                        tibble(ID = 1:nrow(assignment@data)),
+                                        p,
+                                        verbose = FALSE) %>%
     analysisResults(element = 'correlations') 
   
   assignment <- assignment %>% 
@@ -112,22 +112,15 @@ setGeneric('filterCorrelations', function(assignment)
   standardGeneric('filterCorrelations'))
 
 setMethod('filterCorrelations',signature = 'Assignment',function(assignment){
-
+  
   parameters <- as(assignment,'AssignmentParameters')
   
-  if (str_detect(parameters@technique,'LC')) {
-    cors <- assignment@correlations %>%
-      filter(r < -(parameters@filter$rthresh) | r > parameters@filter$rthresh)
-  } else {
-    cors <- assignment@correlations %>%
-      filterCors(rthresh = parameters@filter$rthresh,
-                 n = parameters@filter$n,
-                 rIncrement = parameters@filter$rIncrement,
-                 nIncrement = parameters@filter$nIncrement
-      ) 
-  }
-  
-  assignment@correlations <- cors
+  assignment@correlations <- assignment@correlations %>%
+    filterCors(rthresh = parameters@filter$rthresh,
+               n = parameters@filter$n,
+               rIncrement = parameters@filter$rIncrement,
+               nIncrement = parameters@filter$nIncrement
+    ) 
   
   return(assignment)
 })
