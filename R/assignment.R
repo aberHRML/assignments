@@ -5,7 +5,6 @@
 #' @slot flags charactor vector containing completed assignment elements
 #' @slot data A tibble containing the peak intensity matrix
 #' @slot correlations A tibble containing the correlations
-#' @slot preparedCorrelations A tibble containing the prepared correlations ready for analysis
 #' @slot relationships A tibble containing the predicted relationships
 #' @slot addIsoAssign A list containing the results of the adduct and isotope assignment
 #' @slot transAssign A list containing the results of the transformation assignment
@@ -18,7 +17,6 @@ setClass('Assignment',
            log = 'list',
            data = 'tbl_df',
            correlations = 'tbl_df',
-           preparedCorrelations = 'tbl_df',
            relationships = 'tbl_df',
            addIsoAssign = 'list',
            transAssign = 'list',
@@ -28,7 +26,6 @@ setClass('Assignment',
            log = list(date = date(),verbose = TRUE),
            data = tibble(),
            correlations = tibble(),
-           preparedCorrelations = tibble(),
            relationships = tibble(),
            addIsoAssign = list(),
            transAssign = list(),
@@ -45,7 +42,7 @@ setMethod('show',signature = 'Assignment',
             cat(blue('\nMFassign'),red(str_c('v',packageVersion('MFassign') %>% as.character())),'\n')
             cat(yellow('Assignment:'),'\n')
             cat('\t','Features:\t\t',ncol(object@data),'\n')
-            cat('\t','Correlations:\t\t',nrow(object@preparedCorrelations),'\n')
+            cat('\t','Correlations:\t\t',nrow(object@correlations),'\n')
             cat('\t','Relationships:\t\t',nrow(relationships(object)),'\n')
             cat('\n')
             if (length(object@addIsoAssign) > 0) {

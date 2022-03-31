@@ -32,7 +32,7 @@ setMethod('calcCorrelations',signature = 'Assignment',function(assignment){
       round(1) %>%
       seconds_to_period() %>%
       str_c('[',.,']')
-    ncors <- nrow(assignment@preparedCorrelations) %>%
+    ncors <- nrow(assignment@correlations) %>%
       str_c('[',.,' correlations',']')
     message(blue('Calculating correlations '),'\t',green(cli::symbol$tick),' ',ncors,' ',elapsed)
   }
@@ -68,12 +68,12 @@ setGeneric('prepCorrelations', function(assignment)
 setMethod('prepCorrelations',signature = 'Assignment',
           function(assignment){
             
-            if (assignment@log$verbose == T) {
+            if (assignment@log$verbose == TRUE) {
               startTime <- proc.time()
               message(blue('Preparing correlations '),cli::symbol$continue,'\r',appendLF = FALSE)
             }
             
-            correlations <- assignment@preparedCorrelations
+            correlations <- assignment@correlations
             
             correlations <- correlations %>%
               mutate(Mode1 = str_split_fixed(Feature1,'@',2) %>% 
@@ -103,7 +103,7 @@ setMethod('prepCorrelations',signature = 'Assignment',
                      Mode1:RetentionTimeDiff,
                      log2IntensityRatio,r,ID)
             
-            assignment@preparedCorrelations <- correlations
+            assignment@correlations <- correlations
             
             return(assignment)
           })
@@ -127,7 +127,7 @@ setMethod('filterCorrelations',signature = 'Assignment',function(assignment){
       ) 
   }
   
-  assignment@preparedCorrelations <- cors
+  assignment@correlations <- cors
   
   return(assignment)
 })

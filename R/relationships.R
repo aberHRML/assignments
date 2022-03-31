@@ -20,7 +20,7 @@ setMethod('calcRelationships',signature = 'Assignment',
             
             parameters <- as(assignment,'AssignmentParameters')
             
-            cors <- assignment@preparedCorrelations
+            cors <- assignment@correlations
             
             if (isTRUE(transformations)) {
               trans <- c(NA,transformations(assignment))

@@ -18,8 +18,6 @@ An S4 class to store assignment results
 
 \item{\code{correlations}}{A tibble containing the correlations}
 
-\item{\code{preparedCorrelations}}{A tibble containing the prepared correlations ready for analysis}
-
 \item{\code{relationships}}{A tibble containing the predicted relationships}
 
 \item{\code{addIsoAssign}}{A list containing the results of the adduct and isotope assignment}
