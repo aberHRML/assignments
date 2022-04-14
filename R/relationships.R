@@ -93,7 +93,7 @@ setMethod('calcRelationships',signature = 'Assignment',
                      contains('Isotope'),
                      contains('Transformation'),
                      log2IntensityRatio,
-                     r,
+                     coefficient,
                      Error,
                      ID) %>%
               mutate_at(vars(RetentionTime1,RetentionTime2),as.numeric)

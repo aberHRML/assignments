@@ -77,14 +77,14 @@ setMethod('plotNetwork',signature = 'Assignment',
             
             network <- assignment %>%
               .@correlations %>%
-              filter(r > rThreshold) %>%
+              filter(coefficient > rThreshold) %>%
               as_tbl_graph(directed = F) %>%
               activate(nodes) %>%
               rename(Feature = name) %>%
               mutate(Mode = str_sub(Feature,1,1)) %>%
               left_join(n, by = "Feature") %>%
               activate(edges) %>%
-              left_join(e, by = c("Mode1", "Mode2", "m/z1", "m/z2", "RetentionTime1", "RetentionTime2", "log2IntensityRatio", "r", "ID"))
+              left_join(e, by = c("Mode1", "Mode2", "m/z1", "m/z2", "RetentionTime1", "RetentionTime2", "log2IntensityRatio", "coefficient", "ID"))
             
             assigned <- nodes(network)$Assigned
             assigned[is.na(assigned)] <- 'Unassigned'

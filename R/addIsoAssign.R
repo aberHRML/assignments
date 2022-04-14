@@ -33,7 +33,7 @@ setMethod('addIsoAssign',signature = 'Assignment',
             rel <- rel %>% 
               filter(is.na(Transformation1) & 
                        is.na(Transformation2) & 
-                       r > 0) %>%
+                       coefficient > 0) %>%
               filter(!(is.na(Isotope1) & 
                          !is.na(Isotope2) & 
                          Adduct1 == Adduct2 & 

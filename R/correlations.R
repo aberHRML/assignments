@@ -77,7 +77,7 @@ setMethod('prepCorrelations',signature = 'Assignment',
               ) %>%
               select(Feature1,Feature2,
                      Mode1:RetentionTimeDiff,
-                     log2IntensityRatio,r,ID)
+                     log2IntensityRatio,coefficient,ID)
             
             assignment@correlations <- correlations
             
