@@ -49,11 +49,6 @@ setGeneric('prepCorrelations', function(assignment)
 setMethod('prepCorrelations',signature = 'Assignment',
           function(assignment){
             
-            if (assignment@log$verbose == TRUE) {
-              startTime <- proc.time()
-              message(blue('Preparing correlations '),cli::symbol$continue,'\r',appendLF = FALSE)
-            }
-            
             correlations <- assignment@correlations
             
             correlations <- correlations %>%
