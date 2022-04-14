@@ -7,21 +7,32 @@
 \description{
 An S4 class to store assignment parameters.
 }
+\details{
+The correlations parameters should be provided as a list containing the following parameters:
+\itemize{
+\item \code{method}: Correlation method to use. See \code{metabolyseR::correlations} for more information.
+\item \code{pAdjustMethod}
+\item \code{corPvalue}
+\item \code{rthresh}
+\item \code{n}
+\item \code{rIncrement}
+\item \code{nIncrement}
+}
+}
 \section{Slots}{
 
 \describe{
 \item{\code{technique}}{assignment technique to use}
 
-\item{\code{correlations_parameters}}{list of correlation parameters to be passed to metabolyseR correlation analysis}
-
-\item{\code{filter}}{list of r and n thresholds for filtering correlations}
+\item{\code{correlations_parameters}}{list of correlation parameters. See Details.}
 
 \item{\code{max_M}}{maximum M for which to assign molecular formulas}
 
 \item{\code{MF_rank_threshold}}{rank threshold for molecular formula selection}
 
-\item{\code{ppm}}{ppm threshold
-#' @slot adducts named list of character vectors containing the adducuts to use for each mode}
+\item{\code{ppm}}{ppm threshold}
+
+\item{\code{adducts}}{named list of character vectors containing the adducts to use for each mode}
 
 \item{\code{limit}}{amu deviation limit for relationship prediction}
 
@@ -33,10 +44,10 @@ An S4 class to store assignment parameters.
 
 \item{\code{transformations}}{character vector of transformations to use}
 
-\item{\code{adduct_rules}}{tibble containing adduct formation rules as returned by mzAnnotation::adducts()}
+\item{\code{adduct_rules}}{tibble containing adduct formation rules as returned by \code{mzAnnotation::adducts()}}
 
-\item{\code{isotope_rules}}{tibble containing isotope rules as returned by mzAnnotation::isotopes()}
+\item{\code{isotope_rules}}{tibble containing isotope rules as returned by \code{mzAnnotation::isotopes()}}
 
-\item{\code{transformation_rules}}{tibble containing transformation rules as returned by mzAnnotation::transformations()}
+\item{\code{transformation_rules}}{tibble containing transformation rules as returned by \code{mzAnnotation::transformations()}}
 }}
 

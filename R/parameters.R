@@ -2,20 +2,19 @@
 #' @rdname AssignmentParameters-class
 #' @description An S4 class to store assignment parameters.
 #' @slot technique assignment technique to use
-#' @slot correlations_parameters list of correlation parameters to be passed to metabolyseR correlation analysis
-#' @slot filter list of r and n thresholds for filtering correlations
+#' @slot correlations_parameters list of correlation parameters to be passed to `metabolyseR::correlation()`
 #' @slot max_M maximum M for which to assign molecular formulas
 #' @slot MF_rank_threshold rank threshold for molecular formula selection
 #' @slot ppm ppm threshold
-#' #' @slot adducts named list of character vectors containing the adducuts to use for each mode
+#' @slot adducts named list of character vectors containing the adducts to use for each mode
 #' @slot limit amu deviation limit for relationship prediction
 #' @slot RT_diff_limit limit for retention time differences for correlated features in adduct and isotopic assignment
 #' @slot adducts list of character vectors containing the adducts to use. List element names should denote ionisation mode.
 #' @slot isotopes character vector of isotopes to use
 #' @slot transformations character vector of transformations to use
-#' @slot adduct_rules tibble containing adduct formation rules as returned by mzAnnotation::adducts()
-#' @slot isotope_rules tibble containing isotope rules as returned by mzAnnotation::isotopes()
-#' @slot transformation_rules tibble containing transformation rules as returned by mzAnnotation::transformations()
+#' @slot adduct_rules tibble containing adduct formation rules as returned by `mzAnnotation::adducts()`
+#' @slot isotope_rules tibble containing isotope rules as returned by `mzAnnotation::isotopes()`
+#' @slot transformation_rules tibble containing transformation rules as returned by `mzAnnotation::transformations()`
 #' @importFrom mzAnnotation adduct_rules isotope_rules transformation_rules
 #' @export
 
@@ -23,7 +22,6 @@ setClass('AssignmentParameters',
          slots = list(
            technique = 'character',
            correlations_parameters = 'list',
-           filter = 'list',
            max_M = 'numeric',
            MF_rank_threshold = 'numeric',
            ppm = 'numeric',
@@ -40,11 +38,9 @@ setClass('AssignmentParameters',
            technique = 'FIE-HRMS',
            correlations_parameters = list(method = 'spearman',
                                           pAdjustMethod = 'bonferroni',
-                                          corPvalue = 0.05),
-           filter = list(rthresh = 0.7,
-                         n = 500000,
-                         rIncrement = 0.01,
-                         nIncrement = 20000),
+                                          corPvalue = 0.05,
+                                          minCoef = 0.7,
+                                          maxCor = 500000),
            max_M = 800,
            MF_rank_threshold = 1,
            ppm = 6,
@@ -68,9 +64,17 @@ setValidity('AssignmentParameters',function(object){
     availableTechniques() %>% 
       paste(collapse = ', ') %>% 
       paste0('Technique should be one of ',.)
-    }
+  }
   else TRUE
 })
+
+# setValidity('AssignmentParameters',function(object){
+#   correlations_parameters <- object@correlations_parameters
+#   
+#   if (){
+#     
+#   }
+# })
 
 #' @importFrom methods show
 #' @importFrom crayon yellow
@@ -482,19 +486,19 @@ assignmentParameters <- function(technique = availableTechniques()){
                          choices = availableTechniques())
   
   parameters <- switch(technique,
-                         `FIE-HRMS` = new('AssignmentParameters'),
-                         `RP-LC-HRMS` = new('AssignmentParameters',
-                                            technique = 'RP-LC-HRMS',
-                                            max_M = 700,
-                                            RT_diff_limit = 1/60),
-                         `NP-LC-HRMS` = new('AssignmentParameters',
-                                            technique = 'NP-LC-HRMS',
-                                            max_M = 700,
-                                            RT_diff_limit = 1/60,
-                                            adducts = list(n = c("[M-H]1-", "[M+Cl]1-", "[M+K-2H]1-", 
-                                                                 "[M-2H]2-", "[M+Cl37]1-","[2M-H]1-"),
-                                                           p = c('[M+H]1+','[M+K]1+','[M+Na]1+','[M+K41]1+',
-                                                                 '[M+NH4]1+','[M+2H]2+','[2M+H]1+'))))
+                       `FIE-HRMS` = new('AssignmentParameters'),
+                       `RP-LC-HRMS` = new('AssignmentParameters',
+                                          technique = 'RP-LC-HRMS',
+                                          max_M = 700,
+                                          RT_diff_limit = 1/60),
+                       `NP-LC-HRMS` = new('AssignmentParameters',
+                                          technique = 'NP-LC-HRMS',
+                                          max_M = 700,
+                                          RT_diff_limit = 1/60,
+                                          adducts = list(n = c("[M-H]1-", "[M+Cl]1-", "[M+K-2H]1-", 
+                                                               "[M-2H]2-", "[M+Cl37]1-","[2M-H]1-"),
+                                                         p = c('[M+H]1+','[M+K]1+','[M+Na]1+','[M+K41]1+',
+                                                               '[M+NH4]1+','[M+2H]2+','[2M+H]1+'))))
   
   return(parameters)
 } 

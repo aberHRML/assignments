@@ -13,7 +13,11 @@ setMethod('calcCorrelations',signature = 'Assignment',function(assignment){
   p <- analysisParameters('correlations')
   parameters <- as(assignment,'AssignmentParameters')
   
-  p@correlations <- parameters@correlations_parameters
+  p@correlations <- parameters@correlations_parameters[c('method',
+                                                         'pAdjustMethod',
+                                                         'corPvalue',
+                                                         'minCoef',
+                                                         'maxCor')]
   
   assignment@correlations <- metabolyse(assignment@data,
                                         tibble(ID = 1:nrow(assignment@data)),
@@ -22,7 +26,6 @@ setMethod('calcCorrelations',signature = 'Assignment',function(assignment){
     analysisResults(element = 'correlations') 
   
   assignment <- assignment %>% 
-    filterCorrelations() %>% 
     prepCorrelations()
   
   if (assignment@log$verbose == TRUE) {
@@ -39,28 +42,6 @@ setMethod('calcCorrelations',signature = 'Assignment',function(assignment){
   
   return(assignment)
 })
-
-
-filterCors <- function(correlations, rthresh = 0.7, n = 100000, rIncrement = 0.01, nIncrement = 20000){
-  filCors <- function(cors,rthresh,n){
-    while (nrow(cors) > n) {
-      cors <- correlations %>%
-        filter(r > rthresh | r < -rthresh)
-      rthresh <- rthresh + rIncrement
-    }
-    return(cors)
-  }
-  
-  while (TRUE) {
-    cors <- filCors(correlations,rthresh,n)
-    if (nrow(cors) > 0) {
-      break()
-    } else {
-      n <- n + nIncrement
-    }
-  }
-  return(cors)
-}
 
 setGeneric('prepCorrelations', function(assignment)
   standardGeneric('prepCorrelations'))
@@ -107,20 +88,3 @@ setMethod('prepCorrelations',signature = 'Assignment',
             
             return(assignment)
           })
-
-setGeneric('filterCorrelations', function(assignment)
-  standardGeneric('filterCorrelations'))
-
-setMethod('filterCorrelations',signature = 'Assignment',function(assignment){
-  
-  parameters <- as(assignment,'AssignmentParameters')
-  
-  assignment@correlations <- assignment@correlations %>%
-    filterCors(rthresh = parameters@filter$rthresh,
-               n = parameters@filter$n,
-               rIncrement = parameters@filter$rIncrement,
-               nIncrement = parameters@filter$nIncrement
-    ) 
-  
-  return(assignment)
-})

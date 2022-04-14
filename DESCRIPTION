@@ -41,4 +41,4 @@ Collate: parameters.R assignment.R correlations.R
 Suggests: testthat,
     covr
 Remotes: jasenfinch/mzAnnotation@tmp,
-    jasenfinch/metabolyseR
+    jasenfinch/metabolyseR@devel
