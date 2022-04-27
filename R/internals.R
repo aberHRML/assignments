@@ -250,3 +250,35 @@ generateMFs <- function(M,
     },
     .options = furrr_options(seed = 1234))
 }
+
+#' @importFrom mzAnnotation transformationPossible
+
+sanitiseTransformations <- function(graph_edges,transformation_rules_table){
+  transforms <- dplyr::bind_rows(
+    graph_edges %>% 
+      filter(is.na(Transformation1)) %>% 
+      select(
+        from = MF1,
+        to = MF2,
+        transformation = Transformation2),
+    graph_edges %>% 
+      filter(is.na(Transformation2)) %>% 
+      select(
+        from = MF2,
+        to = MF1,
+        transformation = Transformation1)
+    
+  )
+  
+  transformation_possible <- transforms %>% 
+    rowwise() %>% 
+    group_split() %>% 
+    map_lgl(~mzAnnotation::transformationPossible(
+      .x$from,
+      .x$to,
+      .x$transformation,
+      transformation_rules_table))
+  
+  graph_edges %>% 
+    filter(transformation_possible)
+}

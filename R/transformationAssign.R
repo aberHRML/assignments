@@ -10,9 +10,9 @@ setMethod('transformationAssign',signature = 'Assignment',
           function(assignment){
             
             count <- length(assignment@transAssign)
-            assigned <- assignment@assignments
+            assigned <- assignments(assignment)
             
-            if (assignment@log$verbose == T) {
+            if (assignment@log$verbose == TRUE) {
               startTime <- proc.time()
               message(blue(str_c('Transformation assignment iteration ', 
                                  count + 1,' ')),
@@ -23,10 +23,13 @@ setMethod('transformationAssign',signature = 'Assignment',
             
             rel <- assignment %>% 
               relationships() %>%
-              filter((`m/z1` %in% assigned$`Measured m/z` | 
-                        (`m/z2` %in% assigned$`Measured m/z`)) & 
-                       !(`m/z1` %in% assigned$`Measured m/z` & 
-                           (`m/z2` %in% assigned$`Measured m/z`)))
+              filter(
+                (`m/z1` %in% assigned$`Measured m/z` | 
+                   (`m/z2` %in% assigned$`Measured m/z`)) & 
+                  !(`m/z1` %in% assigned$`Measured m/z` & 
+                      (`m/z2` %in% assigned$`Measured m/z`)),
+                !(is.na(Transformation1) & is.na(Transformation2))
+              )
             
             mz1 <- rel %>%
               semi_join(assigned,
@@ -69,6 +72,7 @@ setMethod('transformationAssign',signature = 'Assignment',
                 graph_edges <- rel %>% 
                   addMFs(MFs,
                          identMF = FALSE) %>%
+                  sanitiseTransformations(assignment@transformation_rules) %>% 
                   mutate(RetentionTime1 = as.numeric(RetentionTime1),
                          RetentionTime2 = as.numeric(RetentionTime2)) %>%
                   addNames()
