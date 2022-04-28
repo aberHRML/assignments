@@ -9,7 +9,7 @@ plausibility <- function(AIS,degree,weight){
 
 #' @importFrom purrr compact
 
-clean <- function(graph){
+clean <- function(graph,adduct_rules_table){
   graph %>% 
     morph(to_components) %>% 
     map(~{
@@ -20,6 +20,18 @@ clean <- function(graph){
       else NULL
     }) %>% 
     compact() %>% 
+    map(~{
+      component_nodes <- nodes(.x)
+      component_adducts <- component_nodes$Adduct %>%
+        unique()
+
+      adduct_info <- adduct_rules_table %>%
+        filter(Name %in% component_adducts)
+
+      if (0 %in% adduct_info$Isotopic) return(.x)
+      else NULL
+    }) %>%
+    compact() %>%
     bind_graphs() 
 }
 
@@ -60,7 +72,7 @@ calcComponents <- function(graph_nodes,
     activate(nodes) %>%
     left_join(graph_nodes,by = c('name' = 'Name')) %>%
     mutate(Component = group_components()) %>% 
-    clean()
+    clean(adductRules(assignment))
   
   if (nComponents(graph) > 0){
     comp <- graph %>%
@@ -98,7 +110,7 @@ recalcComponents <- function(graph,
                              assignment){
   
   graph <- graph %>% 
-    clean()
+    clean(adductRules(assignment))
   
   if (nComponents(graph) > 0){
     g <- graph %>%
