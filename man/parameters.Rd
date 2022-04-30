@@ -3,6 +3,10 @@
 \name{technique}
 \alias{technique}
 \alias{technique,AssignmentParameters-method}
+\alias{correlations}
+\alias{correlations,AssignmentParameters-method}
+\alias{correlations<-}
+\alias{correlations<-,AssignmentParameters,list-method}
 \alias{limit}
 \alias{limit,AssignmentParameters-method}
 \alias{limit<-}
@@ -48,6 +52,14 @@
 technique(x)
 
 \S4method{technique}{AssignmentParameters}(x)
+
+correlations(x)
+
+\S4method{correlations}{AssignmentParameters}(x)
+
+correlations(x) <- value
+
+\S4method{correlations}{AssignmentParameters,list}(x) <- value
 
 limit(x)
 

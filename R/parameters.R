@@ -68,13 +68,22 @@ setValidity('AssignmentParameters',function(object){
   else TRUE
 })
 
-# setValidity('AssignmentParameters',function(object){
-#   correlations_parameters <- object@correlations_parameters
-#   
-#   if (){
-#     
-#   }
-# })
+#' @importFrom metabolyseR correlationsParameters
+
+setValidity('AssignmentParameters',function(object){
+  
+  correlations_parameters <- correlationsParameters() %>% 
+    names()
+  
+  if (!any(names(object@correlations_parameters) %in% 
+           correlations_parameters)) {
+    correlations_parameters %>% 
+      paste0('`',.,'`') %>% 
+      paste(collapse = ', ') %>% 
+      paste0('Correlations parameters should only include ',.)
+  }
+  else TRUE
+})
 
 #' @importFrom methods show
 #' @importFrom crayon yellow
@@ -191,6 +200,33 @@ setGeneric('technique',function(x)
 setMethod('technique',signature = 'AssignmentParameters',
           function(x){
             x@technique
+          })
+
+#' @rdname parameters
+#' @export
+
+setGeneric('correlations',
+           function(x) standardGeneric('correlations'))
+
+#' @rdname parameters
+
+setMethod('correlations',signature = 'AssignmentParameters',
+          function(x) x@correlations_parameters)
+
+#' @rdname parameters
+#' @export
+
+setGeneric('correlations<-',
+           function(x,value) standardGeneric('correlations<-'))
+
+#' @rdname parameters
+#' @importFrom methods validObject
+
+setMethod('correlations<-',signature = c('AssignmentParameters','list'),
+          function(x,value){
+            x@correlations_parameters <- value
+            validObject(x)
+            return(x)
           })
 
 #' @rdname parameters

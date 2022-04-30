@@ -7,24 +7,12 @@
 \description{
 An S4 class to store assignment parameters.
 }
-\details{
-The correlations parameters should be provided as a list containing the following parameters:
-\itemize{
-\item \code{method}: Correlation method to use. See \code{metabolyseR::correlations} for more information.
-\item \code{pAdjustMethod}
-\item \code{corPvalue}
-\item \code{rthresh}
-\item \code{n}
-\item \code{rIncrement}
-\item \code{nIncrement}
-}
-}
 \section{Slots}{
 
 \describe{
 \item{\code{technique}}{assignment technique to use}
 
-\item{\code{correlations_parameters}}{list of correlation parameters. See Details.}
+\item{\code{correlations_parameters}}{list of correlation parameters to be passed to \code{metabolyseR::correlation()}}
 
 \item{\code{max_M}}{maximum M for which to assign molecular formulas}
 
