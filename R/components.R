@@ -12,26 +12,30 @@ plausibility <- function(AIS,degree,weight){
 clean <- function(graph,adduct_rules_table){
   graph %>% 
     morph(to_components) %>% 
-    map(~{
-      component_nodes <- nodes(.x)
+    furrr::future_map(~{
+      component_adducts <- .x %>% 
+        nodes() %>% 
+        .$Adduct %>%
+        unique()
       
-      if (nrow(component_nodes) > 1 &
-          NA %in% component_nodes$Isotope) return(.x)
-      else NULL
+      adduct_info <- adduct_rules_table %>%
+        select(Adduct = Name,
+               adduct_isotopic = Isotopic)
+      
+      component_nodes <- .x %>% 
+        nodes() %>% 
+        left_join(adduct_info, 
+                  by = "Adduct") %>% 
+        mutate(isotopic = !is.na(Isotope),
+               adduct_isotopic = as.logical(adduct_isotopic),
+               either_isotopic = adduct_isotopic | isotopic) 
+      
+      if (all(component_nodes$isotopic) == TRUE |
+          all(component_nodes$adduct_isotopic) == TRUE |
+          all(component_nodes$either_isotopic) == TRUE) NULL
+      else return(.x)
     }) %>% 
     compact() %>% 
-    map(~{
-      component_nodes <- nodes(.x)
-      component_adducts <- component_nodes$Adduct %>%
-        unique()
-
-      adduct_info <- adduct_rules_table %>%
-        filter(Name %in% component_adducts)
-
-      if (0 %in% adduct_info$Isotopic) return(.x)
-      else NULL
-    }) %>%
-    compact() %>%
     bind_graphs() 
 }
 
