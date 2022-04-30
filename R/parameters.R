@@ -103,6 +103,12 @@ setMethod('show',signature = 'AssignmentParameters',
               cat('\t','RT limit:\t\t',object@RT_diff_limit,'\n')
             }
             
+            
+            cat('\t','Correlations:\n')
+            correlations(object) %>% 
+              paste0('\t\t',names(.),': ',.,'\n') %>% 
+              cat()
+            
             cat('\n\t','Adducts:','\n')
             adducts <- map(names(object@adducts),~{
               a <- str_c(object@adducts[[.]],collapse = ', ')
