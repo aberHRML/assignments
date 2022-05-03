@@ -6,7 +6,6 @@
 #' @slot max_M maximum M for which to assign molecular formulas
 #' @slot MF_rank_threshold rank threshold for molecular formula selection
 #' @slot ppm ppm threshold
-#' @slot adducts named list of character vectors containing the adducts to use for each mode
 #' @slot limit amu deviation limit for relationship prediction
 #' @slot RT_diff_limit limit for retention time differences for correlated features in adduct and isotopic assignment
 #' @slot adducts list of character vectors containing the adducts to use. List element names should denote ionisation mode.
