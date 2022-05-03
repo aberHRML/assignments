@@ -1,23 +1,35 @@
 
 spectrumPlot <- function(dat,MF){
+  check_installed(c('ggplot2',
+                    'ggrepel',
+                    'ggthemes'))
+  
   dat$Mode[dat$Mode == 'n'] <- 'Negative mode'
   dat$Mode[dat$Mode == 'n'] <- 'Positive mode'
   
-  ggplot(dat) +
-    geom_segment(aes(x = `m/z`,xend = `m/z`, y = 0, yend = `Relative Abundance`),colour = ptol_pal()(1)) +
-    geom_text_repel(aes(x = `m/z`,y = `Relative Abundance`,label = Label)) +
-    theme_bw() +
-    theme(panel.border = element_blank(),
-          panel.grid = element_blank(),
-          axis.line = element_line(),
-          axis.title = element_text(face = 'bold'),
-          strip.background = element_blank(),
-          strip.text = element_text(face = 'bold'),
-          plot.title = element_text(face = 'bold',
+  ggplot2::ggplot(dat) +
+    ggplot2::geom_segment(
+      ggplot2::aes(x = `m/z`,
+                   xend = `m/z`, 
+                   y = 0, 
+                   yend = `Relative Abundance`),
+      colour = ggthemes::ptol_pal()(1)) +
+    ggrepel::geom_text_repel(
+      ggplot2::aes(x = `m/z`,
+                   y = `Relative Abundance`,
+                   label = Label)) +
+    ggplot2::theme_bw() +
+    ggplot2::theme(panel.border = ggplot2::element_blank(),
+          panel.grid = ggplot2::element_blank(),
+          axis.line = ggplot2::element_line(),
+          axis.title = ggplot2::element_text(face = 'bold'),
+          strip.background = ggplot2::element_blank(),
+          strip.text = ggplot2::element_text(face = 'bold'),
+          plot.title = ggplot2::element_text(face = 'bold',
                                     hjust = 0.5)) +
-    labs(title = MF,
+    ggplot2::labs(title = MF,
          y = 'Relative Abundance') +
-    facet_wrap(~Mode,scales = 'free')
+    ggplot2::facet_wrap(~Mode,scales = 'free')
 }
 
 #' plotSpectrum
@@ -27,8 +39,6 @@ spectrumPlot <- function(dat,MF){
 #' @param MF molecular formula
 #' @importFrom tidyr gather
 #' @importFrom dplyr group_by summarise
-#' @importFrom ggplot2 geom_segment
-#' @importFrom ggrepel geom_text_repel
 #' @export
 
 setGeneric('plotSpectrum',function(assignment,MF)

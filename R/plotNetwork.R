@@ -1,5 +1,10 @@
 
 networkPlot <- function(network,layout,rThreshold,assignedNodes,explainedEdges){
+  check_installed(c('ggraph',
+                    'ggthemes',
+                    'ggplot2',
+                    'graphlayouts'))
+  
   rt <- str_c('Visualised using threshold of r > ',rThreshold)
   nn <- str_c('Total nodes = ',sum(assignedNodes))
   an <- str_c('Assigned nodes = ',
@@ -14,15 +19,15 @@ networkPlot <- function(network,layout,rThreshold,assignedNodes,explainedEdges){
               {explainedEdges[1]/sum(explainedEdges) * 100} %>%
                 round(),'%)')
   
-  ggraph(network,layout = layout) +
-    geom_edge_link(alpha = 0.2) +
-    geom_node_point(aes(fill = Assigned),shape = 21) +
-    scale_fill_ptol() +
-    theme_graph() +
-    theme(legend.title = element_blank()) +
-    coord_fixed() +
-    facet_edges(~Explained) +
-    labs(title = str_c('Assignment correlation network'),
+  ggraph::ggraph(network,layout = layout) +
+    ggraph::geom_edge_link(alpha = 0.2) +
+    ggraph::geom_node_point(ggplot2::aes(fill = Assigned),shape = 21) +
+    ggthemes::scale_fill_ptol() +
+    ggraph::theme_graph() +
+    ggplot2::theme(legend.title = ggplot2::element_blank()) +
+    ggplot2::coord_fixed() +
+    ggraph::facet_edges(~Explained) +
+    ggplot2::labs(title = str_c('Assignment correlation network'),
          caption = str_c(rt,nn,an,ne,ee,sep = '\n'))
 }
 
@@ -34,10 +39,6 @@ networkPlot <- function(network,layout,rThreshold,assignedNodes,explainedEdges){
 #' @param rThreshold r threhold to use for filtering edge correlation weights
 #' @importFrom tidygraph as_tbl_graph bind_graphs
 #' @importFrom igraph set_vertex_attr set_edge_attr
-#' @importFrom ggraph ggraph geom_edge_link geom_node_point theme_graph geom_node_text facet_edges
-#' @importFrom ggthemes scale_fill_ptol
-#' @importFrom ggplot2 labs aes element_blank coord_fixed
-#' @importFrom graphlayouts layout_igraph_stress
 #' @export
 
 setGeneric('plotNetwork',function(assignment, layout = 'stress', rThreshold = 0.7){

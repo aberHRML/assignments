@@ -1,8 +1,8 @@
-#' @importFrom patchwork plot_annotation plot_layout
-#' @importFrom ggraph create_layout scale_edge_color_gradient geom_node_label guide_edge_colourbar
-#' @importFrom ggplot2 scale_fill_manual margin xlim ylim guides
 
 plotSolutions <- function(graph,selectedComp,feature){
+  check_installed(c('ggraph',
+                    'ggplot2',
+                    'patchwork'))
   graph %>%
     map(~{
       stats <- nodes(.) %>%
@@ -19,36 +19,45 @@ plotSolutions <- function(graph,selectedComp,feature){
       g <- g %>%
         mutate(Feat = Feature == feature) %>%
         create_layout('nicely')
-      ggraph(g) +
-        geom_edge_link(aes(colour = r)) +
-        scale_edge_color_gradient(low = 'white',high = 'black',limits = c(0.5,1)) +
-        geom_node_label(aes(label = name,fill = Feat),size = 2,) +
-        scale_fill_manual(values = c('white','steelblue')) +
-        theme_graph(base_family = '',
-                    title_size = 12,
-                    title_face = 'plain',
-                    foreground = border,
-                    plot_margin = margin(5, 5, 5, 5)) +
-        theme(plot.title = element_text(face = 'bold',
-                                        hjust = 0.5),
-              plot.caption = element_text(hjust = 0)) +
-        labs(title = str_c('Component ',stats$Component),
-             caption = str_c('Degree = ',stats$Degree %>% round(2),'; ',
-                             'Weight = ',stats$Weight %>% round(2),'; ',
-                             'AIS = ',stats$AIS %>% round(2),'; ',
-                             'Plausibility = ',stats$`Component Plausibility` %>% round(2))) +
-        xlim(min(g$x) - (max(g$x) - min(g$x)) * 0.05,
-             max(g$x) + (max(g$x) - min(g$x)) * 0.05) +
-        ylim(min(g$y) - (max(g$y) - min(g$y)) * 0.05,
-             max(g$y) + (max(g$y) - min(g$y)) * 0.05) +
-        guides(fill = 'none')
+      ggraph::ggraph(g) +
+        ggraph::geom_edge_link(ggplot2::aes(colour = r)) +
+        ggraph::scale_edge_color_gradient(low = 'white',
+                                          high = 'black',
+                                          limits = c(0.5,1)) +
+        ggraph::geom_node_label(ggplot2::aes(label = name,
+                                             fill = Feat),
+                                size = 2,) +
+        ggplot2::scale_fill_manual(values = c('white','steelblue')) +
+        ggraph::theme_graph(base_family = '',
+                            title_size = 12,
+                            title_face = 'plain',
+                            foreground = border,
+                            plot_margin = ggplot2::margin(5, 5, 5, 5)) +
+        ggplot2::theme(
+          plot.title = ggplot2::element_text(face = 'bold',
+                                             hjust = 0.5),
+          plot.caption = ggplot2::element_text(hjust = 0)) +
+        ggplot2::labs(
+          title = str_c('Component ',stats$Component),
+          caption = str_c('Degree = ',stats$Degree %>% round(2),'; ',
+                          'Weight = ',stats$Weight %>% round(2),'; ',
+                          'AIS = ',stats$AIS %>% round(2),'; ',
+                          'Plausibility = ',stats$`Component Plausibility` %>% 
+                            round(2))) +
+        ggplot2::xlim(min(g$x) - (max(g$x) - min(g$x)) * 0.05,
+                      max(g$x) + (max(g$x) - min(g$x)) * 0.05) +
+        ggplot2::ylim(min(g$y) - (max(g$y) - min(g$y)) * 0.05,
+                      max(g$y) + (max(g$y) - min(g$y)) * 0.05) +
+        ggplot2::guides(fill = 'none')
     }) %>%
-    wrap_plots() + 
-    plot_layout(guides = 'collect') +
-    plot_annotation(title = str_c('Solutions for feature ',
-                                  feature),
-                    theme = theme(plot.title = element_text(face = 'bold',
-                                                            hjust = 0.5)))
+    patchwork::wrap_plots() + 
+    patchwork::plot_layout(guides = 'collect') +
+    patchwork::plot_annotation(
+      title = str_c('Solutions for feature ',
+                    feature),
+      theme = ggplot2::theme(
+        plot.title = ggplot2::element_text(face = 'bold',
+                                           hjust = 0.5)))
 }
 
 #' Plot the solutions for a feature

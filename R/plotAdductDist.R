@@ -1,33 +1,33 @@
 
-#' @importFrom ggthemes ptol_pal
-#' @importFrom ggplot2 ggplot geom_bar theme_bw facet_wrap theme element_text element_line scale_y_continuous scale_x_discrete
-
 plotDist <- function(x){
-  ggplot(x,aes(x = Adduct)) + 
-    geom_bar(colour = 'black',fill = ptol_pal()(1)) + 
-    scale_y_continuous(expand = c(0,0)) +
-    scale_x_discrete(expand = c(0,0)) +
-    theme_bw() + 
-    facet_wrap(~Isotope,
+  check_installed(c('ggplot2',
+                    'ggthemes'))
+  
+  ggplot2::ggplot(x,ggplot2::aes(x = Adduct)) + 
+    ggplot2::geom_bar(colour = 'black',
+                      fill = ggthemes::ptol_pal()(1)) + 
+    ggplot2::scale_y_continuous(expand = c(0,0)) +
+    ggplot2::scale_x_discrete(expand = c(0,0)) +
+    ggplot2::theme_bw() + 
+    ggplot2::facet_wrap(~Isotope,
                scales = 'free') + 
-    labs(title = x$Mode[1],
+    ggplot2::labs(title = x$Mode[1],
          y = 'Count',
          caption = str_c('N = ',nrow(x))) +
-    theme(plot.title = element_text(face = 'bold',hjust = 0.5),
-          axis.title = element_text(face = 'bold'),
-          axis.text.x = element_text(angle = 45, hjust = 1),
-          panel.border = element_blank(),
-          axis.line = element_line(),
-          panel.grid = element_blank(),
-          strip.background = element_blank(),
-          strip.text = element_text(face = 'bold'))
+    ggplot2::theme(plot.title = ggplot2::element_text(face = 'bold',hjust = 0.5),
+          axis.title = ggplot2::element_text(face = 'bold'),
+          axis.text.x = ggplot2::element_text(angle = 45, hjust = 1),
+          panel.border = ggplot2::element_blank(),
+          axis.line = ggplot2::element_line(),
+          panel.grid = ggplot2::element_blank(),
+          strip.background = ggplot2::element_blank(),
+          strip.text = ggplot2::element_text(face = 'bold'))
 }
 
 #' Plot adduct frequency distributions
 #' @rdname plotAdductDist
 #' @description Plot adduct frequency distributions.
 #' @param assignment S4 object of class Assignment
-#' @importFrom patchwork wrap_plots
 #' @importFrom tidyr replace_na
 #' @export
 
@@ -36,9 +36,12 @@ setGeneric('plotAdductDist',function(assignment){
 })
 
 #' @rdname plotAdductDist
+#' @importFrom rlang check_installed
 
 setMethod('plotAdductDist',signature = 'Assignment',
           function(assignment){
+            
+            check_installed('patchwork')
             
             assign <- assignment %>%
               assignments() %>% 
@@ -53,6 +56,6 @@ setMethod('plotAdductDist',signature = 'Assignment',
             assign %>% 
               split(.$Mode) %>% 
               map(plotDist) %>% 
-              wrap_plots()
+              patchwork::wrap_plots()
           }
 )

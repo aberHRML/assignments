@@ -4,9 +4,7 @@ Version: 1.0.0
 Authors@R: person("Jasen", "Finch", email = "jsf9@aber.ac.uk", role = c("aut", "cre"))
 Description: Molecular formula assignment for high resolution metabolomics.
 Depends: R (>= 3.5.0),
-    ggraph
-Imports: CHNOSZ,
-    cli,
+Imports: cli,
     crayon,
     dplyr,
     furrr,
@@ -18,6 +16,7 @@ Imports: CHNOSZ,
     methods,
     mzAnnotation,
     purrr,
+    rlang,
     stringr,
     tibble,
     tidygraph,
@@ -36,10 +35,10 @@ Collate: parameters.R assignment.R correlations.R
 Suggests: testthat,
     covr,
     ggplot2,
+    ggraph,
     ggrepel,
     ggthemes,
     graphlayouts,
     patchwork
-    
 Remotes: jasenfinch/mzAnnotation@tmp,
     jasenfinch/metabolyseR@devel
