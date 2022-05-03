@@ -15,7 +15,6 @@
 #' @slot isotope_rules tibble containing isotope rules as returned by `mzAnnotation::isotopes()`
 #' @slot transformation_rules tibble containing transformation rules as returned by `mzAnnotation::transformations()`
 #' @importFrom mzAnnotation adduct_rules isotope_rules transformation_rules
-#' @export
 
 setClass('AssignmentParameters',
          slots = list(

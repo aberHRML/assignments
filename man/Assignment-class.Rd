@@ -12,7 +12,7 @@ An S4 class to store assignment results
 \describe{
 \item{\code{log}}{list containing assignment logs}
 
-\item{\code{flags}}{charactor vector containing completed assignment elements}
+\item{\code{flags}}{character vector containing completed assignment elements}
 
 \item{\code{data}}{A tibble containing the peak intensity matrix}
 

@@ -1,15 +1,14 @@
 #' Assignment
-#' @rdname Assignment
+#' @rdname Assignment-class
 #' @description An S4 class to store assignment results
 #' @slot log list containing assignment logs
-#' @slot flags charactor vector containing completed assignment elements
+#' @slot flags character vector containing completed assignment elements
 #' @slot data A tibble containing the peak intensity matrix
 #' @slot correlations A tibble containing the correlations
 #' @slot relationships A tibble containing the predicted relationships
 #' @slot addIsoAssign A list containing the results of the adduct and isotope assignment
 #' @slot transAssign A list containing the results of the transformation assignment
 #' @slot assignments A tibble containing the assigned molecular formulas
-#' @export
 
 setClass('Assignment',
          contains = 'AssignmentParameters',

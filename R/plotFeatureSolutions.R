@@ -18,7 +18,7 @@ plotSolutions <- function(graph,selectedComp,feature){
       g <- .
       g <- g %>%
         mutate(Feat = Feature == feature) %>%
-        create_layout('nicely')
+        ggraph::create_layout('nicely')
       ggraph::ggraph(g) +
         ggraph::geom_edge_link(ggplot2::aes(colour = r)) +
         ggraph::scale_edge_color_gradient(low = 'white',
