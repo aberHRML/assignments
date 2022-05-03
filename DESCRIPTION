@@ -11,17 +11,12 @@ Imports: CHNOSZ,
     dplyr,
     furrr,
     future,
-    ggplot2,
-    ggrepel,
-    ggthemes,
-    graphlayouts,
     igraph,
     lubridate,
     magrittr,
+    metabolyseR,
     methods,
     mzAnnotation,
-    metabolyseR,
-    patchwork,
     purrr,
     stringr,
     tibble,
@@ -39,6 +34,12 @@ Collate: parameters.R assignment.R correlations.R
         plotAdductDist.R plotFeatureSolutions.R 
         plotSpectrum.R reexports.R zzz.R
 Suggests: testthat,
-    covr
+    covr,
+    ggplot2,
+    ggrepel,
+    ggthemes,
+    graphlayouts,
+    patchwork
+    
 Remotes: jasenfinch/mzAnnotation@tmp,
     jasenfinch/metabolyseR@devel
