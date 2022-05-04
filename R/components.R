@@ -32,7 +32,8 @@ clean <- function(graph,adduct_rules_table){
       
       if (all(component_nodes$isotopic) == TRUE |
           all(component_nodes$adduct_isotopic) == TRUE |
-          all(component_nodes$either_isotopic) == TRUE) NULL
+          all(component_nodes$either_isotopic) == TRUE |
+          nrow(component_nodes) < 2) NULL
       else return(.x)
     }) %>% 
     compact() %>% 
