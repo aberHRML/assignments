@@ -5,8 +5,8 @@ plotSolutions <- function(graph,selectedComp,feature){
                     'patchwork'))
   graph %>%
     map(~{
-      stats <- nodes(.) %>%
-        select(Component:`Component Plausibility`) %>%
+      stats <- nodes(.x) %>%
+        select(Component:`Component Plausibility`,AIS) %>%
         .[1,]
       
       if (stats$Component[1] == selectedComp){

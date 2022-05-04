@@ -54,21 +54,17 @@ setMethod('transformationAssign',signature = 'Assignment',
               MFs <- generateMFs(M,
                                  ppm(assignment),
                                  MFrankThreshold(assignment),
-                                 adducts(assignment),
                                  adductRules(assignment),
-                                 isotopes(assignment),
-                                 isotopeRules(assignment))
+                                 isotopeRules(assignment),
+                                 AIS(assignment))
               
               if (nrow(MFs) > 0) {
                 
                 MFs <- MFs %>%
-                  bind_rows(assigned %>%
-                              select(names(MFs)[!(names(MFs) == 'AddIsoScore')]) %>%
-                              rowwise() %>%
-                              mutate(AddIsoScore = addIsoScore(Adduct,
-                                                               Isotope,
-                                                               adducts(assignment),
-                                                               isotopes(assignment))))
+                  bind_rows(assigned %>% 
+                              select(dplyr::any_of(names(MFs))) %>% 
+                              left_join(AIS(assignment),
+                                        by = c('Adduct','Isotope')))
                 graph_edges <- rel %>% 
                   addMFs(MFs,
                          identMF = FALSE) %>%

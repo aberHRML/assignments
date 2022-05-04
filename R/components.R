@@ -52,7 +52,7 @@ componentMetrics <- function(component,max_add_iso_total){
          Degree = degree(Nodes,Size),,
          Density = (2 * Size) / (Nodes * (Nodes - 1)),
          Weight = sum(Weight) / Nodes,
-         AIS = Size * sum(AddIsoScore) / max_add_iso_total,
+         AIS = Size * sum(AIS) / max_add_iso_total,
          `Component Plausibility` = plausibility(AIS,Degree,Weight))
 }
 
@@ -100,7 +100,7 @@ calcComponents <- function(graph_nodes,
     graph <- graph %>%
       left_join(weights,by = 'Component') %>%
       morph(to_components) %>%
-      componentMetrics(max_add_iso_total = maxAddIsoScore(assignment)) %>%
+      componentMetrics(max_add_iso_total = maxAIS(assignment)) %>%
       unmorph() 
   }
   
@@ -142,7 +142,7 @@ recalcComponents <- function(graph,
       select(-Weight) %>%
       left_join(weights,by = 'Component') %>%
       morph(to_components) %>%
-      componentMetrics(max_add_iso_total = maxAddIsoScore(assignment)) %>% 
+      componentMetrics(max_add_iso_total = maxAIS(assignment)) %>% 
       unmorph() 
   } 
   

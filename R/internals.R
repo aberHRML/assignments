@@ -131,69 +131,51 @@ collateMFs <- function(rel,MF){
     mutate(ID = 1:nrow(.))
 }
 
-#' @importFrom purrr map_lgl
-
-addIsoScore <- function(add,iso,addRank,isoRank){
-  add <- tibble(Adduct = add)
-  iso <- tibble(Isotope = iso)
-  iso$Isotope[is.na(iso$Isotope)] <- 'NA'
-  addRank <- addRank[map_lgl(addRank,~{add %in% .})] %>%
-    .[[1]] %>%
-    {tibble(Adduct = ., 
-            Rank = (length(.) - 1):0)}
-  isoRank <- tibble(Isotope = c('NA',isoRank), Rank = length(isoRank):0)
+AIS <- function(assignment){
+  possible_products <- expand_grid(
+    Adduct = adducts(assignment) %>% 
+      flatten_chr(),
+    Isotope = c(NA,isotopes(assignment))
+  )
   
-  add <- left_join(add, addRank,by = 'Adduct') %>%
-    .$Rank
-  iso <- left_join(iso, isoRank,by = 'Isotope') %>%
-    .$Rank
+  adducts_scores <- assignment %>% 
+    adducts() %>% 
+    map(~tibble(Adduct = .x,
+                Adduct_Score = (length(.x) -1):0)) %>% 
+    bind_rows()
   
-  maxScore <- max(addRank$Rank) + max(isoRank$Rank)
-  score <- (add + iso)/maxScore
+  isotopes_scores <- assignment %>% 
+    isotopes() %>% 
+    {c(NA,.)} %>% 
+    {tibble(Isotope = .,
+            Isotope_Score = (length(.) -1):0)}
   
-  return(score)
+  possible_products %>% 
+    left_join(adducts_scores,by = 'Adduct') %>% 
+    left_join(isotopes_scores,by = 'Isotope') %>% 
+    mutate(AIS = Adduct_Score + Isotope_Score,
+           AIS = AIS / max(AIS)) %>% 
+    select(-contains('Score'))
 }
 
 #' @importFrom tidyr expand_grid
 #' @importFrom purrr flatten_chr map_dfr
 
-maxAddIsoScore <- function(assignment){
-  
+maxAIS <- function(assignment){
   assignment_adducts <- adducts(assignment)
   assignment_isotopes <- isotopes(assignment)
   
-  adduct_scores <- assignment_adducts %>% 
-    map(~tibble(adduct = .) %>% 
-          mutate(adduct_rank = (nrow(.) - 1):0)) %>% 
-    bind_rows(.id = 'mode')
+  n_adducts <- assignment %>% 
+    adducts() %>% 
+    flatten_chr() %>% 
+    length()
   
-  isotope_scores <- assignment_isotopes %>% 
-    c('NA',.) %>% 
-    tibble(isotope = .) %>% 
-    mutate(isotope_rank = (nrow(.) - 1):0)
+  n_isotopes <- assignment %>% 
+    isotopes() %>% 
+    {c(NA,.)} %>% 
+    length()
   
-  max_total <- assignment_adducts %>% 
-    map_dfr(~tibble(max_total = length(.x) - 1),
-            .id = 'mode') %>% 
-    mutate(max_total = max_total + 
-             length(assignment_isotopes))
-  
-  add_iso_combs <- expand_grid(adduct = assignment_adducts %>% 
-                                 flatten_chr(),
-                               isotope = c('NA',assignment_isotopes)
-  )
-  
-  add_iso_scores <- add_iso_combs %>% 
-    left_join(adduct_scores, 
-              by = "adduct") %>% 
-    left_join(isotope_scores, 
-              by = "isotope") %>% 
-    mutate(total = adduct_rank + 
-             isotope_rank) %>% 
-    left_join(max_total,by = 'mode') %>% 
-    mutate(score = total / max_total)
-  
-  max_score <- sum(add_iso_scores$score)
+  max_score <- (n_adducts * n_isotopes) / 2
   
   return(max_score)
 }
@@ -204,10 +186,9 @@ maxAddIsoScore <- function(assignment){
 generateMFs <- function(M,
                         ppm,
                         rank_threshold,
-                        assignment_adducts,
                         adduct_rules,
-                        assignment_isotopes,
-                        isotope_rules){
+                        isotope_rules,
+                        AIS){
   nM <- nrow(M)
   
   M %>%
@@ -237,13 +218,8 @@ generateMFs <- function(M,
           select(Feature,RetentionTime,MF,Isotope,Adduct,`Theoretical M`,
                  `Measured M`,`Theoretical m/z`,`Measured m/z`, `PPM error`,
                  `MF Plausibility (%)` = `Plausibility (%)`) %>%
-          
-          rowwise() %>%
-          mutate(AddIsoScore = addIsoScore(Adduct,
-                                           Isotope,
-                                           assignment_adducts,
-                                           assignment_isotopes)) %>%
-          ungroup()
+          left_join(AIS,
+                    by = c('Adduct','Isotope'))
       } else {
         return(NULL)
       }
