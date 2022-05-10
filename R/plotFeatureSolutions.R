@@ -9,14 +9,15 @@ plotSolutions <- function(graph,selectedComp,feature){
         select(Component:`Component Plausibility`,AIS) %>%
         .[1,]
       
-      if (stats$Component[1] == selectedComp){
-        border <- 'red'  
+      if (length(selectedComp) > 0){
+        border <- ifelse(stats$Component[1] == selectedComp,
+                         'red',
+                         'black')
       } else {
         border <- 'black'
       }
       
-      g <- .
-      g <- g %>%
+      g <- .x %>%
         mutate(Feat = Feature == feature) %>%
         ggraph::create_layout('nicely')
       ggraph::ggraph(g) +
