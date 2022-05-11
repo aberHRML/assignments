@@ -40,5 +40,5 @@ Suggests: testthat,
     ggthemes,
     graphlayouts,
     patchwork
-Remotes: jasenfinch/mzAnnotation@tmp,
+Remotes: jasenfinch/mzAnnotation@devel,
     jasenfinch/metabolyseR@devel
