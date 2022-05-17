@@ -12,6 +12,7 @@ eliminate <- function(MFs,by,direction){
 }
 
 #' @importFrom dplyr rename
+#' @importFrom purrr map_lgl
 
 addMFs <- function(rel,MF,identMF = T){
   

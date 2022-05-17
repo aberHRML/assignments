@@ -12,5 +12,6 @@ globalVariables(c(
   'absPPM','Name1','Name2','Size','AverageAddIsoScore','nodes','rtDiff',
   'Component','Weight','AIS','Name','Assigned','Intensity','Label',
   'Relative Abundance','m/z','Group','N','adduct_rank','isotope_rank',
-  'M','total','MF','RetentionTimeDiff'
+  'M','total','MF','RetentionTimeDiff','Adduct_Score','Isotope_Score',
+  'Iteration'
 ))
