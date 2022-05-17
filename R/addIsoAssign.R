@@ -67,8 +67,6 @@ setMethod('addIsoAssign',signature = 'Assignment',
             
             counter <- 0
             
-            assignment@addIsoAssign <- list()
-            
             repeat {
               
               counter <- counter + 1

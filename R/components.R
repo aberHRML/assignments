@@ -1,5 +1,5 @@
 
-degree <- function(n_nodes,n_edges){
+avg_degree <- function(n_nodes,n_edges){
   2 * (n_edges / n_nodes)
 }
 
@@ -50,7 +50,7 @@ componentMetrics <- function(component,max_add_iso_total){
   component %>% 
   mutate(Size = graph_size(),
          Nodes = n(),
-         Degree = degree(Nodes,Size),,
+         Degree = avg_degree(Nodes,Size),,
          Density = (2 * Size) / (Nodes * (Nodes - 1)),
          Weight = sum(Weight) / Nodes,
          AIS = sum(AIS) / max_add_iso_total,
@@ -150,6 +150,8 @@ recalcComponents <- function(graph,
   return(graph)
 }
 
+#' @importFrom igraph degree
+
 filterComponents <- function(graph,
                              assignment,
                              filters = componentFilters()){
@@ -162,8 +164,9 @@ filterComponents <- function(graph,
       filter(name %in% {filtered_graph %>% 
           nodes() %>% 
           eliminate(f$Measure,f$Direction) %>%
-          .$name}) 
-    if (V(filtered_graph) %>% length() > 0) {
+          .$name}) %>% 
+      filter(degree(.) != 0)
+    if (E(filtered_graph) %>% length() > 0) {
       filtered_graph <- filtered_graph %>%
         recalcComponents(assignment)
     } else {
