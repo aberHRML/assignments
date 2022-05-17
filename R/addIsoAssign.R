@@ -46,12 +46,12 @@ setMethod('addIsoAssign',signature = 'Assignment',
                           maxM(assignment))
             
             MFs <- generateMFs(M,
-                              ppm(assignment),
-                              MFrankThreshold(assignment),
-                              adductRules(assignment),
-                              isotopeRules(assignment),
-                              AIS(assignment))
-              
+                               ppm(assignment),
+                               MFrankThreshold(assignment),
+                               adductRules(assignment),
+                               isotopeRules(assignment),
+                               AIS(assignment))
+            
             graph_edges <- rel %>% 
               addMFs(MFs) %>%
               filter(MF1 == MF2) %>%
@@ -64,22 +64,61 @@ setMethod('addIsoAssign',signature = 'Assignment',
             graph <- calcComponents(graph_nodes,
                                     graph_edges,
                                     assignment)
-  
-            filtered_graph <- filterComponents(graph,
-                                               assignment)
             
-            assignment@addIsoAssign <- list(
-              graph = graph,
-              filtered_graph = filtered_graph,
-              assigned = filtered_graph %>% 
+            counter <- 0
+            
+            assignment@addIsoAssign <- list()
+            
+            repeat {
+              
+              counter <- counter + 1
+              
+              message(paste0('iteration ',counter))
+              
+              if (counter > 1){
+                graph <- assignment@addIsoAssign[[counter - 1]]$graph %>% 
+                  activate(nodes) %>% 
+                  dplyr::anti_join(assignment %>% 
+                                     assignments() %>% 
+                                     select(dplyr::any_of(c('Feature','Isotope','Adduct','MF'))),
+                                   by = 'Feature') 
+                
+                if (length(graph) == 0) break()
+                
+                graph <- graph %>% 
+                  clean(adductRules(assignment)) %>% 
+                  recalcComponents(assignment)
+              }
+              
+              filtered_graph <- graph 
+              
+              filtered_graph <- filtered_graph %>% 
+                filterComponents(assignment,
+                                 filters = componentFilters())
+              
+              assigned_features <- filtered_graph %>% 
                 nodes() %>% 
                 rename(Name = name) %>%
                 mutate(Mode = str_sub(Feature,1,1))
-            )
-            
-            assignment@assignments <- assignment@addIsoAssign$assigned %>%
-              select(Name:`MF Plausibility (%)`,Mode) %>%
-              mutate(Iteration = 'A&I')
+              
+              if (nrow(assigned_features) == 0){
+                break()
+              }
+              
+              assignment@addIsoAssign[[counter]] <- list(
+                graph = graph,
+                filtered_graph = filtered_graph,
+                assigned = assigned_features
+              )
+              
+              assignment@assignments <- bind_rows(
+                assignment@assignments,
+                assigned_features %>%
+                  select(Name:`MF Plausibility (%)`,Mode) %>%
+                  mutate(Iteration = paste0('A&I',counter))
+              )
+              
+            }
             
             if (assignment@log$verbose == TRUE) {
               endTime <- proc.time()
