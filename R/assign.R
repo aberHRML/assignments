@@ -37,7 +37,7 @@ setMethod('assignMFs',signature = 'tbl_df',
   
   if (verbose == TRUE) {
     startTime <- proc.time()
-    message(blue('\nMFassign '),red(str_c('v',packageVersion('MFassign') %>% as.character())),' ',date())
+    message(blue('\nassignments '),red(str_c('v',packageVersion('assignments') %>% as.character())),' ',date())
     message(rep('_',console_width()))
     params <- parameters %>%
       {capture.output(print(.))} %>%

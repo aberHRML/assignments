@@ -38,7 +38,7 @@ setClass('Assignment',
 
 setMethod('show',signature = 'Assignment',
           function(object){
-            cat(blue('\nMFassign'),red(str_c('v',packageVersion('MFassign') %>% as.character())),'\n')
+            cat(blue('\nassignments'),red(str_c('v',packageVersion('assignments') %>% as.character())),'\n')
             cat(yellow('Assignment:'),'\n')
             cat('\t','Features:\t\t',ncol(object@data),'\n')
             cat('\t','Correlations:\t\t',nrow(object@correlations),'\n')
