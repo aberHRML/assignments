@@ -45,22 +45,35 @@ setMethod('show',signature = 'Assignment',
             cat('\t','Relationships:\t\t',nrow(relationships(object)),'\n')
             cat('\n')
             if (length(object@addIsoAssign) > 0) {
+              addIsoAssigned <- object %>% 
+                assignments() %>% 
+                filter(str_detect(Iteration,'A&I')) 
               cat('\t',green('Adduct & isotope assignment:'),'\n')
-              cat('\t\t','MFs:\t\t',length(unique(object@addIsoAssign$assigned$MF)),'\n')
-              cat('\t\t','Relationships:\t',object@addIsoAssign$filtered_graph %>% E() %>% length(),'\n')
-              cat('\t\t','Assigned:\t',nrow(object@addIsoAssign$assigned),'\n')
+              cat('\t\t','Iterations:\t',length(object@addIsoAssign),'\n')
+              cat('\t\t',
+                  'MFs:\t\t',
+                  addIsoAssigned %>% 
+                    select(MF) %>% 
+                    distinct() %>% 
+                    nrow(),
+                  '\n')
+              cat('\t\t','Assigned:\t',nrow(addIsoAssigned),'\n') 
               cat('\n')
             }
             if (length(object@transAssign) > 0) {
+              transAssign <- object %>% 
+                assignments() %>% 
+                filter(str_detect(Iteration,'T')) 
               cat('\t',green('Transformation assignment:'),'\n')
               cat('\t\t','Iterations:\t',length(object@transAssign),'\n')
-              transAssigned <- object@transAssign %>%
-                {.[map_dbl(.,length) > 0]} %>%
-                map_dbl(~{
-                  return(nrow(.$assigned))
-                }) %>%
-                sum()
-              cat('\t\t','Assigned:\t',transAssigned,'\n') 
+              cat('\t\t',
+                  'MFs:\t\t',
+                  transAssign %>% 
+                    select(MF) %>% 
+                    distinct() %>% 
+                    nrow(),
+                  '\n')
+              cat('\t\t','Assigned:\t',nrow(transAssign),'\n') 
               cat('\n')
             }
             if (nrow(object@assignments) > 0) {
