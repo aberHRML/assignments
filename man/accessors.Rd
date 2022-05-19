@@ -15,6 +15,7 @@
 \alias{components,Assignment-method}
 \alias{featureComponents}
 \alias{featureComponents,Assignment-method}
+\alias{component}
 \alias{component,Assignment-method}
 \alias{assignments}
 \alias{assignments,Assignment-method}
@@ -47,6 +48,8 @@ components(assignment, iteration, type = c("selected", "all"))
 featureComponents(assignment, feature, type = c("selected", "all"))
 
 \S4method{featureComponents}{Assignment}(assignment, feature, type = c("selected", "all"))
+
+component(assignment, component, iteration, type = c("selected", "all"))
 
 \S4method{component}{Assignment}(assignment, component, iteration, type = c("selected", "all"))
 

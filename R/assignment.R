@@ -279,6 +279,9 @@ setMethod('featureComponents',signature = 'Assignment',
               filter(Feature == feature)
           })
 
+#' @rdname accessors
+#' @export
+
 setGeneric('component',function(assignment,
                                 component,
                                 iteration,
