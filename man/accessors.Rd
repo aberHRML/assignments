@@ -11,6 +11,11 @@
 \alias{iterations,Assignment-method}
 \alias{graph}
 \alias{graph,Assignment-method}
+\alias{components}
+\alias{components,Assignment-method}
+\alias{featureComponents}
+\alias{featureComponents,Assignment-method}
+\alias{component,Assignment-method}
 \alias{assignments}
 \alias{assignments,Assignment-method}
 \title{Assignment accessors}
@@ -34,6 +39,16 @@ iterations(assignment)
 graph(assignment, iteration, type = c("filtered", "all"))
 
 \S4method{graph}{Assignment}(assignment, iteration, type = c("filtered", "all"))
+
+components(assignment, iteration, type = c("filtered", "all"))
+
+\S4method{components}{Assignment}(assignment, iteration, type = c("filtered", "all"))
+
+featureComponents(assignment, feature, type = c("filtered", "all"))
+
+\S4method{featureComponents}{Assignment}(assignment, feature, type = c("filtered", "all"))
+
+\S4method{component}{Assignment}(assignment, component, iteration, type = c("filtered", "all"))
 
 assignments(assignment)
 
@@ -68,6 +83,21 @@ iterations(assignment)
 ## Return a selected graph
 \dontrun{
 graph(assignment,'A&I1')
+}
+
+## Return a component information for a selected graph
+\dontrun{
+components(assignment,'A&I1')
+}
+
+## Return a component information for a selected feature
+\dontrun{
+featureComponents(assignment,'A&I1')
+}
+
+ ## Extract a component graph
+\dontrun{
+component(assignment,1,'A&I1')
 }
 
 ## Return assignments
