@@ -29,8 +29,7 @@ RoxygenNote: 7.2.0
 Collate: parameters.R assignment.R correlations.R 
         addIsoAssign.R transformationAssign.R relationships.R
         graph.R assign.R internals.R components.R
-        feature_data.R assignments.R plotNetwork.R 
-        plotAdductDist.R plot_components.R 
+        feature_data.R assignments.R plotAdductDist.R plot_components.R 
         plotSpectrum.R reexports.R zzz.R
 Suggests: testthat,
     covr,
