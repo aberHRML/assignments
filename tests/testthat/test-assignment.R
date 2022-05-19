@@ -47,7 +47,7 @@ test_that('assignment class show method works',{
 })
 
 test_that('assignment data can be returned',{
-  expect_s3_class(assignmentData(assignment_FIE),'tbl_df')
+  expect_s3_class(featureData(assignment_FIE),'tbl_df')
 })
 
 test_that('data with assigned feature names can be returned',{
