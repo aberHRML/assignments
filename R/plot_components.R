@@ -8,7 +8,18 @@ graphTheme <- function(){
   )
 }
 
-plotGraph <- function(graph,min_coef,label_size = 3,axis_offset = 0.1){
+plotGraph <- function(graph,
+                      min_coef,
+                      label_size = 3,
+                      axis_offset = 0.1,
+                      border = 'black',
+                      highlight = NA){
+  
+  if (!is.na(highlight)){
+    graph <- graph %>% 
+      activate(nodes) %>% 
+      mutate(selected = Feature == highlight)
+  }
   
   g <- graph %>% 
     activate(nodes) %>% 
@@ -16,16 +27,32 @@ plotGraph <- function(graph,min_coef,label_size = 3,axis_offset = 0.1){
              str_replace_all(' ','\n')) %>% 
     ggraph::create_layout('nicely')
   
-  g %>% 
+  pl <- g %>% 
     ggraph::ggraph() +
     ggraph::geom_edge_link(ggplot2::aes(colour = coefficient)) +
     ggraph::scale_edge_color_gradient(low = 'lightgrey',
                                       high = 'black',
-                                      limits = c(min_coef,1)) +
-    ggraph::geom_node_label(ggplot2::aes(label = name),
-                            size = label_size) +
+                                      limits = c(min_coef,1))
+  
+  if (!is.na(highlight)) {
+    pl <- pl + 
+      ggraph::geom_node_label(
+        ggplot2::aes(label = name,fill = selected),
+        size = label_size) +
+      ggplot2::scale_fill_manual(values = c('white','lightblue')) +
+      ggplot2::guides(fill = 'none')
+  } else {
+    pl <- pl + 
+      ggraph::geom_node_label(
+        ggplot2::aes(label = name),
+        size = label_size)
+  }
+  
+  pl + 
     ggraph::theme_graph(base_family = '',
-                        base_size = 10) +
+                        base_size = 10,
+                        title_size = 11,
+                        foreground = border) +
     graphTheme() +
     ggplot2::lims(
       x = c(
@@ -48,6 +75,8 @@ plotGraph <- function(graph,min_coef,label_size = 3,axis_offset = 0.1){
 #' @param type the graph type to return. `filtered` returns the assignment graph after component selection. `all` returns all assignment components.
 #' @param label_size node label size
 #' @param axis_offset axis proportion by which to increase axis limits. Prevents cut off of node labels.
+#' @param border specify a plot border colour
+#' @param highlight specify a feature node to highlight
 #' @examples 
 #' \dontrun{
 #' plan(future::sequential)
@@ -65,10 +94,13 @@ setGeneric('plotComponent',
                     iteration,
                     type = c('filtered','all'),
                     label_size = 3,
-                    axis_offset = 0.1)
+                    axis_offset = 0.1,
+                    border = NA,
+                    highlight = NA)
              standardGeneric('plotComponent'))
 
 #' @importFrom dplyr mutate_if
+#' @rdname plotComponent
 
 setMethod('plotComponent',signature = 'Assignment',
           function(assignment,
@@ -76,22 +108,29 @@ setMethod('plotComponent',signature = 'Assignment',
                    iteration,
                    type = c('filtered','all'),
                    label_size = 3,
-                   axis_offset = 0.1
+                   axis_offset = 0.1,
+                   border = NA,
+                   highlight = NA 
           ){
             
             check_installed(c('ggraph',
                               'ggplot2',
-                              'ggtext'))
+                              'ggtext',
+                              'glue'))
             
             component_graph <- component(assignment,
                                          component,
                                          iteration,
                                          type) 
             
+            if (!is.na(highlight) & 
+                !highlight %in% nodes(component_graph)$Feature) {
+              stop(paste0('Highlight feature ',highlight,' not found in component.'))
+            }
+            
             component_stats <- component_graph %>% 
               nodes() %>% 
-              select(`MF Plausibility (%)`,
-                     AIS,
+              select(AIS,
                      Component:`Component Plausibility`) %>% 
               distinct() %>% 
               mutate_if(is.numeric,signif,digits = 3)
@@ -101,95 +140,118 @@ setMethod('plotComponent',signature = 'Assignment',
             plotGraph(component_graph,
                       min_coef,
                       label_size,
-                      axis_offset) +
+                      axis_offset,
+                      border,
+                      highlight
+                      ) +
               ggplot2::labs(
                 title = paste0('Component ',component),
                 caption =  glue::glue('
           P<sub>c</sub> = {component_stats$`Component Plausibility`};
           Degree = {component_stats$Degree};
-          
-          AIS<sub>c</sub> = {component_stats$AIS};
-          P<sub>MF</sub> = {component_stats$`MF Plausibility (%)`}%')
-            )
+          AIS<sub>c</sub> = {component_stats$AIS}'
+              ))
           })
 
 #' Plot the solutions for a feature
-#' @rdname plotFeatureSolutions
+#' @rdname plotFeatureComponents
 #' @description Plot possible MF solutions for a given feature.
 #' @param assignment S4 object of class Assignent
 #' @param feature name of feature to plot
-#' @param maxComponents maximum number of components to plot
+#' @param iteration components from which iteration to plot
+#' @param type the graph type to return. `all` returns all assignment components. `filtered` returns the assignment graph after component selection.
+#' @param max_components maximum number of components to plot
+#' @param label_size node label size
+#' @param axis_offset axis proportion by which to increase axis limits. Prevents cut off of node labels.
 #' @export
 
-setGeneric('plotFeatureSolutions',
-           function(assignment,feature,maxComponents = 10)
-             standardGeneric('plotFeatureSolutions')
+setGeneric('plotFeatureComponents',
+           function(assignment,
+                    feature,
+                    iteration,
+                    type = c('all','filtered'),
+                    max_components = 6,
+                    label_size = 3,
+                    axis_offset = 0.1)
+             standardGeneric('plotFeatureComponents')
 )
 
-#' @rdname plotFeatureSolutions
+#' @rdname plotFeatureComponents
+#' @importFrom dplyr slice
 
-setMethod('plotFeatureSolutions',signature = 'Assignment',
-          function(assignment,feature,maxComponents = 10){
+setMethod('plotFeatureComponents',signature = 'Assignment',
+          function(assignment,
+                   feature,
+                   iteration,
+                   type = c('all','filtered'),
+                   max_components = 6,
+                   label_size = 2,
+                   axis_offset = 0.05){
+            
+            check_installed(c('ggraph',
+                              'ggplot2',
+                              'ggtext',
+                              'patchwork'))
             
             if (!feature %in% colnames(featureData(assignment))) {
-              stop('Feature not found in assignment data')
+              stop('Feature not found in assignment data.',
+                   call. = FALSE)
             }
             
-            available_iterations <- iterations(assignment)
+            type <- match.arg(type,
+                              choices = c('all','filtered'))
             
-            graphs <- available_iterations %>% 
-              map(graph,assignment = assignment,type = 'all') %>% 
-              set_names(available_iterations)
-            
-            available_nodes <- graphs %>% 
-              map_dfr(nodes,.id = 'Iteration') %>% 
-              select(Feature) %>% 
-              distinct()
-            
-            if (!(feature %in% available_nodes$Feature)){
-              stop(
-                paste0('No assignment solutions available for feature ',
-                       feature),
-                call. = FALSE)
-            }
-            
-            comp <- n %>%
-              filter(Feature == feature) %>%
-              select(Component,`Component Plausibility`) %>%
-              distinct() %>%
-              arrange(Component)
-            
-            graph <- assignment@addIsoAssign$graph %>%
-              filter(Component %in% comp$Component) %>%
-              mutate(name = str_replace_all(name,'  ','\n')) %>%
-              mutate(name = str_replace_all(name,' ','\n')) %>%
-              morph(to_components) 
-            
-            graphComponents <- graph %>% 
-              map_dbl(~{nodes(.) %>% 
-                  .$Component %>% 
-                  .[1]
-              })
-            
-            comp <- comp %>%
-              arrange(desc(`Component Plausibility`)) %>%
+            selected_component <- assignments(assignment) %>% 
+              filter(Feature == feature,
+                     Iteration == iteration) %>% 
               .$Component
             
-            graph <- graph %>%
-              set_names(graphComponents) %>%
-              .[comp %>% as.character()]
+            feature_components <- featureComponents(assignment,feature,type) %>% 
+              filter(Iteration == iteration) %>% 
+              select(Component) %>% 
+              arrange(Component) %>% 
+              mutate(border = 'black',
+                     border = border %>% 
+                       replace(Component == selected_component,
+                               'red'))
             
-            if (length(comp) > maxComponents) {
-              graph <- graph[1:maxComponents]
+            if (nrow(feature_components) == 0){
+              stop(paste0('No components for feature ',
+                          feature,
+                          ' found in iteration ',
+                          iteration,'.'),
+                   call. = FALSE)
             }
             
-            selectedComp <- assignment@addIsoAssign$filtered_graph %>%
-              nodes() %>%
-              select(Feature,Component) %>%
-              filter(Feature == feature) %>%
-              .$Component
+            if (nrow(feature_components) > max_components){
+              feature_components <- slice(
+                feature_components,
+                seq_len(max_components))
+            }
             
-            pl <- plotSolutions(graph,selectedComp,feature)
+            pl <- feature_components %>%
+              rowwise() %>% 
+              group_split() %>% 
+              map(~plotComponent(
+                assignment,
+                .x$Component,
+                iteration,
+                type,
+                label_size,
+                axis_offset,
+                highlight = feature,
+                border = .x$border
+              )) %>% 
+              patchwork::wrap_plots() +
+              patchwork::plot_layout(guides = 'collect')
+            
+            if (length(selected_component) > 0){
+              pl <- pl +
+                patchwork::plot_annotation(
+                  caption = 'Red highlighted graph denotes the component selected for assignment.',
+                  theme = ggplot2::theme(plot.caption = ggplot2::element_text(hjust = 0))
+                )
+            }
             
             return(pl)
           })

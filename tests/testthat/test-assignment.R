@@ -58,9 +58,9 @@ test_that('a summary of assignments can be returned',{
   expect_s3_class(summariseAssignments(assignment_FIE),'tbl_df')
 })
 test_that('feature solutions can be plotted',{
-  pl <- plotFeatureSolutions(assignment_FIE,
+  pl <- plotFeatureComponents(assignment_FIE,
                              'n191.01962',
-                             maxComponents = 2)
+                             'A&I1')
   
   expect_s3_class(pl,'patchwork')
 })

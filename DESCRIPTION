@@ -37,9 +37,10 @@ Suggests: testthat,
     ggplot2,
     ggraph,
     ggrepel,
-    ggthemes,
-    graphlayouts,
     ggtext,
+    ggthemes,
+    glue,
+    graphlayouts,
     patchwork
 Remotes: jasenfinch/mzAnnotation@devel,
     jasenfinch/metabolyseR@devel

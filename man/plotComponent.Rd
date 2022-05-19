@@ -2,6 +2,7 @@
 % Please edit documentation in R/plot_components.R
 \name{plotComponent}
 \alias{plotComponent}
+\alias{plotComponent,Assignment-method}
 \title{Plot a component}
 \usage{
 plotComponent(
@@ -10,7 +11,20 @@ plotComponent(
   iteration,
   type = c("filtered", "all"),
   label_size = 3,
-  axis_offset = 0.1
+  axis_offset = 0.1,
+  border = NA,
+  highlight = NA
+)
+
+\S4method{plotComponent}{Assignment}(
+  assignment,
+  component,
+  iteration,
+  type = c("filtered", "all"),
+  label_size = 3,
+  axis_offset = 0.1,
+  border = NA,
+  highlight = NA
 )
 }
 \arguments{
@@ -25,6 +39,10 @@ plotComponent(
 \item{label_size}{node label size}
 
 \item{axis_offset}{axis proportion by which to increase axis limits. Prevents cut off of node labels.}
+
+\item{border}{specify a plot border colour}
+
+\item{highlight}{specify a feature node to highlight}
 }
 \description{
 Plot a molecular formula component graph.
