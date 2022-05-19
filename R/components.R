@@ -8,6 +8,7 @@ plausibility <- function(size,AIS,weight){
 }
 
 #' @importFrom purrr compact
+#' @importFrom tidygraph bind_graphs
 
 clean <- function(graph,adduct_rules_table){
   graph %>% 
