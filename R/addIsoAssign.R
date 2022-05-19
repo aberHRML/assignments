@@ -135,7 +135,9 @@ setMethod('addIsoAssign',signature = 'Assignment',
               assignment@assignments <- bind_rows(
                 assignment@assignments,
                 assigned_features %>%
-                  select(Name:`MF Plausibility (%)`,Mode) %>%
+                  select(Name:`MF Plausibility (%)`,
+                         Mode,
+                         Component) %>%
                   mutate(Iteration = paste0('A&I',counter))
               )
               

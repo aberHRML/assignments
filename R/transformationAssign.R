@@ -98,7 +98,9 @@ setMethod('transformationAssign',signature = 'Assignment',
                 rename(Name = name) %>%
                 mutate(Mode = str_sub(Feature,1,1)) %>%
                 filter(!(Name %in% assigned$Name)) %>%
-                select(Name:`MF Plausibility (%)`,Mode) %>%
+                select(Name:`MF Plausibility (%)`,
+                       Mode,
+                       Component) %>%
                 mutate(Iteration = str_c('T',count + 1)) %>% 
                 group_split(MF) %>% 
                 map_dfr(~{
