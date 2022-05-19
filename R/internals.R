@@ -1,3 +1,12 @@
+
+elapsedTime <- function(start_time,end_time){
+  {end_time - start_time} %>%
+    .[3] %>%
+    round(1) %>%
+    seconds_to_period() %>%
+    str_c('[',.,']')
+}
+
 #' @importFrom dplyr bind_cols
 
 eliminate <- function(MFs,by,direction){

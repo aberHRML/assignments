@@ -9,15 +9,19 @@ setGeneric("transformationAssign", function(assignment)
 setMethod('transformationAssign',signature = 'Assignment',
           function(assignment){
             
-            if (assignment@log$verbose == TRUE) message(blue('Transformation assignment...'))
+            if (assignment@log$verbose == TRUE) {
+              t_start_time <- proc.time()
+              message(blue('Transformation assignment'),
+                      cli::symbol$continue)
+            }
             count <- 0
             repeat {
               count <- count + 1
               
               if (assignment@log$verbose == TRUE) {
-                startTime <- proc.time()
-                message(blue(str_c('iteration ', 
-                                   count,' ')),
+                start_time <- proc.time()
+                message(str_c('iteration ', 
+                              count,' '),
                         cli::symbol$continue,
                         '\r',
                         appendLF = FALSE)
@@ -112,16 +116,12 @@ setMethod('transformationAssign',signature = 'Assignment',
               assignment@assignments <- bind_rows(assignment@assignments,
                                                   newly_assigned)
               
-              if (assignment@log$verbose == TRUE) {
-                endTime <- proc.time()
-                elapsed <- {endTime - startTime} %>%
-                  .[3] %>%
-                  round(1) %>%
-                  seconds_to_period() %>%
-                  str_c('[',.,']')
-                message(blue(str_c('iteration ', 
-                                   count,' ')),
-                        '\t',
+              if (isTRUE(assignment@log$verbose)) {
+                end_time <- proc.time()
+                elapsed <- elapsedTime(start_time,end_time)
+                message(str_c('iteration ', 
+                              count,' '),
+                        '\t\t\t',
                         green(cli::symbol$tick),
                         ' ',
                         elapsed)
@@ -130,6 +130,13 @@ setMethod('transformationAssign',signature = 'Assignment',
             
             names(assignment@transAssign) <- paste0('T',
                                                     seq_along(assignment@transAssign))
+            
+            if (isTRUE(assignment@log$verbose)) {
+              t_end_time <- proc.time()
+              elapsed <- elapsedTime(t_start_time,
+                                     t_end_time)
+              message(blue('Transformation assignment '),'\t',green(cli::symbol$tick),' ',elapsed)
+            }
             
             return(assignment)
           }

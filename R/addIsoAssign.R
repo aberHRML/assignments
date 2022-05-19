@@ -14,10 +14,9 @@ setMethod('addIsoAssign',signature = 'Assignment',
           function(assignment){
             
             if (isTRUE(assignment@log$verbose)) {
-              startTime <- proc.time()
+              ai_start_time <- proc.time()
               message(blue('Adduct & isotopic assignment '),
-                      cli::symbol$continue,'\r',
-                      appendLF = FALSE)
+                      cli::symbol$continue)
             }
             
             assignment_technique <- technique(assignment)
@@ -45,12 +44,30 @@ setMethod('addIsoAssign',signature = 'Assignment',
             M <- collateM(rel,
                           maxM(assignment))
             
+            if (isTRUE(assignment@log$verbose)) {
+              start_time <- proc.time()
+              message('generating molecular formulas',
+                      cli::symbol$continue,
+                      '\r',
+                      appendLF = FALSE)
+            }
+            
             MFs <- generateMFs(M,
                                ppm(assignment),
                                MFrankThreshold(assignment),
                                adductRules(assignment),
                                isotopeRules(assignment),
                                AIS(assignment))
+            
+            if (isTRUE(assignment@log$verbose)) {
+              end_time <- proc.time()
+              elapsed <- elapsedTime(start_time,end_time)
+              message('generating molecular formulas',
+                      '\t',
+                      green(cli::symbol$tick),
+                      ' ',
+                      elapsed)
+            }
             
             graph_edges <- rel %>% 
               addMFs(MFs) %>%
@@ -71,7 +88,13 @@ setMethod('addIsoAssign',signature = 'Assignment',
               
               counter <- counter + 1
               
-              message(paste0('iteration ',counter))
+              if (isTRUE(assignment@log$verbose)) {
+                start_time <- proc.time()
+                message(paste0('iteration ',counter),
+                        cli::symbol$continue,
+                        '\r',
+                        appendLF = FALSE)
+              }
               
               if (counter > 1){
                 graph <- assignment@addIsoAssign[[counter - 1]]$graph %>% 
@@ -116,15 +139,25 @@ setMethod('addIsoAssign',signature = 'Assignment',
                   mutate(Iteration = paste0('A&I',counter))
               )
               
+              if (isTRUE(assignment@log$verbose)) {
+                end_time <- proc.time()
+                elapsed <- elapsedTime(start_time,end_time)
+                message(paste0('iteration ',counter),
+                        '\t\t\t',
+                        green(cli::symbol$tick),
+                        ' ',
+                        elapsed)
+              }
+              
             }
             
-            if (assignment@log$verbose == TRUE) {
-              endTime <- proc.time()
-              elapsed <- {endTime - startTime} %>%
-                .[3] %>%
-                round(1) %>%
-                seconds_to_period() %>%
-                str_c('[',.,']')
+            names(assignment@addIsoAssign) <- paste0('A&I',
+                                                     seq_along(assignment@addIsoAssign))
+            
+            if (isTRUE(assignment@log$verbose)) {
+              ai_end_time <- proc.time()
+              elapsed <- elapsedTime(ai_start_time,
+                                     ai_end_time)
               message(blue('Adduct & isotopic assignment '),'\t',green(cli::symbol$tick),' ',elapsed)
             }
             
