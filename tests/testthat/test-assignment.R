@@ -12,6 +12,15 @@ test_adducts <- list(
   
 adducts(assignment_parameters_FIE) <- test_adducts
 adducts(assignment_parameters_LC) <- test_adducts
+transformations(assignment_parameters_LC) <- character()
+
+FIE_features <-  new('Analysis')
+metabolyseR::raw(FIE_features) <- metabolyseR::analysisData(
+  feature_data,
+  info = tibble::tibble(
+    ID = feature_data %>% 
+      nrow() %>% 
+      seq_len()))
 
 LC_features <- new('Analysis')
 metabolyseR::preTreated(LC_features) <- metabolyseR::analysisData(
@@ -25,8 +34,9 @@ metabolyseR::preTreated(LC_features) <- metabolyseR::analysisData(
       seq_len()))
 
 
-assignment_FIE <- assignMFs(feature_data,
+assignment_FIE <- assignMFs(FIE_features,
                             assignment_parameters_FIE,
+                            type = 'raw',
                             verbose = TRUE)
 
 assignment_LC <- assignMFs(LC_features,
@@ -50,6 +60,18 @@ test_that('assignment data can be returned',{
   expect_s3_class(featureData(assignment_FIE),'tbl_df')
 })
 
+test_that('assignment correlations can be returned',{
+  expect_s3_class(correlations(assignment_FIE),'tbl_df')
+})
+
+test_that('graph method throws an error if incorrect iteration specified',{
+  expect_error(graph(assignment_FIE,'incorrect'))
+})
+
+test_that('component method throws an error if an incorrect component is specified',{
+  expect_error(component(assignment_FIE,'incorrect','A&I1'))
+})
+
 test_that('data with assigned feature names can be returned',{
   expect_s3_class(assignedData(assignment_FIE),'tbl_df')
 })
@@ -57,12 +79,38 @@ test_that('data with assigned feature names can be returned',{
 test_that('a summary of assignments can be returned',{
   expect_s3_class(summariseAssignments(assignment_FIE),'tbl_df')
 })
-test_that('feature solutions can be plotted',{
+
+test_that('feature components can be plotted',{
   pl <- plotFeatureComponents(assignment_FIE,
                              'n191.01962',
                              'A&I1')
   
   expect_s3_class(pl,'patchwork')
+})
+
+test_that('plotFeatureComponents throws an error if incorrect feature specified',{
+  expect_error(plotFeatureComponents(assignment_FIE,
+                              'incorrect',
+                              'A&I1'))
+})
+
+test_that('plotFeatureComponents throws an error if no components are found',{
+  expect_error(plotFeatureComponents(assignment_FIE,"n228.97636",'A&I1'))
+})
+
+test_that('a component can be plotted',{
+  pl <- plotComponent(assignment_FIE,
+                      1,
+                      'A&I1')
+  
+  expect_s3_class(pl,'ggplot')
+})
+
+test_that('plotComponent throws an error if incorrect feature specified for highlighting',{
+  expect_error(plotComponent(assignment_FIE,
+                      1,
+                      'A&I1',
+                      highlight = 'incorrect'))
 })
 
 test_that('feature solutions plotting throws an error if an incorrect feature is provided',{

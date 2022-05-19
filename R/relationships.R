@@ -11,9 +11,9 @@ setGeneric("calcRelationships", function(assignment,transformations = TRUE)
 #' @importFrom tibble tibble enframe
 
 setMethod('calcRelationships',signature = 'Assignment',
-          function(assignment,transformations = T){
+          function(assignment){
             
-            if (assignment@log$verbose == T) {
+            if (assignment@log$verbose == TRUE) {
               startTime <- proc.time()
               message(blue('Calculating relationships '),cli::symbol$continue,'\r',appendLF = 'FALSE')
             }
@@ -22,11 +22,8 @@ setMethod('calcRelationships',signature = 'Assignment',
             
             cors <- assignment@correlations
             
-            if (isTRUE(transformations)) {
-              trans <- c(NA,transformations(assignment))
-            } else {
-              trans <- NA
-            }
+            trans <- c(NA,transformations(assignment))
+            
             
             rel <- cors %>%
               select(`m/z1`,`m/z2`,Mode1,Mode2) %>%

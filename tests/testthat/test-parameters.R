@@ -5,6 +5,17 @@ test_that("technique can be returned", {
   expect_type(technique(p),'character')
 })
 
+test_that("correlation parameters can be returned", {
+  expect_type(correlationsParameters(p),'list')
+})
+
+test_that("correlation parameters can be set", {
+  new_minCoef <- 0.9
+  correlationsParameters(p)$minCoef <- new_minCoef
+  
+  expect_identical(correlationsParameters(p)$minCoef,new_minCoef)
+})
+
 test_that("limit can be returned", {
   expect_type(limit(p),'double')
 })

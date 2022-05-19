@@ -130,8 +130,10 @@ setMethod('transformationAssign',signature = 'Assignment',
               }
             }
             
-            names(assignment@transAssign) <- paste0('T',
-                                                    seq_along(assignment@transAssign))
+            if (length(assignment@transAssign) > 0){
+              names(assignment@transAssign) <- paste0('T',
+                                                      seq_along(assignment@transAssign))
+            }
             
             if (isTRUE(assignment@log$verbose)) {
               t_end_time <- proc.time()
