@@ -60,22 +60,8 @@ setMethod('assignMFs',signature = 'tbl_df',
   assignment <- assignment %>% 
     calcCorrelations() %>% 
     calcRelationships() %>% 
-    addIsoAssign()
-  
-  count <- 0
-  while (TRUE) {
-    count <- count + 1
-    assignment <- suppressWarnings(transformationAssign(assignment))
-    if (length(assignment@transAssign[[count]]) == 0) {
-      assignment@transAssign <- assignment@transAssign[-count] 
-      break()
-    }
-    if (nrow(assignment@transAssign[[count]]$assigned) == 0) {
-      assignment@transAssign <- assignment@transAssign[-count]  
-      break()
-    }
-    
-  }
+    addIsoAssign() %>% 
+    transformationAssign()
   
   if (verbose == TRUE) {
     endTime <- proc.time()
