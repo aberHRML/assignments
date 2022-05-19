@@ -92,6 +92,7 @@ setMethod('show',signature = 'Assignment',
 #' @param assignment S4 object of class Assignment
 #' @param iteration the assignment iteration
 #' @param type the graph type to return. `filtered` returns the assignment graph after component selection. `all` returns all assignment components.
+#' @param component component number to extract
 #' @examples 
 #' assignment <- new('Assignment',
 #'                   data = feature_data)
@@ -247,9 +248,10 @@ setMethod('components',signature = 'Assignment',
             
             selected_graph <- graph(assignment,iteration,type) %>% 
               nodes() %>% 
-              select(Component:Weight) %>% 
+              select(Component:`Component Plausibility`) %>% 
               distinct()
             
+            return(selected_graph)
           })
 
 #' @rdname accessors

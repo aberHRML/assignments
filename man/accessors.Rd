@@ -60,6 +60,8 @@ assignments(assignment)
 \item{iteration}{the assignment iteration}
 
 \item{type}{the graph type to return. \code{filtered} returns the assignment graph after component selection. \code{all} returns all assignment components.}
+
+\item{component}{component number to extract}
 }
 \description{
 Access methods for Assignment S4 class
