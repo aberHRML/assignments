@@ -94,7 +94,7 @@ components(assignment,'A&I1')
 
 ## Return a component information for a selected feature
 \dontrun{
-featureComponents(assignment,'A&I1')
+featureComponents(assignment,'n191.01962')
 }
 
  ## Extract a component graph

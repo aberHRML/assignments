@@ -121,7 +121,7 @@ setMethod('show',signature = 'Assignment',
 #' 
 #' ## Return a component information for a selected feature
 #' \dontrun{
-#' featureComponents(assignment,'A&I1')
+#' featureComponents(assignment,'n191.01962')
 #' }
 #'
 #'  ## Extract a component graph
@@ -272,7 +272,7 @@ setMethod('featureComponents',signature = 'Assignment',
             available_iterations <- iterations(assignment)
             
             available_iterations %>% 
-              map(graph,assignment = assignment,type = 'all') %>% 
+              map(graph,assignment = assignment,type = type) %>% 
               set_names(available_iterations) %>% 
               map_dfr(nodes,.id = 'Iteration') %>% 
               filter(Feature == feature)
