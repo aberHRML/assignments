@@ -198,7 +198,7 @@ setMethod('iterations',signature = 'Assignment',
 
 setGeneric('graph',function(assignment,
                             iteration,
-                            type = c('filtered','all'))
+                            type = c('selected','all'))
   standardGeneric('graph'))
 
 #' @rdname accessors
@@ -206,7 +206,7 @@ setGeneric('graph',function(assignment,
 setMethod('graph',signature = 'Assignment',
           function(assignment, 
                    iteration,
-                   type = c('filtered','all')){
+                   type = c('selected','all')){
             
             if (!iteration %in% iterations(assignment)) {
               iters <- assignment %>% 
@@ -218,7 +218,7 @@ setMethod('graph',signature = 'Assignment',
             }
             
             type <- match.arg(type,
-                              choices = c('filtered','all'))
+                              choices = c('selected','all'))
             
             assignment_iteration <- switch(
               str_remove(iteration,'[1-9]'),
@@ -237,7 +237,7 @@ setMethod('graph',signature = 'Assignment',
 
 setGeneric('components',function(assignment,
                                  iteration,
-                                 type = c('filtered','all'))
+                                 type = c('selected','all'))
   standardGeneric('components'))
 
 #' @rdname accessors
@@ -245,7 +245,7 @@ setGeneric('components',function(assignment,
 setMethod('components',signature = 'Assignment',
           function(assignment, 
                    iteration,
-                   type = c('filtered','all')){
+                   type = c('selected','all')){
             
             selected_graph <- graph(assignment,iteration,type) %>% 
               nodes() %>% 
@@ -260,7 +260,7 @@ setMethod('components',signature = 'Assignment',
 
 setGeneric('featureComponents',function(assignment,
                                         feature,
-                                        type = c('filtered','all'))
+                                        type = c('selected','all'))
   standardGeneric('featureComponents'))
 
 #' @rdname accessors
@@ -268,7 +268,7 @@ setGeneric('featureComponents',function(assignment,
 setMethod('featureComponents',signature = 'Assignment',
           function(assignment, 
                    feature,
-                   type = c('filtered','all')){
+                   type = c('selected','all')){
             
             available_iterations <- iterations(assignment)
             
@@ -282,7 +282,7 @@ setMethod('featureComponents',signature = 'Assignment',
 setGeneric('component',function(assignment,
                                 component,
                                 iteration,
-                                type = c('filtered','all'))
+                                type = c('selected','all'))
   standardGeneric('component'))
 
 #' @rdname accessors
@@ -291,7 +291,7 @@ setMethod('component',signature = 'Assignment',
           function(assignment, 
                    component,
                    iteration,
-                   type = c('filtered','all')){
+                   type = c('selected','all')){
             
             iteration_components <- components(assignment,
                                                iteration,
