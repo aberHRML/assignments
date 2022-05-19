@@ -43,3 +43,4 @@ Suggests: testthat,
     patchwork
 Remotes: jasenfinch/mzAnnotation@devel,
     jasenfinch/metabolyseR@devel
+URL: https://jasenfinch.github.io/assignments/
