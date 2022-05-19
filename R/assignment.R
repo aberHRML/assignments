@@ -226,7 +226,7 @@ setMethod('graph',signature = 'Assignment',
               `T` = assignment@transAssign)
             
             graph <- switch(type,
-                            filtered = assignment_iteration[[iteration]]$filtered_graph,
+                            selected = assignment_iteration[[iteration]]$filtered_graph,
                             all = assignment_iteration[[iteration]]$graph)
             
             return(graph)

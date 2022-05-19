@@ -70,12 +70,6 @@ test_that('feature solutions plotting throws an error if an incorrect feature is
                                     'test'))
 })
 
-test_that('assignment network can be plotted',{
-  pl <- plotNetwork(assignment_FIE)
-  
-  expect_s3_class(pl,'ggraph')
-})
-
 test_that('adduct distributions can be plotted',{
   pl <- plotAdductDist(assignment_FIE)
   

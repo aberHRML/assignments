@@ -9,7 +9,7 @@ plotFeatureComponents(
   assignment,
   feature,
   iteration,
-  type = c("all", "filtered"),
+  type = c("all", "selected"),
   max_components = 6,
   label_size = 3,
   axis_offset = 0.1
@@ -19,7 +19,7 @@ plotFeatureComponents(
   assignment,
   feature,
   iteration,
-  type = c("all", "filtered"),
+  type = c("all", "selected"),
   max_components = 6,
   label_size = 2,
   axis_offset = 0.05

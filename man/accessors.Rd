@@ -36,19 +36,19 @@ iterations(assignment)
 
 \S4method{iterations}{Assignment}(assignment)
 
-graph(assignment, iteration, type = c("filtered", "all"))
+graph(assignment, iteration, type = c("selected", "all"))
 
-\S4method{graph}{Assignment}(assignment, iteration, type = c("filtered", "all"))
+\S4method{graph}{Assignment}(assignment, iteration, type = c("selected", "all"))
 
-components(assignment, iteration, type = c("filtered", "all"))
+components(assignment, iteration, type = c("selected", "all"))
 
-\S4method{components}{Assignment}(assignment, iteration, type = c("filtered", "all"))
+\S4method{components}{Assignment}(assignment, iteration, type = c("selected", "all"))
 
-featureComponents(assignment, feature, type = c("filtered", "all"))
+featureComponents(assignment, feature, type = c("selected", "all"))
 
-\S4method{featureComponents}{Assignment}(assignment, feature, type = c("filtered", "all"))
+\S4method{featureComponents}{Assignment}(assignment, feature, type = c("selected", "all"))
 
-\S4method{component}{Assignment}(assignment, component, iteration, type = c("filtered", "all"))
+\S4method{component}{Assignment}(assignment, component, iteration, type = c("selected", "all"))
 
 assignments(assignment)
 
