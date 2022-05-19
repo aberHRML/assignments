@@ -66,11 +66,9 @@ setValidity('AssignmentParameters',function(object){
   else TRUE
 })
 
-#' @importFrom metabolyseR correlationsParameters
-
 setValidity('AssignmentParameters',function(object){
   
-  correlations_parameters <- correlationsParameters() %>% 
+  correlations_parameters <- metabolyseR::correlationsParameters() %>% 
     names()
   
   if (!any(names(object@correlations_parameters) %in% 
@@ -103,7 +101,7 @@ setMethod('show',signature = 'AssignmentParameters',
             
             
             cat('\t','Correlations:\n')
-            correlations(object) %>% 
+            correlationsParameters(object) %>% 
               paste0('\t\t',names(.),': ',.,'\n') %>% 
               cat()
             
@@ -133,6 +131,12 @@ setMethod('show',signature = 'AssignmentParameters',
 #' 
 #' ## Return technique
 #' technique(assignment_parameters)
+#'
+#' ## Return correlations parameters
+#' correlationsParameters(assignment_parameters)
+#' 
+#' ## Set correlations parameters
+#' correlationsParameters(assignment_parameters)$minCoef <- 0.75
 #' 
 #' ## Return limit
 #' limit(assignment_parameters)
@@ -209,24 +213,24 @@ setMethod('technique',signature = 'AssignmentParameters',
 #' @rdname parameters
 #' @export
 
-setGeneric('correlations',
-           function(x) standardGeneric('correlations'))
+setGeneric('correlationsParameters',
+           function(x) standardGeneric('correlationsParameters'))
 
 #' @rdname parameters
 
-setMethod('correlations',signature = 'AssignmentParameters',
+setMethod('correlationsParameters',signature = 'AssignmentParameters',
           function(x) x@correlations_parameters)
 
 #' @rdname parameters
 #' @export
 
-setGeneric('correlations<-',
-           function(x,value) standardGeneric('correlations<-'))
+setGeneric('correlationsParameters<-',
+           function(x,value) standardGeneric('correlationsParameters<-'))
 
 #' @rdname parameters
 #' @importFrom methods validObject
 
-setMethod('correlations<-',signature = c('AssignmentParameters','list'),
+setMethod('correlationsParameters<-',signature = c('AssignmentParameters','list'),
           function(x,value){
             x@correlations_parameters <- value
             validObject(x)

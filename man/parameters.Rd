@@ -3,10 +3,10 @@
 \name{technique}
 \alias{technique}
 \alias{technique,AssignmentParameters-method}
-\alias{correlations}
-\alias{correlations,AssignmentParameters-method}
-\alias{correlations<-}
-\alias{correlations<-,AssignmentParameters,list-method}
+\alias{correlationsParameters}
+\alias{correlationsParameters,AssignmentParameters-method}
+\alias{correlationsParameters<-}
+\alias{correlationsParameters<-,AssignmentParameters,list-method}
 \alias{limit}
 \alias{limit,AssignmentParameters-method}
 \alias{limit<-}
@@ -53,13 +53,13 @@ technique(x)
 
 \S4method{technique}{AssignmentParameters}(x)
 
-correlations(x)
+correlationsParameters(x)
 
-\S4method{correlations}{AssignmentParameters}(x)
+\S4method{correlationsParameters}{AssignmentParameters}(x)
 
-correlations(x) <- value
+correlationsParameters(x) <- value
 
-\S4method{correlations}{AssignmentParameters,list}(x) <- value
+\S4method{correlationsParameters}{AssignmentParameters,list}(x) <- value
 
 limit(x)
 
@@ -154,6 +154,12 @@ assignment_parameters <- assignmentParameters('FIE')
 
 ## Return technique
 technique(assignment_parameters)
+
+## Return correlations parameters
+correlationsParameters(assignment_parameters)
+
+## Set correlations parameters
+correlationsParameters(assignment_parameters)$minCoef <- 0.75
 
 ## Return limit
 limit(assignment_parameters)
