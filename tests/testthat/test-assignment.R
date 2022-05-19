@@ -55,7 +55,7 @@ test_that('data with assigned feature names can be returned',{
 })
 
 test_that('a summary of assignments can be returned',{
-  expect_s3_class(summariseAssignment(assignment_FIE),'tbl_df')
+  expect_s3_class(summariseAssignments(assignment_FIE),'tbl_df')
 })
 test_that('feature solutions can be plotted',{
   pl <- plotFeatureSolutions(assignment_FIE,

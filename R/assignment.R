@@ -177,18 +177,18 @@ setMethod('assignedData', signature = 'Assignment',
           })
 
 #' Summarise assignments
-#' @rdname summariseAssignment
+#' @rdname summariseAssignments
 #' @description Summarise features assigned to molecular formulas.
 #' @param assignment S4 object of class Assignment
 #' @importFrom dplyr desc
 #' @export
 
-setGeneric('summariseAssignment',function(assignment)
-  standardGeneric('summariseAssignment'))
+setGeneric('summariseAssignments',function(assignment)
+  standardGeneric('summariseAssignments'))
 
-#' @rdname summariseAssignment
+#' @rdname summariseAssignments
 
-setMethod('summariseAssignment',signature = 'Assignment',
+setMethod('summariseAssignments',signature = 'Assignment',
           function(assignment){
             assigned <- assignment %>%
               assignments() %>%
