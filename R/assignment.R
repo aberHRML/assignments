@@ -112,6 +112,21 @@ setMethod('show',signature = 'Assignment',
 #' \dontrun{
 #' graph(assignment,'A&I1')
 #' }
+#'
+#' ## Return a component information for a selected graph
+#' \dontrun{
+#' components(assignment,'A&I1')
+#' }
+#' 
+#' ## Return a component information for a selected feature
+#' \dontrun{
+#' featureComponents(assignment,'A&I1')
+#' }
+#'
+#'  ## Extract a component graph
+#' \dontrun{
+#' component(assignment,1,'A&I1')
+#' }
 #' 
 #' ## Return assignments
 #' assignments(assignment)
@@ -202,11 +217,90 @@ setMethod('graph',signature = 'Assignment',
             
             type <- match.arg(type,
                               choices = c('filtered','all'))
+            
+            assignment_iteration <- switch(
+              str_remove(iteration,'[1-9]'),
+              `A&I` = assignment@addIsoAssign,
+              `T` = assignment@transAssign)
+            
             graph <- switch(type,
-                            filtered = assignment@addIsoAssign[[iteration]]$filtered_graph,
-                            all = assignment@addIsoAssign[[iteration]]$graph)
+                            filtered = assignment_iteration[[iteration]]$filtered_graph,
+                            all = assignment_iteration[[iteration]]$graph)
             
             return(graph)
+          })
+
+#' @rdname accessors
+#' @export
+
+setGeneric('components',function(assignment,
+                                 iteration,
+                                 type = c('filtered','all'))
+  standardGeneric('components'))
+
+#' @rdname accessors
+
+setMethod('components',signature = 'Assignment',
+          function(assignment, 
+                   iteration,
+                   type = c('filtered','all')){
+            
+            selected_graph <- graph(assignment,iteration,type) %>% 
+              nodes() %>% 
+              select(Component:Weight) %>% 
+              distinct()
+            
+          })
+
+#' @rdname accessors
+#' @export
+
+setGeneric('featureComponents',function(assignment,
+                                        feature,
+                                        type = c('filtered','all'))
+  standardGeneric('featureComponents'))
+
+#' @rdname accessors
+
+setMethod('featureComponents',signature = 'Assignment',
+          function(assignment, 
+                   feature,
+                   type = c('filtered','all')){
+            
+            available_iterations <- iterations(assignment)
+            
+            available_iterations %>% 
+              map(graph,assignment = assignment,type = 'all') %>% 
+              set_names(available_iterations) %>% 
+              map_dfr(nodes,.id = 'Iteration') %>% 
+              filter(Feature == feature)
+          })
+
+setGeneric('component',function(assignment,
+                                component,
+                                iteration,
+                                type = c('filtered','all'))
+  standardGeneric('component'))
+
+#' @rdname accessors
+
+setMethod('component',signature = 'Assignment',
+          function(assignment, 
+                   component,
+                   iteration,
+                   type = c('filtered','all')){
+            
+            iteration_components <- components(assignment,
+                                               iteration,
+                                               type)
+            
+            if (!component %in% iteration_components$Component){
+              stop(paste0('Component ',component, ' not found in iteration ',iteration,'.'))
+            }
+            
+            graph(assignment,iteration,type) %>% 
+              filter(Component == component)
+            
           })
 
 #' @rdname accessors
@@ -247,7 +341,7 @@ setMethod('assignedData', signature = 'Assignment',
           function(assignment){
             
             d <- assignment %>%
-              assignmentData()
+              featureData()
             
             assignedFeats <- assignment %>%
               assignments() %>%
