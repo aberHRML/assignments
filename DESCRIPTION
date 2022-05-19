@@ -39,6 +39,7 @@ Suggests: testthat,
     ggrepel,
     ggthemes,
     graphlayouts,
+    ggtext,
     patchwork
 Remotes: jasenfinch/mzAnnotation@devel,
     jasenfinch/metabolyseR@devel

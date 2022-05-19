@@ -1,65 +1,117 @@
 
-plotSolutions <- function(graph,selectedComp,feature){
-  check_installed(c('ggraph',
-                    'ggplot2',
-                    'patchwork'))
-  graph %>%
-    map(~{
-      stats <- nodes(.x) %>%
-        select(Component:`Component Plausibility`,AIS) %>%
-        .[1,]
-      
-      if (length(selectedComp) > 0){
-        border <- ifelse(stats$Component[1] == selectedComp,
-                         'red',
-                         'black')
-      } else {
-        border <- 'black'
-      }
-      
-      g <- .x %>%
-        mutate(Feat = Feature == feature) %>%
-        ggraph::create_layout('nicely')
-      ggraph::ggraph(g) +
-        ggraph::geom_edge_link(ggplot2::aes(colour = coefficient)) +
-        ggraph::scale_edge_color_gradient(low = 'white',
-                                          high = 'black',
-                                          limits = c(0.5,1)) +
-        ggraph::geom_node_label(ggplot2::aes(label = name,
-                                             fill = Feat),
-                                size = 2,) +
-        ggplot2::scale_fill_manual(values = c('white','steelblue')) +
-        ggraph::theme_graph(base_family = '',
-                            title_size = 12,
-                            title_face = 'plain',
-                            foreground = border,
-                            plot_margin = ggplot2::margin(5, 5, 5, 5)) +
-        ggplot2::theme(
-          plot.title = ggplot2::element_text(face = 'bold',
-                                             hjust = 0.5),
-          plot.caption = ggplot2::element_text(hjust = 0)) +
-        ggplot2::labs(
-          title = str_c('Component ',stats$Component),
-          caption = str_c('Degree = ',stats$Degree %>% round(2),'; ',
-                          'Weight = ',stats$Weight %>% round(2),'; ',
-                          'AIS = ',stats$AIS %>% round(2),'; ',
-                          'Plausibility = ',stats$`Component Plausibility` %>% 
-                            round(2))) +
-        ggplot2::xlim(min(g$x) - (max(g$x) - min(g$x)) * 0.05,
-                      max(g$x) + (max(g$x) - min(g$x)) * 0.05) +
-        ggplot2::ylim(min(g$y) - (max(g$y) - min(g$y)) * 0.05,
-                      max(g$y) + (max(g$y) - min(g$y)) * 0.05) +
-        ggplot2::guides(fill = 'none')
-    }) %>%
-    patchwork::wrap_plots() + 
-    patchwork::plot_layout(guides = 'collect') +
-    patchwork::plot_annotation(
-      title = str_c('Solutions for feature ',
-                    feature),
-      theme = ggplot2::theme(
-        plot.title = ggplot2::element_text(face = 'bold',
-                                           hjust = 0.5)))
+graphTheme <- function(){
+  ggplot2::theme(
+    legend.title = ggplot2::element_text(face = 'bold'),
+    plot.margin = ggplot2::margin(5, 5, 5, 5),
+    plot.title = ggplot2::element_text(face = 'bold',hjust = 0.5),
+    plot.caption = ggtext::element_markdown(hjust = 0.5)
+  )
 }
+
+plotGraph <- function(graph,min_coef,label_size = 3,axis_offset = 0.1){
+  
+  g <- graph %>% 
+    activate(nodes) %>% 
+    mutate(name = str_replace_all(name,'  ','\n') %>% 
+             str_replace_all(' ','\n')) %>% 
+    ggraph::create_layout('nicely')
+  
+  g %>% 
+    ggraph::ggraph() +
+    ggraph::geom_edge_link(ggplot2::aes(colour = coefficient)) +
+    ggraph::scale_edge_color_gradient(low = 'lightgrey',
+                                      high = 'black',
+                                      limits = c(min_coef,1)) +
+    ggraph::geom_node_label(ggplot2::aes(label = name),
+                            size = label_size) +
+    ggraph::theme_graph(base_family = '',
+                        base_size = 10) +
+    graphTheme() +
+    ggplot2::lims(
+      x = c(
+        min(g$x) - (max(g$x) - min(g$x)) * axis_offset,
+        max(g$x) + (max(g$x) - min(g$x)) * axis_offset
+      ),
+      y = c(
+        min(g$y) - (max(g$y) - min(g$y)) * axis_offset,
+        max(g$y) + (max(g$y) - min(g$y)) * axis_offset
+      )
+    )
+}
+
+#' Plot a component
+#' @rdname plotComponent
+#' @description Plot a molecular formula component graph.
+#' @param assignment S4 object of class Assignment
+#' @param component component number to extract
+#' @param iteration the assignment iteration
+#' @param type the graph type to return. `filtered` returns the assignment graph after component selection. `all` returns all assignment components.
+#' @param label_size node label size
+#' @param axis_offset axis proportion by which to increase axis limits. Prevents cut off of node labels.
+#' @examples 
+#' \dontrun{
+#' plan(future::sequential)
+#' p <- assignmentParameters('FIE-HRMS')
+#'
+#' assignment <- assignMFs(feature_data,p)
+#' 
+#' plotComponent(assignment,1,'A&I1')
+#' }
+#' @export
+
+setGeneric('plotComponent',
+           function(assignment,
+                    component,
+                    iteration,
+                    type = c('filtered','all'),
+                    label_size = 3,
+                    axis_offset = 0.1)
+             standardGeneric('plotComponent'))
+
+#' @importFrom dplyr mutate_if
+
+setMethod('plotComponent',signature = 'Assignment',
+          function(assignment,
+                   component,
+                   iteration,
+                   type = c('filtered','all'),
+                   label_size = 3,
+                   axis_offset = 0.1
+          ){
+            
+            check_installed(c('ggraph',
+                              'ggplot2',
+                              'ggtext'))
+            
+            component_graph <- component(assignment,
+                                         component,
+                                         iteration,
+                                         type) 
+            
+            component_stats <- component_graph %>% 
+              nodes() %>% 
+              select(`MF Plausibility (%)`,
+                     AIS,
+                     Component:`Component Plausibility`) %>% 
+              distinct() %>% 
+              mutate_if(is.numeric,signif,digits = 3)
+            
+            min_coef <- correlationsParameters(assignment)$minCoef
+            
+            plotGraph(component_graph,
+                      min_coef,
+                      label_size,
+                      axis_offset) +
+              ggplot2::labs(
+                title = paste0('Component ',component),
+                caption =  glue::glue('
+          P<sub>c</sub> = {component_stats$`Component Plausibility`};
+          Degree = {component_stats$Degree};
+          
+          AIS<sub>c</sub> = {component_stats$AIS};
+          P<sub>MF</sub> = {component_stats$`MF Plausibility (%)`}%')
+            )
+          })
 
 #' Plot the solutions for a feature
 #' @rdname plotFeatureSolutions
@@ -98,7 +150,7 @@ setMethod('plotFeatureSolutions',signature = 'Assignment',
               stop(
                 paste0('No assignment solutions available for feature ',
                        feature),
-                   call. = FALSE)
+                call. = FALSE)
             }
             
             comp <- n %>%
