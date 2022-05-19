@@ -13,5 +13,5 @@ globalVariables(c(
   'Component','Weight','AIS','Name','Assigned','Intensity','Label',
   'Relative Abundance','m/z','Group','N','adduct_rank','isotope_rank',
   'M','total','MF','RetentionTimeDiff','Adduct_Score','Isotope_Score',
-  'Iteration'
+  'Iteration','border','selected'
 ))

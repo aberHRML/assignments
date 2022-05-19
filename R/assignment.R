@@ -93,6 +93,7 @@ setMethod('show',signature = 'Assignment',
 #' @param iteration the assignment iteration
 #' @param type the graph type to return. `filtered` returns the assignment graph after component selection. `all` returns all assignment components.
 #' @param component component number to extract
+#' @param feature feature information to extract
 #' @examples 
 #' assignment <- new('Assignment',
 #'                   data = feature_data)
