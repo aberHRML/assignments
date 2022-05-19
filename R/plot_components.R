@@ -79,10 +79,25 @@ setGeneric('plotFeatureSolutions',
 setMethod('plotFeatureSolutions',signature = 'Assignment',
           function(assignment,feature,maxComponents = 10){
             
-            n <- nodes(assignment@addIsoAssign$graph)
+            if (!feature %in% colnames(featureData(assignment))) {
+              stop('Feature not found in assignment data')
+            }
             
-            if (!(feature %in% n$Feature)){
-              stop('Feature not found in assignment graph.',
+            available_iterations <- iterations(assignment)
+            
+            graphs <- available_iterations %>% 
+              map(graph,assignment = assignment,type = 'all') %>% 
+              set_names(available_iterations)
+            
+            available_nodes <- graphs %>% 
+              map_dfr(nodes,.id = 'Iteration') %>% 
+              select(Feature) %>% 
+              distinct()
+            
+            if (!(feature %in% available_nodes$Feature)){
+              stop(
+                paste0('No assignment solutions available for feature ',
+                       feature),
                    call. = FALSE)
             }
             
