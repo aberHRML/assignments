@@ -90,6 +90,57 @@ setMethod('show',signature = 'Assignment',
 #' @rdname accessors
 #' @description Access methods for Assignment S4 class
 #' @param assignment S4 object of class Assignment
+#' @param iteration the assignment iteration
+#' @param type the graph type to return. `filtered` returns the assignment graph after component selection. `all` returns all assignment components.
+#' @examples 
+#' assignment <- new('Assignment',
+#'                   data = feature_data)
+#' 
+#' ## Return feature data
+#' featureData(assignment)
+#' 
+#' ## Return correlations
+#' correlations(assignment)
+#'
+#' ## Return relationships
+#' relationships(assignment)
+#' 
+#' ## Return the available iterations
+#' iterations(assignment)
+#'
+#' ## Return a selected graph
+#' \dontrun{
+#' graph(assignment,'A&I1')
+#' }
+#' 
+#' ## Return assignments
+#' assignments(assignment)
+#' @export
+
+setGeneric('featureData',function(assignment)
+  standardGeneric('featureData'))
+
+#' @rdname accessors
+
+setMethod('featureData', signature = 'Assignment',
+          function(assignment){
+            assignment@data
+          })
+
+#' @rdname accessors
+#' @export
+
+setGeneric('correlations',function(assignment)
+  standardGeneric('correlations'))
+
+#' @rdname accessors
+
+setMethod('correlations',signature = 'Assignment',
+          function(assignment){
+            assignment@relationships
+          })
+
+#' @rdname accessors
 #' @export
 
 setGeneric('relationships',function(assignment)
@@ -114,6 +165,53 @@ setMethod('relationships<-',signature = 'Assignment',
 #' @rdname accessors
 #' @export
 
+setGeneric('iterations',function(assignment)
+  standardGeneric('iterations'))
+
+#' @rdname accessors
+
+setMethod('iterations',signature = 'Assignment',
+          function(assignment){
+            c(names(assignment@addIsoAssign),
+              names(assignment@transAssign))
+          })
+
+#' @rdname accessors
+#' @export
+
+setGeneric('graph',function(assignment,
+                            iteration,
+                            type = c('filtered','all'))
+  standardGeneric('graph'))
+
+#' @rdname accessors
+
+setMethod('graph',signature = 'Assignment',
+          function(assignment, 
+                   iteration,
+                   type = c('filtered','all')){
+            
+            if (!iteration %in% iterations(assignment)) {
+              iters <- assignment %>% 
+                iterations() %>% 
+                paste0('"',.,'"') %>% 
+                paste(collapse = ', ')
+              stop(paste0('Iteration not recognised. Argument `iteration` should be one of ',iters),
+                   call. = FALSE)
+            }
+            
+            type <- match.arg(type,
+                              choices = c('filtered','all'))
+            graph <- switch(type,
+                            filtered = assignment@addIsoAssign[[iteration]]$filtered_graph,
+                            all = assignment@addIsoAssign[[iteration]]$graph)
+            
+            return(graph)
+          })
+
+#' @rdname accessors
+#' @export
+
 setGeneric('assignments',function(assignment)
   standardGeneric('assignments'))
 
@@ -124,26 +222,20 @@ setMethod('assignments',signature = 'Assignment',
             assignment@assignments
           })
 
-#' assignmentData
-#' @rdname assignmentData
-#' @description Return data table used for assignments.
-#' @param assignment S4 object of class Assignment
-#' @export
-
-setGeneric('assignmentData',function(assignment)
-  standardGeneric('assignmentData'))
-
-#' @rdname assignmentData
-
-setMethod('assignmentData', signature = 'Assignment',
-          function(assignment){
-            assignment@data
-          })
-
 #' assignedData
 #' @rdname assignedData
 #' @description Return data table used for assignments with feature assignments added to column names.
 #' @param assignment S4 object of class Assignment
+#' @return A tibble containing the original feature data with molecular formula assignments added to teh column names.
+#' @examples 
+#' \dontrun{
+#' plan(future::sequential)
+#' p <- assignmentParameters('FIE-HRMS')
+#'
+#' assignment <- assignMFs(feature_data,p)
+#' 
+#' assignedData(assignment)
+#' }
 #' @export
 
 setGeneric('assignedData',function(assignment)
@@ -180,6 +272,16 @@ setMethod('assignedData', signature = 'Assignment',
 #' @rdname summariseAssignments
 #' @description Summarise features assigned to molecular formulas.
 #' @param assignment S4 object of class Assignment
+#' @return A tibble containing the feature assignments summarised by molecular formula.
+#' @examples 
+#' \dontrun{
+#' plan(future::sequential)
+#' p <- assignmentParameters('FIE-HRMS')
+#'
+#' assignment <- assignMFs(feature_data,p)
+#' 
+#' summariseAssignments(assignment)
+#' }
 #' @importFrom dplyr desc
 #' @export
 

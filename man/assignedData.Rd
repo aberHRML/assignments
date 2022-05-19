@@ -12,6 +12,19 @@ assignedData(assignment)
 \arguments{
 \item{assignment}{S4 object of class Assignment}
 }
+\value{
+A tibble containing the original feature data with molecular formula assignments added to teh column names.
+}
 \description{
 Return data table used for assignments with feature assignments added to column names.
+}
+\examples{
+\dontrun{
+plan(future::sequential)
+p <- assignmentParameters('FIE-HRMS')
+
+assignment <- assignMFs(feature_data,p)
+
+assignedData(assignment)
+}
 }
