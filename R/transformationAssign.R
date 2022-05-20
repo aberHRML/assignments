@@ -101,7 +101,7 @@ setMethod('transformationAssign',signature = 'Assignment',
                 select(Name:`MF Plausibility (%)`,
                        Mode,
                        Component) %>%
-                mutate(Iteration = str_c('T',count + 1)) %>% 
+                mutate(Iteration = str_c('T',count)) %>% 
                 group_split(MF) %>% 
                 map_dfr(~{
                   if (NA %in% .x$Isotope) return(.x)
