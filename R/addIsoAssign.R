@@ -104,7 +104,7 @@ setMethod('addIsoAssign',signature = 'Assignment',
                               select(dplyr::any_of(c('Feature','Isotope','Adduct','MF'))),
                             by = 'Feature') 
                 
-                if (length(graph) == 0) break()
+                if (nrow(edges(graph)) == 0) break() 
                 
                 graph <- graph %>% 
                   clean(adductRules(assignment)) %>% 
