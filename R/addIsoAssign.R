@@ -3,7 +3,7 @@ setGeneric("addIsoAssign", function(assignment)
   standardGeneric("addIsoAssign")
 )
 
-#' @importFrom dplyr arrange rowwise slice_sample left_join ungroup
+#' @importFrom dplyr arrange rowwise slice_sample left_join ungroup anti_join
 #' @importFrom stringr str_detect
 #' @importFrom mzAnnotation calcM ipMF
 #' @importFrom igraph vertex.attributes V
@@ -99,10 +99,10 @@ setMethod('addIsoAssign',signature = 'Assignment',
               if (counter > 1){
                 graph <- assignment@addIsoAssign[[counter - 1]]$graph %>% 
                   activate(nodes) %>% 
-                  dplyr::anti_join(assignment %>% 
-                                     assignments() %>% 
-                                     select(dplyr::any_of(c('Feature','Isotope','Adduct','MF'))),
-                                   by = 'Feature') 
+                  anti_join(assignment %>% 
+                              assignments() %>% 
+                              select(dplyr::any_of(c('Feature','Isotope','Adduct','MF'))),
+                            by = 'Feature') 
                 
                 if (length(graph) == 0) break()
                 
