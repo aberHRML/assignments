@@ -3,8 +3,8 @@ avg_degree <- function(n_nodes,n_edges){
   2 * (n_edges / n_nodes)
 }
 
-plausibility <- function(size,AIS,weight){
-  size * AIS + weight
+plausibility <- function(degree,AIS,weight){
+  degree * AIS * weight
 }
 
 #' @importFrom purrr compact
@@ -55,16 +55,14 @@ componentMetrics <- function(component,max_add_iso_total){
          Density = (2 * Size) / (Nodes * (Nodes - 1)),
          Weight = sum(Weight) / Nodes,
          AIS = sum(AIS) / max_add_iso_total,
-         `Component Plausibility` = plausibility(AIS,Degree,Weight))
+         `Component Plausibility` = plausibility(Degree,AIS,Weight))
 }
 
 componentFilters <- function(){
   tibble(Measure = c('Component Plausibility',
-                     'Degree',
-                     'AIS',
                      'MF Plausibility (%)',
                      'PPM error'),
-         Direction = c(rep('max',4),'min'))
+         Direction = c(rep('max',2),'min'))
 }
 
 #' @importFrom tidygraph as_tbl_graph activate morph unmorph graph_size group_components tbl_graph
