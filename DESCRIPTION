@@ -31,7 +31,8 @@ Collate: parameters.R assignment.R correlations.R
         graph.R assign.R internals.R components.R
         feature_data.R assignments.R plotAdductDist.R plot_components.R 
         plotSpectrum.R reexports.R zzz.R
-Suggests: testthat,
+Suggests: 
+    testthat,
     covr,
     ggplot2,
     ggraph,
@@ -40,7 +41,10 @@ Suggests: testthat,
     ggthemes,
     glue,
     graphlayouts,
-    patchwork
+    patchwork,
+    knitr,
+    rmarkdown
 Remotes: jasenfinch/mzAnnotation@devel,
     jasenfinch/metabolyseR@devel
 URL: https://jasenfinch.github.io/assignments/
+VignetteBuilder: knitr

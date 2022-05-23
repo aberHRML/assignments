@@ -1,0 +1,211 @@
+---
+title: "assignments"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{assignments}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+```{r, include = FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>",
+  fig.align = 'center'
+)
+```
+
+## Introduction
+
+The *assignments* package provides an automated molecular formula assignment approach for high resolution electrospray ionisation mass spectrometry (ESI-MS) data from metabolomics experiments.
+This includes data from both direct and flow injection/infusion fingerprinting as well as liquid chromatograph mass spectrometry (LC-MS) profiling analytical techniques.
+
+This vignette will provide a brief overview of the input data required, parameter selection, performing the assignments and assessing the results.
+
+Before we begin, first load the package.
+
+```{r setup}
+library(assignments)
+```
+
+## Computational requirements and parallel processing
+
+This approach is computationally intensive so the use of high-performance computing resources is recommended.
+A suggested minimum would be the use of 16 CPU workers and at least 8GB of RAM per worker (128GB total) to ensure that processing is completed in a reasonable duration.
+
+The parallel back-end is provided by the [*future*](https://future.futureverse.org/) package.
+Information about the available parallel strategies can be found [here](https://future.futureverse.org/#controlling-how-futures-are-resolved).
+This example will use a relatively tiny data set so the following example parallel options will be used:
+
+```{r parallel}
+plan('multisession',workers = 2)
+```
+
+## Input data
+
+The requirements for data input are designed to be as simple as possible.
+Input data should consist of an *m/z* by sample intensity matrix with positive an negative mode data combined where available.
+The *m/z* features provided as column names should be in the form of `<ionisation_mode><m/z>@<retention_time>`.
+Ionisation mode should be given as a prefix `n` or `p` for negative or positive ionisation modes respectively.
+Feature *m/z* should be provided to an accuracy of least 5 decimal places.
+The retention time portion (`@<retention_time>`) is only required for LC-MS data and should be provided in minutes. 
+
+It is recommended that the data undergo pre-treatment routines such as relative standard deviation filtering, imputation and/or normalisation prior to assignment.
+However, this is not essential requirement and raw intensity values could also be used.
+
+The input data for this example is a subset from an FIE-HRMS metabolomics experiment and is shown below.
+The feature intensities are total ion count  (TIC) normalised.
+
+```{r example-data}
+feature_data
+```
+
+## Parameters
+
+Default parameters for a number of techniques are provided.
+The available techniques can be viewed as shown below.
+
+```{r techniques}
+availableTechniques()
+```
+
+The `FIE-HRMS` fingerprinting technique parameters would also be suitable for direct injection data.
+The default parameters are designed to be as widely applicable as possible and should suit many situations.
+For this example we will specify the use of the `FIE-HRMS` parameters.
+
+```{r parameters}
+parameters <- assignmentParameters('FIE-HRMS')
+```
+
+The parameters can then be viewed by printing the returned object.
+
+```{r print-parameters}
+parameters
+```
+
+It is possible to access and set all of these parameters.
+For example, the `adducts` method can be used to access the specified adducts: 
+
+```{r extract-adducts}
+adducts(parameters)
+```
+
+More accessor methods for assignment parameters can be viewed by running `?parameters`.
+
+Additional adducts, isotopes and transformations rules can also be appended to the relevant rules tables within the assignment parameters object. 
+See the assignment parameters documentation for more information.
+
+## Assignment
+
+To perform the molecular formula assignment we can execute the following.
+
+```{r assignment}
+assignment <- assignMFs(feature_data,
+                        parameters)
+```
+
+For an overview of the assignment results, we can print the object.
+
+```{r print-assignment}
+assignment
+```
+
+## Results
+
+The following can be used to access the assigned *m/z* feature information.
+
+```{r assignment-results}
+assignments(assignment)
+```
+
+These feature assignments can also be summarised for each molecular formula.
+
+```{r summarise-assignments}
+summariseAssignments(assignment)
+```
+
+We can extract all the calculated correlations between the *m/z* features.
+
+```{r correlations}
+correlations(assignment)
+```
+
+As well as all the computed mathematical adduct, isotope and transformation relationships.
+
+```{r relationships}
+relationships(assignment)
+```
+
+To view all the iterations conducted during the assignment, the following can be used. 
+
+```{r iterations}
+iterations(assignment)
+```
+
+Information for the component subgraphs identified in an iteration can also be extracted.
+These can either be the `selected` components or `all` the possible components.
+
+```{r components}
+components(assignment,
+           iteration = 'A&I1',
+           type = 'selected')
+```
+
+We can extract the [*tidygraph*](https://tidygraph.data-imaginist.com/) `tbl_graph` object for a given iterations.
+
+```{r graph}
+graph(assignment,
+      iteration = 'A&I1',
+      type = 'selected')
+```
+
+Along with the graph of individual component.
+
+```{r component}
+component(assignment,
+          component = 1,
+          iteration = 'A&I1',
+          type = 'selected')
+```
+
+And all the components of a given feature.
+
+```{r feature-components}
+featureComponents(assignment,
+                  feature = 'n191.01962',
+                  type = 'all')
+```
+
+The graph of an individual component can be visualised.
+This first requires the *ggraph* package to be loaded.
+
+```{r plot-component,fig.height=4,fig.width=4}
+library(ggraph)
+
+plotComponent(assignment,
+              component = 1,
+              iteration = 'A&I1',
+              type = 'selected')
+```
+
+We can also visualise the components containing a specific feature for a given iteration.
+
+```{r feature-solutions,fig.width=9,fig.height=7}
+plotFeatureComponents(
+  assignment,
+  feature = 'n191.01962',
+  iteration = 'A&I1',
+  type = 'all',
+  max_components = 6,
+  axis_offset = 0.2
+)
+```
+
+Because a molecular ranking threshold is applied during assignment, it may also be useful to generate all the alternative molecular formulas and their rankings for a specific *m/z*, adduct and isotope using the `ipMF` function from the *mzAnnotation* package.
+
+```{r alternative-mfs}
+mzAnnotation::ipMF(191.01962,
+     adduct = '[M-H]1-',
+     isotope = NA,
+     ppm = 6)
+```
