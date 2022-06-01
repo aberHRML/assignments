@@ -154,7 +154,7 @@ setGeneric('correlations',function(assignment)
 
 setMethod('correlations',signature = 'Assignment',
           function(assignment){
-            assignment@relationships
+            assignment@correlations
           })
 
 #' @rdname accessors
