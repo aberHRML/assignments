@@ -122,9 +122,7 @@ setMethod('addIsoAssign',signature = 'Assignment',
                 rename(Name = name) %>%
                 mutate(Mode = str_sub(Feature,1,1))
               
-              if (nrow(assigned_features) == 0){
-                break()
-              }
+              if (nrow(assigned_features) == 0) break()
               
               assignment@addIsoAssign[[counter]] <- list(
                 graph = graph,

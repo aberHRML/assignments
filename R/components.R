@@ -11,7 +11,7 @@ plausibility <- function(degree,AIS,weight){
 #' @importFrom tidygraph bind_graphs
 
 clean <- function(graph,adduct_rules_table){
-  graph %>% 
+  cleaned_graph <- graph %>% 
     morph(to_components) %>% 
     furrr::future_map(~{
       component_adducts <- .x %>% 
@@ -37,8 +37,19 @@ clean <- function(graph,adduct_rules_table){
           nrow(component_nodes) < 2) NULL
       else return(.x)
     }) %>% 
-    compact() %>% 
-    bind_graphs() 
+    compact()
+  
+  if (length(cleaned_graph) == 0){
+    cleaned_graph <- graph %>% 
+      slice(0)
+  }
+  
+  if (length(cleaned_graph) > 0){
+    cleaned_graph <- cleaned_graph %>% 
+      bind_graphs() 
+  }
+   
+  return(cleaned_graph)
 }
 
 nComponents <- function(graph){
