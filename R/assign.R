@@ -54,8 +54,8 @@ setMethod('assignMFs',signature = 'tbl_df',
   
   assignment <- new('Assignment',
                     parameters,
-                    data = feature_data)
-  assignment@log$verbose <- verbose
+                    data = feature_data,
+                    log = list(verbose = verbose))
   
   assignment <- calcCorrelations(assignment)
   assignment <- calcRelationships(assignment)
