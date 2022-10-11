@@ -57,11 +57,10 @@ setMethod('assignMFs',signature = 'tbl_df',
                     data = feature_data)
   assignment@log$verbose <- verbose
   
-  assignment <- assignment %>% 
-    calcCorrelations() %>% 
-    calcRelationships() %>% 
-    addIsoAssign() %>% 
-    transformationAssign()
+  assignment <- calcCorrelations(assignment)
+  assignment <- calcRelationships(assignment)
+  assignment <- addIsoAssign(assignment)
+  assignment <- transformationAssign(assignment)
   
   if (verbose == TRUE) {
     endTime <- proc.time()
