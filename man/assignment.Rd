@@ -19,6 +19,10 @@ assignment(feature_data, parameters, ...)
 \item{feature_data}{a tibble or an object of S4 class \code{AnalysisData} or \code{Analysis} containing the feature intensity matrix of m/z for which to assign molecular formulas. See details.}
 
 \item{parameters}{an S4 object of class \code{AssignmentParamters} containing the parameters for molecular formula assignment}
+
+\item{...}{arguments to pass to the relevant method}
+
+\item{type}{type \code{pre-treated} or \code{raw} data on which to perform assignment when argument \code{feature_data} is of class \code{Analysis}}
 }
 \value{
 An object of S4 class \code{Assignment}.

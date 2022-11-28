@@ -23,8 +23,8 @@ Return data table used for assignments with feature assignments added to column 
 plan(future::sequential)
 p <- assignmentParameters('FIE-HRMS')
 
-mf_assignments <- assignMFs(feature_data,p)
+assignment <- assignMFs(feature_data,p)
 
-assignedData(mf_assignment)
+assignedData(assignment)
 }
 }

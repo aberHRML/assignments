@@ -34,7 +34,7 @@ plotComponent(
 
 \item{iteration}{the assignment iteration}
 
-\item{type}{the graph type to return. \code{filtered} returns the assignment graph after component selection. \code{all} returns all assignment components.}
+\item{type}{the graph type to return. \code{selected} returns the assignment graph after component selection. \code{all} returns all assignment components.}
 
 \item{label_size}{node label size}
 

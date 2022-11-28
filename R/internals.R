@@ -7,7 +7,7 @@ elapsedTime <- function(start_time,end_time){
     str_c('[',.,']')
 }
 
-#' @importFrom dplyr bind_cols
+#' @importFrom dplyr bind_cols all_of
 
 eliminate <- function(MFs,by,direction){
   direct <- get(direction)

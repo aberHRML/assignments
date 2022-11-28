@@ -334,7 +334,7 @@ setMethod('assignments',signature = 'Assignment',
 #'
 #' mf_assignments <- assignMFs(feature_data,p)
 #' 
-#' assignedData(mf_assignment)
+#' assignedData(mf_assignments)
 #' }
 #' @export
 
@@ -413,6 +413,8 @@ setMethod('summariseAssignments',signature = 'Assignment',
 #' @description Constructor methods for creating an object of S4 class `Assignment`.
 #' @param feature_data a tibble or an object of S4 class `AnalysisData` or `Analysis` containing the feature intensity matrix of m/z for which to assign molecular formulas. See details.
 #' @param parameters an S4 object of class `AssignmentParamters` containing the parameters for molecular formula assignment
+#' @param type type `pre-treated` or `raw` data on which to perform assignment when argument `feature_data` is of class `Analysis`
+#' @param ... arguments to pass to the relevant method
 #' @return An object of S4 class `Assignment`.
 #' @examples 
 #' mf_assignments <- assignment(feature_data,assignmentParameters('FIE-HRMS'))

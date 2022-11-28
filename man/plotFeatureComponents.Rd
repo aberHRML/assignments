@@ -32,7 +32,7 @@ plotFeatureComponents(
 
 \item{iteration}{components from which iteration to plot}
 
-\item{type}{the graph type to return. \code{all} returns all assignment components. \code{filtered} returns the assignment graph after component selection.}
+\item{type}{the graph type to return. \code{all} returns all assignment components. \code{selected} returns the assignment graph after component selection.}
 
 \item{max_components}{maximum number of components to plot}
 

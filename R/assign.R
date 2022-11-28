@@ -4,7 +4,7 @@
 #' @param feature_data a tibble or an object of S4 class `AnalysisData` or `Analysis` containing the feature intensity matrix of m/z for which to assign molecular formulas. See details.
 #' @param parameters an S4 object of class `AssignmentParamters` containing the parameters for molecular formula assignment
 #' @param verbose should progress output be printed to the console
-#' @param type `raw` or `pre-treated` data on which to perform assignment when argument `feature_data` is of class `Analysis`
+#' @param type `pre-treated` or `raw` data on which to perform assignment when argument `feature_data` is of class `Analysis`
 #' @param ... arguments to pass to the relevant method
 #' @details 
 #' If argument `feature_data` is specified as a tibble, this should be a feature intensity matrix where the columns are the `m/z` features to assign and the rows are the individual observations, with the cells as abundance values.
@@ -17,7 +17,7 @@
 #' plan(future::sequential)
 #' p <- assignmentParameters('FIE-HRMS')
 #'
-#' mf_assignments <- assignMFs(feature_data,p)
+#' assignments <- assignMFs(feature_data,p)
 #'
 #' @export
 

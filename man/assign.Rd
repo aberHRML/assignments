@@ -42,7 +42,7 @@ assignMFs(
 
 \item{...}{arguments to pass to the relevant method}
 
-\item{type}{\code{raw} or \code{pre-treated} data on which to perform assignment when argument \code{feature_data} is of class \code{Analysis}}
+\item{type}{\code{pre-treated} or \code{raw} data on which to perform assignment when argument \code{feature_data} is of class \code{Analysis}}
 }
 \description{
 assign molecular formulas to a set of given m/z.
@@ -54,6 +54,6 @@ If argument \code{feature_data} is specified as a tibble, this should be a featu
 plan(future::sequential)
 p <- assignmentParameters('FIE-HRMS')
 
-mf_assignments <- assignMFs(feature_data,p)
+assignments <- assignMFs(feature_data,p)
 
 }

@@ -72,7 +72,7 @@ plotGraph <- function(graph,
 #' @param assignment S4 object of class Assignment
 #' @param component component number to extract
 #' @param iteration the assignment iteration
-#' @param type the graph type to return. `filtered` returns the assignment graph after component selection. `all` returns all assignment components.
+#' @param type the graph type to return. `selected` returns the assignment graph after component selection. `all` returns all assignment components.
 #' @param label_size node label size
 #' @param axis_offset axis proportion by which to increase axis limits. Prevents cut off of node labels.
 #' @param border specify a plot border colour
@@ -159,7 +159,7 @@ setMethod('plotComponent',signature = 'Assignment',
 #' @param assignment S4 object of class Assignent
 #' @param feature name of feature to plot
 #' @param iteration components from which iteration to plot
-#' @param type the graph type to return. `all` returns all assignment components. `filtered` returns the assignment graph after component selection.
+#' @param type the graph type to return. `all` returns all assignment components. `selected` returns the assignment graph after component selection.
 #' @param max_components maximum number of components to plot
 #' @param label_size node label size
 #' @param axis_offset axis proportion by which to increase axis limits. Prevents cut off of node labels.
