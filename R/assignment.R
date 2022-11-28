@@ -332,9 +332,9 @@ setMethod('assignments',signature = 'Assignment',
 #' plan(future::sequential)
 #' p <- assignmentParameters('FIE-HRMS')
 #'
-#' assignment <- assignMFs(feature_data,p)
+#' mf_assignments <- assignMFs(feature_data,p)
 #' 
-#' assignedData(assignment)
+#' assignedData(mf_assignment)
 #' }
 #' @export
 

@@ -82,9 +82,9 @@ plotGraph <- function(graph,
 #' plan(future::sequential)
 #' p <- assignmentParameters('FIE-HRMS')
 #'
-#' assignment <- assignMFs(feature_data,p)
+#' mf_assignments <- assignMFs(feature_data,p)
 #' 
-#' plotComponent(assignment,1,'A&I1')
+#' plotComponent(mf_assignments,1,'A&I1')
 #' }
 #' @export
 
