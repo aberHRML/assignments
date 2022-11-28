@@ -16,7 +16,7 @@ eliminate <- function(MFs,by,direction){
     bind_cols(MFs %>% select(by = by)) %>%
     group_by(Feature) %>% 
     filter(by == direct(by)) %>% 
-    select(-by) %>% 
+    select(-all_of(by)) %>% 
     ungroup()
 }
 
