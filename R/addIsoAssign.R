@@ -1,8 +1,12 @@
 
+#' @rdname assignment-methods
+#' @export
+
 setGeneric("addIsoAssign", function(assignment)
   standardGeneric("addIsoAssign")
 )
 
+#' @rdname assignment-methods
 #' @importFrom dplyr arrange rowwise slice_sample left_join ungroup anti_join
 #' @importFrom stringr str_detect
 #' @importFrom mzAnnotation calcM ipMF
@@ -13,6 +17,14 @@ setGeneric("addIsoAssign", function(assignment)
 setMethod('addIsoAssign',signature = 'Assignment',
           function(assignment){
             
+            rel <- assignment %>% 
+              relationships()
+            
+            if (ncol(rel) == 0){
+              stop('No relationships found. Has `calcRelationships()` been called on this object?',
+                   call. = FALSE)
+            }
+            
             if (isTRUE(assignment@log$verbose)) {
               ai_start_time <- proc.time()
               message(blue('Adduct & isotopic assignment '),
@@ -20,9 +32,6 @@ setMethod('addIsoAssign',signature = 'Assignment',
             }
             
             assignment_technique <- technique(assignment)
-            
-            rel <- assignment %>% 
-              relationships()
             
             if (str_detect(assignment_technique,'LC')){
               rel <- rel %>% 

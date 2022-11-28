@@ -154,3 +154,12 @@ test_that('Assignment class object can be created from an Analysis class object'
                              type = 'pre-treated'),
                   'Assignment')
 })
+
+test_that('assignment methods error correctly when slots are empty',{
+  mf_assignments <- assignment(feature_data,
+                               assignment_parameters_FIE)
+  
+  expect_error(calcRelationships(mf_assignments))
+  expect_error(addIsoAssign(mf_assignments))
+  expect_error(transformationAssign(mf_assignments))
+})
