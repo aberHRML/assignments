@@ -7,10 +7,26 @@
 [![license](https://img.shields.io/badge/license-GNU%20GPL%20v3.0-blue.svg)](https://github.com/jasenfinch/MFassign/blob/master/DESCRIPTION)
 <!-- badges: end -->
  
-An R package for molecular formula assignment in high resolution metabolomics
+> An R package for molecular formula assignment of high resolution ESI-MS based metabolomics data
+
+### Overview
 
 ### Installation
 
+The `assignments` package can be installed from GitHub using the
+following:
+
 ``` r
-devtools::install_github('jasenfinch/assignments')
+remotes::install_github('jasenfinch/assignments')
 ```
+
+### Learn more
+
+The package documentation can be browsed online at
+<https://jasenfinch.github.io/assignments/>.
+
+If this is your first time using `assignments` see the
+[vignette](https://jasenfinch.github.io/metabolyseR/articles/assignments.html) for information on how to get started.
+
+If you believe you’ve found a bug in `assignments`, please file a bug (and, if possible, a [reproducible example](https://reprex.tidyverse.org)) at
+<https://github.com/jasenfinch/assignments/issues>.

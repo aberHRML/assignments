@@ -1,13 +1,24 @@
-#' @importFrom stringr str_c
+
+#' @rdname assignment-methods
+#' @export
 
 setGeneric("transformationAssign", function(assignment)
   standardGeneric("transformationAssign"))
 
+#' @rdname assignment-methods
+#' @importFrom stringr str_c
 #' @importFrom dplyr full_join select distinct group_split
 #' @importFrom mzAnnotation transformMF
 
 setMethod('transformationAssign',signature = 'Assignment',
           function(assignment){
+            
+            assigned <- assignments(assignment)
+            
+            if (ncol(assigned) == 0){
+              stop('No assignments found. Has `addIsoAssign()` been called on this object?',
+                   call. = FALSE)
+            }
             
             if (assignment@log$verbose == TRUE) {
               t_start_time <- proc.time()

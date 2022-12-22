@@ -1,8 +1,8 @@
 Package: assignments
-Title: Molecular formula assignment for high resolution metabolomics
+Title: Molecular Formula Assignment For High Resolution ESI-MS Based Metabolomics Data
 Version: 1.0.0
 Authors@R: person("Jasen", "Finch", email = "jsf9@aber.ac.uk", role = c("aut", "cre"))
-Description: Molecular formula assignment for high resolution metabolomics.
+Description: A molecular formula assignment approach for high resolution electrospray ionisation mass spectrometry based metabolomics data.
 Depends: R (>= 3.5.0),
 Imports: cli,
     crayon,
@@ -25,7 +25,7 @@ License: GPL (>= 3)
 Encoding: UTF-8
 LazyData: true
 Roxygen: list(markdown = TRUE)
-RoxygenNote: 7.2.0
+RoxygenNote: 7.2.1
 Collate: parameters.R assignment.R correlations.R 
         addIsoAssign.R transformationAssign.R relationships.R
         graph.R assign.R internals.R components.R

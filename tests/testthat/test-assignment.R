@@ -129,3 +129,37 @@ test_that('assignment spectrum can be plotted',{
   
   expect_s3_class(pl,'ggplot')
 })
+
+test_that('Assignment class object can be created from a tibble',{
+  expect_s4_class(assignment(feature_data,
+                             assignment_parameters_FIE),
+                  'Assignment')
+})
+
+test_that('Assignment class object can be created from an AnalysisData class object',{
+  expect_s4_class(assignment(FIE_features %>% 
+                               raw(),
+                             assignment_parameters_FIE),
+                  'Assignment')
+})
+
+test_that('Assignment class object can be created from an Analysis class object',{
+  expect_s4_class(assignment(FIE_features,
+                             assignment_parameters_FIE,
+                             type = 'raw'),
+                  'Assignment')
+  
+  expect_s4_class(assignment(LC_features,
+                             assignment_parameters_FIE,
+                             type = 'pre-treated'),
+                  'Assignment')
+})
+
+test_that('assignment methods error correctly when slots are empty',{
+  mf_assignments <- assignment(feature_data,
+                               assignment_parameters_FIE)
+  
+  expect_error(calcRelationships(mf_assignments))
+  expect_error(addIsoAssign(mf_assignments))
+  expect_error(transformationAssign(mf_assignments))
+})

@@ -72,41 +72,41 @@ assignments(assignment)
 Access methods for Assignment S4 class
 }
 \examples{
-assignment <- new('Assignment',
+mf_assignments <- new('Assignment',
                   data = feature_data)
 
 ## Return feature data
-featureData(assignment)
+featureData(mf_assignments)
 
 ## Return correlations
-correlations(assignment)
+correlations(mf_assignments)
 
 ## Return relationships
-relationships(assignment)
+relationships(mf_assignments)
 
 ## Return the available iterations
-iterations(assignment)
+iterations(mf_assignments)
 
 ## Return a selected graph
 \dontrun{
-graph(assignment,'A&I1')
+graph(mf_assignments,'A&I1')
 }
 
 ## Return a component information for a selected graph
 \dontrun{
-components(assignment,'A&I1')
+components(mf_assignments,'A&I1')
 }
 
 ## Return a component information for a selected feature
 \dontrun{
-featureComponents(assignment,'n191.01962')
+featureComponents(mf_assignments,'n191.01962')
 }
 
  ## Extract a component graph
 \dontrun{
-component(assignment,1,'A&I1')
+component(mf_assignments,1,'A&I1')
 }
 
 ## Return assignments
-assignments(assignment)
+assignments(mf_assignments)
 }

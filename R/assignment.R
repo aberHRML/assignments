@@ -95,43 +95,43 @@ setMethod('show',signature = 'Assignment',
 #' @param component component number to extract
 #' @param feature feature information to extract
 #' @examples 
-#' assignment <- new('Assignment',
+#' mf_assignments <- new('Assignment',
 #'                   data = feature_data)
 #' 
 #' ## Return feature data
-#' featureData(assignment)
+#' featureData(mf_assignments)
 #' 
 #' ## Return correlations
-#' correlations(assignment)
+#' correlations(mf_assignments)
 #'
 #' ## Return relationships
-#' relationships(assignment)
+#' relationships(mf_assignments)
 #' 
 #' ## Return the available iterations
-#' iterations(assignment)
+#' iterations(mf_assignments)
 #'
 #' ## Return a selected graph
 #' \dontrun{
-#' graph(assignment,'A&I1')
+#' graph(mf_assignments,'A&I1')
 #' }
 #'
 #' ## Return a component information for a selected graph
 #' \dontrun{
-#' components(assignment,'A&I1')
+#' components(mf_assignments,'A&I1')
 #' }
 #' 
 #' ## Return a component information for a selected feature
 #' \dontrun{
-#' featureComponents(assignment,'n191.01962')
+#' featureComponents(mf_assignments,'n191.01962')
 #' }
 #'
 #'  ## Extract a component graph
 #' \dontrun{
-#' component(assignment,1,'A&I1')
+#' component(mf_assignments,1,'A&I1')
 #' }
 #' 
 #' ## Return assignments
-#' assignments(assignment)
+#' assignments(mf_assignments)
 #' @export
 
 setGeneric('featureData',function(assignment)
@@ -332,9 +332,9 @@ setMethod('assignments',signature = 'Assignment',
 #' plan(future::sequential)
 #' p <- assignmentParameters('FIE-HRMS')
 #'
-#' assignment <- assignMFs(feature_data,p)
+#' mf_assignments <- assignMFs(feature_data,p)
 #' 
-#' assignedData(assignment)
+#' assignedData(mf_assignments)
 #' }
 #' @export
 
@@ -378,9 +378,9 @@ setMethod('assignedData', signature = 'Assignment',
 #' plan(future::sequential)
 #' p <- assignmentParameters('FIE-HRMS')
 #'
-#' assignment <- assignMFs(feature_data,p)
+#' mf_assignments <- assignMFs(feature_data,p)
 #' 
-#' summariseAssignments(assignment)
+#' summariseAssignments(mf_assignments)
 #' }
 #' @importFrom dplyr desc
 #' @export
@@ -406,4 +406,54 @@ setMethod('summariseAssignments',signature = 'Assignment',
               bind_rows() %>%
               arrange(desc(Count))
             return(assigned)
+          })
+
+#' Create an Assignment S4 class object
+#' @rdname assignment
+#' @description Constructor methods for creating an object of S4 class `Assignment`.
+#' @param feature_data a tibble or an object of S4 class `AnalysisData` or `Analysis` containing the feature intensity matrix of m/z for which to assign molecular formulas. See details.
+#' @param parameters an S4 object of class `AssignmentParamters` containing the parameters for molecular formula assignment
+#' @param type type `pre-treated` or `raw` data on which to perform assignment when argument `feature_data` is of class `Analysis`
+#' @param ... arguments to pass to the relevant method
+#' @return An object of S4 class `Assignment`.
+#' @examples 
+#' mf_assignments <- assignment(feature_data,assignmentParameters('FIE-HRMS'))
+#' @export
+
+setGeneric('assignment',function(feature_data,parameters,...)
+  standardGeneric('assignment'))
+
+#' @rdname assignment
+
+setMethod('assignment',signature = c('tbl_df','AssignmentParameters'),
+          function(feature_data,parameters){
+            new('Assignment',
+                parameters,
+                data = feature_data)
+          })
+
+
+#' @rdname assignment
+
+setMethod('assignment',signature = c('AnalysisData','AssignmentParameters'),
+          function(feature_data,parameters){
+            new('Assignment',
+                parameters,
+                data = feature_data%>% 
+                  dat())
+          })
+
+#' @rdname assignment
+
+setMethod('assignment',signature = c('Analysis','AssignmentParameters'),
+          function(feature_data,parameters,type = c('pre-treated','raw')){
+            
+            type <- match.arg(type,
+                              choices = c('pre-treated','raw'))
+            
+            if (type == 'raw') feature_data <- raw(feature_data)
+            if (type == 'pre-treated') feature_data <- preTreated(feature_data)
+            
+           assignment(feature_data,
+                      parameters)
           })

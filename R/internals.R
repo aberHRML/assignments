@@ -7,7 +7,7 @@ elapsedTime <- function(start_time,end_time){
     str_c('[',.,']')
 }
 
-#' @importFrom dplyr bind_cols
+#' @importFrom dplyr bind_cols all_of
 
 eliminate <- function(MFs,by,direction){
   direct <- get(direction)
@@ -16,7 +16,7 @@ eliminate <- function(MFs,by,direction){
     bind_cols(MFs %>% select(by = by)) %>%
     group_by(Feature) %>% 
     filter(by == direct(by)) %>% 
-    select(-by) %>% 
+    select(-all_of(by)) %>% 
     ungroup()
 }
 

@@ -24,9 +24,9 @@ An S4 class to store assignment parameters.
 
 \item{\code{RT_diff_limit}}{limit for retention time differences for correlated features in adduct and isotopic assignment}
 
-\item{\code{adducts}}{list of character vectors containing the adducts to use. List element names should denote ionisation mode.}
+\item{\code{adducts}}{list of character vectors containing the adducts to use. List element names should denote ionisation mode. The order that these adducts are provided denotes their expected relative importance to assignments with the first expected to be the most common and the last the least common within each ionisation mode.}
 
-\item{\code{isotopes}}{character vector of isotopes to use}
+\item{\code{isotopes}}{character vector of isotopes to use. Similarly to the adducts, their order denotes the expected commonality in the data.}
 
 \item{\code{transformations}}{character vector of transformations to use}
 

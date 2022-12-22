@@ -1,11 +1,40 @@
+#' Molecular formula assignment methods
+#' @rdname assignment-methods
+#' @description These methods provide the access to performing the individual steps of the molecular 
+#' formula assignment approach. See Details for more information of when it is best to use these 
+#' instead of `assignMFs()`. 
+#' @param assignment an object of S4 class `Assignment`
+#' @details 
+#' In circumstances where the molecular formula assignment approach has high memory requirements, 
+#' such as where there are many correlations (> 2 million) or many high *m/z* (>700), it may be 
+#' preferable to perform the assignment steps separately as opposed to using `assignMFs()`. This 
+#' can reduce the memory overheads required to successfully assign molecular formulas to the data 
+#' and also enable the possibility of objects to be saved and/or unloaded between the assignment 
+#' steps where needed.
+#' @return An object of S4 class `Assignment` containing molecular formula assignments.
+#' @examples 
+#' \dontrun{
+#' plan(future::sequential)
+#' p <- assignmentParameters('FIE-HRMS')
+#'
+#' mf_assignments <- assignment(feature_data,p)
+#' 
+#' mf_assignments <- mf_assignments %>% 
+#'    calcCorrelations() %>% 
+#'    calcRelationships() %>% 
+#'    addIsoAssign() %>% 
+#'    transformationAssign()
+#' }
+#' @export
 
 setGeneric('calcCorrelations', function(assignment)
   standardGeneric('calcCorrelations'))
 
+#' @rdname assignment-methods
 #' @importFrom metabolyseR analysisParameters metabolyse analysisResults
 
 setMethod('calcCorrelations',signature = 'Assignment',function(assignment){
-  if (assignment@log$verbose == T) {
+  if (assignment@log$verbose == TRUE) {
     startTime <- proc.time()
     message(blue('Calculating correlations '),cli::symbol$continue,'\r',appendLF = FALSE)
   }

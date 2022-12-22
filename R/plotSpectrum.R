@@ -54,7 +54,7 @@ setMethod('plotSpectrum',signature = 'Assignment',function(assignment,MF){
     filter(MF == mf)
   
   dat <- assignment@data %>%
-    select(feat$Feature) %>%
+    select(all_of(feat$Feature)) %>%
     gather('Feature','Intensity') %>%
     group_by(Feature) %>%
     summarise(Intensity = mean(Intensity)) %>%

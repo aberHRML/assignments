@@ -1,7 +1,11 @@
 
-setGeneric("calcRelationships", function(assignment,transformations = TRUE)
+#' @rdname assignment-methods
+#' @export
+
+setGeneric("calcRelationships", function(assignment)
   standardGeneric("calcRelationships"))
 
+#' @rdname assignment-methods
 #' @importFrom furrr future_map
 #' @importFrom dplyr mutate bind_rows filter vars contains
 #' @importFrom dplyr inner_join semi_join select mutate_at relocate
@@ -13,6 +17,13 @@ setGeneric("calcRelationships", function(assignment,transformations = TRUE)
 setMethod('calcRelationships',signature = 'Assignment',
           function(assignment){
             
+            cors <- assignment@correlations
+            
+            if (ncol(cors) == 0){
+              stop('No correlations found. Has `calcCorrelations()` been called on this object?',
+                   call. = FALSE)
+            }
+            
             if (assignment@log$verbose == TRUE) {
               startTime <- proc.time()
               message(blue('Calculating relationships '),cli::symbol$continue,'\r',appendLF = 'FALSE')
@@ -20,7 +31,6 @@ setMethod('calcRelationships',signature = 'Assignment',
             
             parameters <- as(assignment,'AssignmentParameters')
             
-            cors <- assignment@correlations
             
             trans <- c(NA,transformations(assignment))
             
