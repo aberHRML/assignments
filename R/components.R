@@ -62,11 +62,12 @@ componentMetrics <- function(component,max_add_iso_total){
   component %>% 
   mutate(Size = graph_size(),
          Nodes = n(),
-         Degree = avg_degree(Nodes,Size),,
+         Degree = avg_degree(Nodes,Size),
          Density = (2 * Size) / (Nodes * (Nodes - 1)),
          Weight = sum(Weight) / Nodes,
          AIS = sum(AIS) / max_add_iso_total,
-         `Component Plausibility` = plausibility(Degree,AIS,Weight))
+         `Component Plausibility` = plausibility(Degree,AIS,Weight)
+         )
 }
 
 componentFilters <- function(){
