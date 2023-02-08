@@ -13,7 +13,7 @@ eliminate <- function(MFs,by,direction){
   direct <- get(direction)
   
   MFs %>%
-    bind_cols(MFs %>% select(by = by)) %>%
+    bind_cols(MFs %>% select(by = all_of(by))) %>%
     group_by(Feature) %>% 
     filter(by == direct(by)) %>% 
     select(-all_of(by)) %>% 
