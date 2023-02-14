@@ -17,6 +17,8 @@ setGeneric("addIsoAssign", function(assignment)
 setMethod('addIsoAssign',signature = 'Assignment',
           function(assignment){
             
+            invisible(gc())
+            
             rel <- assignment %>% 
               relationships()
             

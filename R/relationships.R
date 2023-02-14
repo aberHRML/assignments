@@ -17,6 +17,8 @@ setGeneric("calcRelationships", function(assignment)
 setMethod('calcRelationships',signature = 'Assignment',
           function(assignment){
             
+            invisible(gc())
+            
             cors <- assignment@correlations
             
             if (ncol(cors) == 0){

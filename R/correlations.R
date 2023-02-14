@@ -39,6 +39,8 @@ setMethod('calcCorrelations',signature = 'Assignment',function(assignment){
     message(blue('Calculating correlations '),cli::symbol$continue,'\r',appendLF = FALSE)
   }
   
+  invisible(gc())
+  
   p <- analysisParameters('correlations')
   parameters <- as(assignment,'AssignmentParameters')
   

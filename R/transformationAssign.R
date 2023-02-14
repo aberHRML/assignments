@@ -13,6 +13,8 @@ setGeneric("transformationAssign", function(assignment)
 setMethod('transformationAssign',signature = 'Assignment',
           function(assignment){
             
+            invisible(gc())
+            
             assigned <- assignments(assignment)
             
             if (ncol(assigned) == 0){
