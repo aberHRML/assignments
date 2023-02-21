@@ -2,7 +2,7 @@ Package: assignments
 Title: Molecular Formula Assignment For High Resolution ESI-MS Based Metabolomics Data
 Version: 1.0.0
 Authors@R: person("Jasen", "Finch", email = "jsf9@aber.ac.uk", role = c("aut", "cre"))
-Description: A molecular formula assignment approach for high resolution electrospray ionisation mass spectrometry based metabolomics data.
+Description: A molecular formula assignment approach for electrospray ionisation high resolution mass spectrometry based metabolomics data.
 Depends: R (>= 3.5.0),
 Imports: cli,
     crayon,
@@ -44,7 +44,7 @@ Suggests:
     patchwork,
     knitr,
     rmarkdown
-Remotes: jasenfinch/mzAnnotation@devel,
-    jasenfinch/metabolyseR@devel
-URL: https://jasenfinch.github.io/assignments/
+Remotes: aberHRML/mzAnnotation,
+    jasenfinch/metabolyseR
+URL: https://aberhrml.github.io/assignments/
 VignetteBuilder: knitr
