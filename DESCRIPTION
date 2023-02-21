@@ -1,72 +1,50 @@
-Package: MFassign
-Title: Molecular Formula Assignment for High Resolution metabolomics
-Version: 0.7.10
+Package: assignments
+Title: Molecular Formula Assignment For High Resolution ESI-MS Based Metabolomics Data
+Version: 1.0.0
 Authors@R: person("Jasen", "Finch", email = "jsf9@aber.ac.uk", role = c("aut", "cre"))
-Description: Molecular formula assignment for high resolution metabolomics.
+Description: A molecular formula assignment approach for electrospray ionisation high resolution mass spectrometry based metabolomics data.
 Depends: R (>= 3.5.0),
-    ggraph
-Imports: CHNOSZ,
+Imports: cli,
+    crayon,
     dplyr,
+    furrr,
+    future,
+    igraph,
+    lubridate,
     magrittr,
+    metabolyseR,
+    methods,
+    mzAnnotation,
+    purrr,
+    rlang,
     stringr,
     tibble,
-    methods,
-    tidyr,
-    crayon,
-    purrr,
-    cli,
-    lubridate,
     tidygraph,
-    igraph,
-    ggthemes,
-    ggplot2,
-    patchwork,
-    mzAnnotation,
-    metabolyseR,
-    ggrepel,
-    graphlayouts,
-    future,
-    furrr
-Remotes: jasenfinch/mzAnnotation,
-    jasenfinch/metabolyseR
+    tidyr
 License: GPL (>= 3)
 Encoding: UTF-8
 LazyData: true
-RoxygenNote: 7.1.1
-Collate:
-        allGenerics.R
-        allClasses.R
-        prepCorrelations-method.R
-        addIsoAssign-method.R
-        transformationAssign-method.R
-        relationships-method.R
-        assignmentParameters.R
-        assignMFs.R
-        MFgen.R
-        MFscore.R
-        addIsoScore.R
-        addMFs.R
-        calcComponents.R
-        assignMethods.R
-        peakData.R
-        LCassignment.R
-        MFassign.R
-        FIEassignment.R
-        doAssignment-method.R
-        continueAssignment.R
-        show-method.R
-        access-methods.R
-        summariseAssignment-method.R
-        plotNetwork-method.R
-        networkComponents.R
-        addNames.R
-        eliminate.R
-        recalcComponents.R
-        plotAdductDist-method.R
-        plotFeatureSolutions.R
-        calcCorrelations-method.R
-        filterCorrelations-method.R
-        plotSpectrum-method.R
-        reexports.R
-Suggests: testthat,
-    covr
+Roxygen: list(markdown = TRUE)
+RoxygenNote: 7.2.3
+Collate: parameters.R assignment.R correlations.R 
+        addIsoAssign.R transformationAssign.R relationships.R
+        graph.R assign.R internals.R components.R
+        feature_data.R assignments.R plotAdductDist.R plot_components.R 
+        plotSpectrum.R reexports.R zzz.R
+Suggests: 
+    testthat,
+    covr,
+    ggplot2,
+    ggraph,
+    ggrepel,
+    ggtext,
+    ggthemes,
+    glue,
+    graphlayouts,
+    patchwork,
+    knitr,
+    rmarkdown
+Remotes: aberHRML/mzAnnotation,
+    jasenfinch/metabolyseR
+URL: https://aberhrml.github.io/assignments/
+VignetteBuilder: knitr

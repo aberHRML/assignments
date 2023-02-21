@@ -1,4 +1,4 @@
 library(testthat)
-library(MFassign)
+library(assignments)
 
-test_check("MFassign")
+test_check("assignments")

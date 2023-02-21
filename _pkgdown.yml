@@ -1,0 +1,42 @@
+url: https://aberhrml.github.io/assignments/
+template:
+  bootstrap: 5
+
+reference:
+  - title: S4 classes
+    contents:
+    - Assignment-class
+    - AssignmentParameters-class
+    - assignment
+
+  - title: Example data
+    contents:
+    - feature_data
+    
+  - title: Parameters
+    contents:
+    - availableTechniques
+    - assignmentParameters
+    - technique
+    
+  - title: Assignment
+    contents:
+    - assignMFs
+    - calcCorrelations
+  
+  - title: Results
+    contents:
+    - featureData
+    - assignedData
+    - summariseAssignments
+    
+  - title: Plotting
+    contents:
+    - plotAdductDist
+    - plotComponent
+    - plotFeatureComponents
+    - plotSpectrum
+    
+  - title: Other
+    contents:
+    - nodes
