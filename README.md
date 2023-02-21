@@ -3,7 +3,7 @@
 <!-- badges: start -->
 [![Lifecycle: stable](https://img.shields.io/badge/lifecycle-stable-brightgreen.svg)](https://lifecycle.r-lib.org/articles/stages.html#stable)
 [![R-CMD-check](https://github.com/aberHRML/assignments/actions/workflows/R-CMD-check.yaml/badge.svg)](https://github.com/aberHRML/assignments/actions/workflows/R-CMD-check.yaml)
-[![Coverage Status](https://img.shields.io/codecov/c/github/aberHRML/assignments/master.svg)](https://codecov.io/github/aberHRML/assignments?branch=master) 
+[![Codecov test coverage](https://codecov.io/gh/aberHRML/assignments/branch/master/graph/badge.svg)](https://app.codecov.io/gh/aberHRML/assignments?branch=master)
 [![license](https://img.shields.io/badge/license-GNU%20GPL%20v3.0-blue.svg)](https://github.com/aberHRML/assignments/blob/master/DESCRIPTION)
 [![GitHub release](https://img.shields.io/github/release/aberHRML/assignments.svg)](https://GitHub.com/aberHRML/assignments/releases/)
 <!-- badges: end -->
