@@ -21,3 +21,5 @@
 * Numerous documentation improvements.
 
 * Added a usage introduction vignette.
+
+* The package documentation is now available at <https://aberhrml.github.io/assignments/>
