@@ -1,6 +1,8 @@
 ---
 title: "assignments"
-output: rmarkdown::html_vignette
+output: 
+  rmarkdown::html_vignette:
+    toc: true
 vignette: >
   %\VignetteIndexEntry{assignments}
   %\VignetteEngine{knitr::rmarkdown}
@@ -17,7 +19,7 @@ knitr::opts_chunk$set(
 
 ## Introduction
 
-The *assignments* package provides an automated molecular formula assignment approach for high resolution electrospray ionisation mass spectrometry (ESI-MS) data from metabolomics experiments.
+The *assignments* package provides an automated molecular formula assignment approach for ultra-high resolution electrospray ionisation mass spectrometry (ESI-MS) data from metabolomics experiments.
 This includes data from both direct and flow injection/infusion fingerprinting as well as liquid chromatograph mass spectrometry (LC-MS) profiling analytical techniques.
 
 This vignette will provide a brief overview of the input data required, parameter selection, performing the assignments and assessing the results.
@@ -201,7 +203,7 @@ plotFeatureComponents(
 )
 ```
 
-Because a molecular ranking threshold is applied during assignment, it may also be useful to generate all the alternative molecular formulas and their rankings for a specific *m/z*, adduct and isotope using the `ipMF` function from the *mzAnnotation* package.
+Because a molecular formula ranking threshold is applied during assignment, it may also be useful to generate all the alternative molecular formulas and their rankings for a specific *m/z*, adduct and isotope using the `ipMF` function from the [*mzAnnotation*](https://aberhrml.github.io/mzAnnotation/) package.
 
 ```{r alternative-mfs}
 mzAnnotation::ipMF(191.01962,
