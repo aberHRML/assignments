@@ -1,19 +1,19 @@
 #' S4 class for assignment parameters
 #' @rdname AssignmentParameters-class
 #' @description An S4 class to store assignment parameters.
-#' @slot technique assignment technique to use
-#' @slot correlations_parameters list of correlation parameters to be passed to `metabolyseR::correlation()`
-#' @slot max_M maximum M for which to assign molecular formulas
+#' @slot technique the analytical technique
+#' @slot correlations_parameters a list of correlation parameters to be passed to `metabolyseR::correlations()`
+#' @slot max_M the maximum molecular mass for which to assign molecular formulas
 #' @slot MF_rank_threshold rank threshold for molecular formula selection
-#' @slot ppm ppm threshold
-#' @slot limit amu deviation limit for relationship prediction
-#' @slot RT_diff_limit limit for retention time differences for correlated features in adduct and isotopic assignment
-#' @slot adducts list of character vectors containing the adducts to use. List element names should denote ionisation mode. The order that these adducts are provided denotes their expected relative importance to assignments with the first expected to be the most common and the last the least common within each ionisation mode.
-#' @slot isotopes character vector of isotopes to use. Similarly to the adducts, their order denotes the expected commonality in the data.
-#' @slot transformations character vector of transformations to use
-#' @slot adduct_rules tibble containing adduct formation rules as returned by `mzAnnotation::adducts()`
-#' @slot isotope_rules tibble containing isotope rules as returned by `mzAnnotation::isotopes()`
-#' @slot transformation_rules tibble containing transformation rules as returned by `mzAnnotation::transformations()`
+#' @slot ppm the parts per million error threshold
+#' @slot limit the atomic mass unit deviation limit for relationship calculation
+#' @slot RT_diff_limit the limit for retention time differences for correlated features in adduct and isotopic assignment
+#' @slot adducts a list of character vectors containing the adducts names. List element names should denote ionisation mode. The order that these adducts are provided denotes their expected relative importance to assignments with the first expected to be the most common and the last the least common within each ionisation mode.
+#' @slot isotopes a character vector of isotopes to use. Similarly to the adducts, their order denotes the expected commonality in the data.
+#' @slot transformations a character vector of transformations molecular formula changes
+#' @slot adduct_rules a tibble containing the adduct formation rules as returned by `mzAnnotation::adduct_rules()`
+#' @slot isotope_rules a tibble containing the isotope rules as returned by `mzAnnotation::isotope_rules()`
+#' @slot transformation_rules tibble containing the transformation rules as returned by `mzAnnotation::transformation_rules()`
 #' @importFrom mzAnnotation adduct_rules isotope_rules transformation_rules
 
 setClass('AssignmentParameters',
@@ -125,11 +125,24 @@ setMethod('show',signature = 'AssignmentParameters',
 #' @rdname parameters
 #' @description Get and set methods for the `AssignmentParameters` S4 class.
 #' @param x S4 object of class `AssignmentParameters`
-#' @param value value to set
+#' @param value the value to set
+#' @details 
+#' * `technique` - Get the analytical technique.
+#' * `correlationsParameters` - Get or set the correlation analysis parameters to be passed to `metabolyseR::correlations()`.
+#' * `limit` - Get or set the atomic mass unit limit for relationship calculation.
+#' * `maxM` - Get or set the maximum molecular mass limit for which to assign molecular formulas.
+#' * `MFrankThreshold` - Get or set the molecular formula rank threshold for molecular formula selection.
+#' * `ppm` - Get or set the parts per million error threshold.
+#' * `isotopes` - Get or set the isotope names. The order in which these are specified denotes the expected relative commonality within the data set.
+#' * `adducts` - Get or set the adduct names for the ionisation modes. The order in which these are specified denotes the expected relative commonality within the data set for each ionisation mode.
+#' * `transformations` - Get or set the transformation molecular formula changes.
+#' * `isotopeRules` - Get or set the isotope rules table. The format of this tibble should match that of `mzAnnotation::isotope_rules()`.
+#' * `adductRules` - Get or set the adduct rules table. The format of this tibble should match that of `mzAnnotation::adduct_rules()`.
+#' * `techniqueRules` - Get or set the transformation rules table. The format of this tibble should match that of `mzAnnotation::transformation_rules()`.
 #' @examples 
 #' assignment_parameters <- assignmentParameters('FIE')
 #' 
-#' ## Return technique
+#' ## Return the analytical technique
 #' technique(assignment_parameters)
 #'
 #' ## Return correlations parameters
@@ -507,8 +520,8 @@ setMethod('transformationRules<-',signature = 'AssignmentParameters',
             return(x)
           })
 
-#' Available techniques
-#' @description Available techniques for molecular formula assignment.
+#' Available analytical techniques
+#' @description The available analytical techniques for molecular formula assignment parameters.
 #' @return A `character` vector of technique names.
 #' @examples 
 #' availableTechniques()
@@ -519,8 +532,10 @@ availableTechniques <- function(){
 }
 
 #' Assignment parameters
-#' @description Return default assignment parameters for a given technique.
+#' @description Return the default molecular formula assignment parameters for a given analytical technique.
 #' @param technique technique to use for assignment
+#' @return An object of S4 class `AssignmentParameters`
+#' @examples assignmentParameters('FIE-HRMS')
 #' @importFrom methods new
 #' @export
 

@@ -1,6 +1,6 @@
 #' Molecular formula assignment methods
 #' @rdname assignment-methods
-#' @description These methods provide the access to performing the individual steps of the molecular 
+#' @description These methods provide access to performing the individual steps of the molecular 
 #' formula assignment approach. See Details for more information of when it is best to use these 
 #' instead of `assignMFs()`. 
 #' @param assignment an object of S4 class `Assignment`
@@ -13,7 +13,6 @@
 #' steps where needed.
 #' @return An object of S4 class `Assignment` containing molecular formula assignments.
 #' @examples 
-#' \dontrun{
 #' plan(future::sequential)
 #' p <- assignmentParameters('FIE-HRMS')
 #'
@@ -24,7 +23,8 @@
 #'    calcRelationships() %>% 
 #'    addIsoAssign() %>% 
 #'    transformationAssign()
-#' }
+#' 
+#' mf_assignments
 #' @export
 
 setGeneric('calcCorrelations', function(assignment)

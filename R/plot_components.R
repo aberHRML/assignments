@@ -66,26 +66,43 @@ plotGraph <- function(graph,
     )
 }
 
-#' Plot a component
-#' @rdname plotComponent
-#' @description Plot a molecular formula component graph.
-#' @param assignment S4 object of class Assignment
-#' @param component component number to extract
-#' @param iteration the assignment iteration
+#' Plot assignment results
+#' @rdname plotting
+#' @description Plot molecular formula assignment results.
+#' @param assignment an object of S4 class Assignment
+#' @param feature the *m/z* feature to plot
+#' @param MF the assigned molecular formula to plot
+#' @param component component number to plot
+#' @param iteration the assignment iteration of the component or components
 #' @param type the graph type to return. `selected` returns the assignment graph after component selection. `all` returns all assignment components.
+#' @param max_components themaximum number of components to plot
 #' @param label_size node label size
 #' @param axis_offset axis proportion by which to increase axis limits. Prevents cut off of node labels.
 #' @param border specify a plot border colour
 #' @param highlight specify a feature node to highlight
+#' @details 
+#' * `plotComponent` - Plot a molecular formula component graph.
+#' * `plotFeatureComponents` - Plot the possible component graphs for a given feature.
+#' * `plotAdductDist` - Plot frequency distributions of the assigned adducts.
+#' * `plotSpectrum` - Plot the spectrum of an assigned molecular formula.
 #' @examples 
-#' \dontrun{
+#' library(ggraph)
 #' plan(future::sequential)
 #' p <- assignmentParameters('FIE-HRMS')
 #'
 #' mf_assignments <- assignMFs(feature_data,p)
 #' 
+#' ## Plot a component
 #' plotComponent(mf_assignments,1,'A&I1')
-#' }
+#' 
+#' ## Plot the components for a feature
+#' plotFeatureComponents(mf_assignments,'n191.01962','A&I1')
+#' 
+#' ## Plot the adduct distributions
+#' plotAdductDist(mf_assignments)
+#' 
+#' ## Plot the spectrum of an assigned molecular formula
+#' plotSpectrum(mf_assignments,'C6H8O7')
 #' @export
 
 setGeneric('plotComponent',
@@ -100,7 +117,7 @@ setGeneric('plotComponent',
              standardGeneric('plotComponent'))
 
 #' @importFrom dplyr mutate_if
-#' @rdname plotComponent
+#' @rdname plotting
 
 setMethod('plotComponent',signature = 'Assignment',
           function(assignment,
@@ -153,16 +170,7 @@ setMethod('plotComponent',signature = 'Assignment',
               ))
           })
 
-#' Plot the solutions for a feature
-#' @rdname plotFeatureComponents
-#' @description Plot possible MF solutions for a given feature.
-#' @param assignment S4 object of class Assignent
-#' @param feature name of feature to plot
-#' @param iteration components from which iteration to plot
-#' @param type the graph type to return. `all` returns all assignment components. `selected` returns the assignment graph after component selection.
-#' @param max_components maximum number of components to plot
-#' @param label_size node label size
-#' @param axis_offset axis proportion by which to increase axis limits. Prevents cut off of node labels.
+#' @rdname plotting
 #' @export
 
 setGeneric('plotFeatureComponents',
@@ -176,7 +184,7 @@ setGeneric('plotFeatureComponents',
              standardGeneric('plotFeatureComponents')
 )
 
-#' @rdname plotFeatureComponents
+#' @rdname plotting
 #' @importFrom dplyr slice
 
 setMethod('plotFeatureComponents',signature = 'Assignment',

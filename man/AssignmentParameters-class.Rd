@@ -10,30 +10,30 @@ An S4 class to store assignment parameters.
 \section{Slots}{
 
 \describe{
-\item{\code{technique}}{assignment technique to use}
+\item{\code{technique}}{the analytical technique}
 
-\item{\code{correlations_parameters}}{list of correlation parameters to be passed to \code{metabolyseR::correlation()}}
+\item{\code{correlations_parameters}}{a list of correlation parameters to be passed to \code{metabolyseR::correlations()}}
 
-\item{\code{max_M}}{maximum M for which to assign molecular formulas}
+\item{\code{max_M}}{the maximum molecular mass for which to assign molecular formulas}
 
 \item{\code{MF_rank_threshold}}{rank threshold for molecular formula selection}
 
-\item{\code{ppm}}{ppm threshold}
+\item{\code{ppm}}{the parts per million error threshold}
 
-\item{\code{limit}}{amu deviation limit for relationship prediction}
+\item{\code{limit}}{the atomic mass unit deviation limit for relationship calculation}
 
-\item{\code{RT_diff_limit}}{limit for retention time differences for correlated features in adduct and isotopic assignment}
+\item{\code{RT_diff_limit}}{the limit for retention time differences for correlated features in adduct and isotopic assignment}
 
-\item{\code{adducts}}{list of character vectors containing the adducts to use. List element names should denote ionisation mode. The order that these adducts are provided denotes their expected relative importance to assignments with the first expected to be the most common and the last the least common within each ionisation mode.}
+\item{\code{adducts}}{a list of character vectors containing the adducts names. List element names should denote ionisation mode. The order that these adducts are provided denotes their expected relative importance to assignments with the first expected to be the most common and the last the least common within each ionisation mode.}
 
-\item{\code{isotopes}}{character vector of isotopes to use. Similarly to the adducts, their order denotes the expected commonality in the data.}
+\item{\code{isotopes}}{a character vector of isotopes to use. Similarly to the adducts, their order denotes the expected commonality in the data.}
 
-\item{\code{transformations}}{character vector of transformations to use}
+\item{\code{transformations}}{a character vector of transformations molecular formula changes}
 
-\item{\code{adduct_rules}}{tibble containing adduct formation rules as returned by \code{mzAnnotation::adducts()}}
+\item{\code{adduct_rules}}{a tibble containing the adduct formation rules as returned by \code{mzAnnotation::adduct_rules()}}
 
-\item{\code{isotope_rules}}{tibble containing isotope rules as returned by \code{mzAnnotation::isotopes()}}
+\item{\code{isotope_rules}}{a tibble containing the isotope rules as returned by \code{mzAnnotation::isotope_rules()}}
 
-\item{\code{transformation_rules}}{tibble containing transformation rules as returned by \code{mzAnnotation::transformations()}}
+\item{\code{transformation_rules}}{tibble containing the transformation rules as returned by \code{mzAnnotation::transformation_rules()}}
 }}
 

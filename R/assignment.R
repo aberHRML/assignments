@@ -1,14 +1,13 @@
 #' Assignment
 #' @rdname Assignment-class
-#' @description An S4 class to store assignment results
-#' @slot log list containing assignment logs
-#' @slot flags character vector containing completed assignment elements
-#' @slot data A tibble containing the peak intensity matrix
-#' @slot correlations A tibble containing the correlations
-#' @slot relationships A tibble containing the predicted relationships
-#' @slot addIsoAssign A list containing the results of the adduct and isotope assignment
-#' @slot transAssign A list containing the results of the transformation assignment
-#' @slot assignments A tibble containing the assigned molecular formulas
+#' @description An S4 class to store molecular formula assignment results.
+#' @slot log a list containing assignment logs
+#' @slot data a tibble containing the *m/z* peak intensity matrix
+#' @slot correlations a tibble containing the correlations analysis results
+#' @slot relationships a tibble containing the calculated mathematical relationships
+#' @slot addIsoAssign a list containing the results of the adduct and isotope assignment iterations
+#' @slot transAssign a list containing the results of the transformation assignment iterationst
+#' @slot assignments a tibble containing the assigned molecular formulas
 
 setClass('Assignment',
          contains = 'AssignmentParameters',
@@ -88,15 +87,30 @@ setMethod('show',signature = 'Assignment',
 
 #' Assignment accessors
 #' @rdname accessors
-#' @description Access methods for Assignment S4 class
+#' @description Access methods for `Assignment` S4 class
 #' @param assignment S4 object of class Assignment
 #' @param iteration the assignment iteration
 #' @param type the graph type to return. `filtered` returns the assignment graph after component selection. `all` returns all assignment components.
 #' @param component component number to extract
 #' @param feature feature information to extract
+#' @details 
+#' * `featureData` - Return the initially specifed *m/z* feature data.
+#' * `correlations` - Return the correlation analysis results.
+#' * `relationships` - Return the calculated relationships.
+#' * `iterations` - Return the assignment iteration performed.
+#' * `graph` - Return a selected graph.
+#' * `components` - Return the component information for an assignment iteration.
+#' * `featureComponents` - Return the component information for a selected feature.
+#' * `component` - Extract a component graph.
+#' * `assignments` - Return the molecular formulas assigned to the *m/z* features.
+#' * `assignedData` - Return the *m/z* peak intensity matrix with the molecular formula assignments included in the column names.
+#' * `summariseAssignments` - Return a tibble of the assignments summarised by molecular formula.
+#' @return A tibble or `tbl_graph` containing assignment results depending on the method used. 
 #' @examples 
-#' mf_assignments <- new('Assignment',
-#'                   data = feature_data)
+#' plan(future::sequential)
+#' p <- assignmentParameters('FIE-HRMS')
+#'
+#' mf_assignments <- assignMFs(feature_data,p)
 #' 
 #' ## Return feature data
 #' featureData(mf_assignments)
@@ -111,27 +125,26 @@ setMethod('show',signature = 'Assignment',
 #' iterations(mf_assignments)
 #'
 #' ## Return a selected graph
-#' \dontrun{
 #' graph(mf_assignments,'A&I1')
-#' }
 #'
 #' ## Return a component information for a selected graph
-#' \dontrun{
 #' components(mf_assignments,'A&I1')
-#' }
 #' 
 #' ## Return a component information for a selected feature
-#' \dontrun{
 #' featureComponents(mf_assignments,'n191.01962')
-#' }
 #'
 #'  ## Extract a component graph
-#' \dontrun{
 #' component(mf_assignments,1,'A&I1')
-#' }
 #' 
 #' ## Return assignments
 #' assignments(mf_assignments)
+#' 
+#' ## Return an m/z intensity matrix with the assignments included
+#' ## in the column names
+#' assignedData(mf_assignments)
+#' 
+#' ## Return the assignments summarised by molecular formula
+#' summariseAssignments(mf_assignments)
 #' @export
 
 setGeneric('featureData',function(assignment)
@@ -322,26 +335,13 @@ setMethod('assignments',signature = 'Assignment',
             assignment@assignments
           })
 
-#' assignedData
-#' @rdname assignedData
-#' @description Return data table used for assignments with feature assignments added to column names.
-#' @param assignment S4 object of class Assignment
-#' @return A tibble containing the original feature data with molecular formula assignments added to teh column names.
-#' @examples 
-#' \dontrun{
-#' plan(future::sequential)
-#' p <- assignmentParameters('FIE-HRMS')
-#'
-#' mf_assignments <- assignMFs(feature_data,p)
-#' 
-#' assignedData(mf_assignments)
-#' }
+#' @rdname accessors
 #' @export
 
 setGeneric('assignedData',function(assignment)
   standardGeneric('assignedData'))
 
-#' @rdname assignedData
+#' @rdname accessors
 
 setMethod('assignedData', signature = 'Assignment',
           function(assignment){
@@ -368,27 +368,14 @@ setMethod('assignedData', signature = 'Assignment',
             return(d)
           })
 
-#' Summarise assignments
-#' @rdname summariseAssignments
-#' @description Summarise features assigned to molecular formulas.
-#' @param assignment S4 object of class Assignment
-#' @return A tibble containing the feature assignments summarised by molecular formula.
-#' @examples 
-#' \dontrun{
-#' plan(future::sequential)
-#' p <- assignmentParameters('FIE-HRMS')
-#'
-#' mf_assignments <- assignMFs(feature_data,p)
-#' 
-#' summariseAssignments(mf_assignments)
-#' }
+#' @rdname accessors
 #' @importFrom dplyr desc
 #' @export
 
 setGeneric('summariseAssignments',function(assignment)
   standardGeneric('summariseAssignments'))
 
-#' @rdname summariseAssignments
+#' @rdname accessors
 
 setMethod('summariseAssignments',signature = 'Assignment',
           function(assignment){
@@ -418,6 +405,7 @@ setMethod('summariseAssignments',signature = 'Assignment',
 #' @return An object of S4 class `Assignment`.
 #' @examples 
 #' mf_assignments <- assignment(feature_data,assignmentParameters('FIE-HRMS'))
+#' mf_assignments
 #' @export
 
 setGeneric('assignment',function(feature_data,parameters,...)

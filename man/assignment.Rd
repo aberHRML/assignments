@@ -32,4 +32,5 @@ Constructor methods for creating an object of S4 class \code{Assignment}.
 }
 \examples{
 mf_assignments <- assignment(feature_data,assignmentParameters('FIE-HRMS'))
+mf_assignments
 }

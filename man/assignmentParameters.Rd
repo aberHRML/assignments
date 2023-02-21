@@ -9,6 +9,12 @@ assignmentParameters(technique = availableTechniques())
 \arguments{
 \item{technique}{technique to use for assignment}
 }
+\value{
+An object of S4 class \code{AssignmentParameters}
+}
 \description{
-Return default assignment parameters for a given technique.
+Return the default molecular formula assignment parameters for a given analytical technique.
+}
+\examples{
+assignmentParameters('FIE-HRMS')
 }

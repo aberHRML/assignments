@@ -5,12 +5,12 @@
 \alias{feature_data}
 \title{Example feature data}
 \format{
-A tibble containing 60 rows and 1003 variables.
+A tibble containing 60 rows and 10 variables.
 }
 \usage{
 feature_data
 }
 \description{
-Example mass spectral feature intensity table.
+An example \code{m/z} peak intensity matrix containing total ion count normalised positive and negative mode flow infusion electrospray ionisation mass spectrometry \emph{m/z} features.
 }
 \keyword{datasets}

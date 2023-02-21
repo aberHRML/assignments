@@ -144,15 +144,31 @@ transformationRules(x) <- value
 \arguments{
 \item{x}{S4 object of class \code{AssignmentParameters}}
 
-\item{value}{value to set}
+\item{value}{the value to set}
 }
 \description{
 Get and set methods for the \code{AssignmentParameters} S4 class.
 }
+\details{
+\itemize{
+\item \code{technique} - Get the analytical technique.
+\item \code{correlationsParameters} - Get or set the correlation analysis parameters to be passed to \code{metabolyseR::correlations()}.
+\item \code{limit} - Get or set the atomic mass unit limit for relationship calculation.
+\item \code{maxM} - Get or set the maximum molecular mass limit for which to assign molecular formulas.
+\item \code{MFrankThreshold} - Get or set the molecular formula rank threshold for molecular formula selection.
+\item \code{ppm} - Get or set the parts per million error threshold.
+\item \code{isotopes} - Get or set the isotope names. The order in which these are specified denotes the expected relative commonality within the data set.
+\item \code{adducts} - Get or set the adduct names for the ionisation modes. The order in which these are specified denotes the expected relative commonality within the data set for each ionisation mode.
+\item \code{transformations} - Get or set the transformation molecular formula changes.
+\item \code{isotopeRules} - Get or set the isotope rules table. The format of this tibble should match that of \code{mzAnnotation::isotope_rules()}.
+\item \code{adductRules} - Get or set the adduct rules table. The format of this tibble should match that of \code{mzAnnotation::adduct_rules()}.
+\item \code{techniqueRules} - Get or set the transformation rules table. The format of this tibble should match that of \code{mzAnnotation::transformation_rules()}.
+}
+}
 \examples{
 assignment_parameters <- assignmentParameters('FIE')
 
-## Return technique
+## Return the analytical technique
 technique(assignment_parameters)
 
 ## Return correlations parameters

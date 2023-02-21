@@ -2,7 +2,7 @@
 % Please edit documentation in R/parameters.R
 \name{availableTechniques}
 \alias{availableTechniques}
-\title{Available techniques}
+\title{Available analytical techniques}
 \usage{
 availableTechniques()
 }
@@ -10,7 +10,7 @@ availableTechniques()
 A \code{character} vector of technique names.
 }
 \description{
-Available techniques for molecular formula assignment.
+The available analytical techniques for molecular formula assignment parameters.
 }
 \examples{
 availableTechniques()

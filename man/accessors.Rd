@@ -19,6 +19,10 @@
 \alias{component,Assignment-method}
 \alias{assignments}
 \alias{assignments,Assignment-method}
+\alias{assignedData}
+\alias{assignedData,Assignment-method}
+\alias{summariseAssignments}
+\alias{summariseAssignments,Assignment-method}
 \title{Assignment accessors}
 \usage{
 featureData(assignment)
@@ -56,6 +60,14 @@ component(assignment, component, iteration, type = c("selected", "all"))
 assignments(assignment)
 
 \S4method{assignments}{Assignment}(assignment)
+
+assignedData(assignment)
+
+\S4method{assignedData}{Assignment}(assignment)
+
+summariseAssignments(assignment)
+
+\S4method{summariseAssignments}{Assignment}(assignment)
 }
 \arguments{
 \item{assignment}{S4 object of class Assignment}
@@ -68,12 +80,32 @@ assignments(assignment)
 
 \item{component}{component number to extract}
 }
+\value{
+A tibble or \code{tbl_graph} containing assignment results depending on the method used.
+}
 \description{
-Access methods for Assignment S4 class
+Access methods for \code{Assignment} S4 class
+}
+\details{
+\itemize{
+\item \code{featureData} - Return the initially specifed \emph{m/z} feature data.
+\item \code{correlations} - Return the correlation analysis results.
+\item \code{relationships} - Return the calculated relationships.
+\item \code{iterations} - Return the assignment iteration performed.
+\item \code{graph} - Return a selected graph.
+\item \code{components} - Return the component information for an assignment iteration.
+\item \code{featureComponents} - Return the component information for a selected feature.
+\item \code{component} - Extract a component graph.
+\item \code{assignments} - Return the molecular formulas assigned to the \emph{m/z} features.
+\item \code{assignedData} - Return the \emph{m/z} peak intensity matrix with the molecular formula assignments included in the column names.
+\item \code{summariseAssignments} - Return a tibble of the assignments summarised by molecular formula.
+}
 }
 \examples{
-mf_assignments <- new('Assignment',
-                  data = feature_data)
+plan(future::sequential)
+p <- assignmentParameters('FIE-HRMS')
+
+mf_assignments <- assignMFs(feature_data,p)
 
 ## Return feature data
 featureData(mf_assignments)
@@ -88,25 +120,24 @@ relationships(mf_assignments)
 iterations(mf_assignments)
 
 ## Return a selected graph
-\dontrun{
 graph(mf_assignments,'A&I1')
-}
 
 ## Return a component information for a selected graph
-\dontrun{
 components(mf_assignments,'A&I1')
-}
 
 ## Return a component information for a selected feature
-\dontrun{
 featureComponents(mf_assignments,'n191.01962')
-}
 
  ## Extract a component graph
-\dontrun{
 component(mf_assignments,1,'A&I1')
-}
 
 ## Return assignments
 assignments(mf_assignments)
+
+## Return an m/z intensity matrix with the assignments included
+## in the column names
+assignedData(mf_assignments)
+
+## Return the assignments summarised by molecular formula
+summariseAssignments(mf_assignments)
 }

@@ -5,25 +5,23 @@
 \alias{Assignment-class}
 \title{Assignment}
 \description{
-An S4 class to store assignment results
+An S4 class to store molecular formula assignment results.
 }
 \section{Slots}{
 
 \describe{
-\item{\code{log}}{list containing assignment logs}
+\item{\code{log}}{a list containing assignment logs}
 
-\item{\code{flags}}{character vector containing completed assignment elements}
+\item{\code{data}}{a tibble containing the \emph{m/z} peak intensity matrix}
 
-\item{\code{data}}{A tibble containing the peak intensity matrix}
+\item{\code{correlations}}{a tibble containing the correlations analysis results}
 
-\item{\code{correlations}}{A tibble containing the correlations}
+\item{\code{relationships}}{a tibble containing the calculated mathematical relationships}
 
-\item{\code{relationships}}{A tibble containing the predicted relationships}
+\item{\code{addIsoAssign}}{a list containing the results of the adduct and isotope assignment iterations}
 
-\item{\code{addIsoAssign}}{A list containing the results of the adduct and isotope assignment}
+\item{\code{transAssign}}{a list containing the results of the transformation assignment iterationst}
 
-\item{\code{transAssign}}{A list containing the results of the transformation assignment}
-
-\item{\code{assignments}}{A tibble containing the assigned molecular formulas}
+\item{\code{assignments}}{a tibble containing the assigned molecular formulas}
 }}
 

@@ -24,10 +24,7 @@ plotDist <- function(x){
           strip.text = ggplot2::element_text(face = 'bold'))
 }
 
-#' Plot adduct frequency distributions
-#' @rdname plotAdductDist
-#' @description Plot adduct frequency distributions.
-#' @param assignment S4 object of class Assignment
+#' @rdname plotting
 #' @importFrom tidyr replace_na
 #' @export
 
@@ -35,7 +32,7 @@ setGeneric('plotAdductDist',function(assignment){
   standardGeneric('plotAdductDist')
 })
 
-#' @rdname plotAdductDist
+#' @rdname plotting
 #' @importFrom rlang check_installed
 
 setMethod('plotAdductDist',signature = 'Assignment',

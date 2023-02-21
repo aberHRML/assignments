@@ -5,7 +5,7 @@
 \alias{assignMFs,tbl_df-method}
 \alias{assignMFs,AnalysisData-method}
 \alias{assignMFs,Analysis-method}
-\title{Assign molecular formulas}
+\title{Perform molecular formula assignment}
 \usage{
 assignMFs(
   feature_data,
@@ -42,13 +42,19 @@ assignMFs(
 
 \item{...}{arguments to pass to the relevant method}
 
-\item{type}{\code{pre-treated} or \code{raw} data on which to perform assignment when argument \code{feature_data} is of class \code{Analysis}}
+\item{type}{\code{pre-treated} or \code{raw} data on which to perform assignment when argument \code{feature_data} is of S4 class \code{Analysis}}
 }
 \description{
-assign molecular formulas to a set of given m/z.
+Perform automated molecular formula assignment.
 }
 \details{
-If argument \code{feature_data} is specified as a tibble, this should be a feature intensity matrix where the columns are the \code{m/z} features to assign and the rows are the individual observations, with the cells as abundance values.
+If argument \code{feature_data} is specified as a tibble, this should be a feature intensity matrix where
+the columns are the \code{m/z} features to assign and the rows are the individual observations, with the
+cells as abundance values. he m/z features provided as column names should be in the form of
+<ionisation_mode><m/z>@<retention_time>. Ionisation mode should be given as a prefix n or p for negative
+or positive ionisation modes respectively. Feature m/z should be provided to an accuracy of least 5 decimal
+places. The retention time portion (@<retention_time>) is only required for LC-MS data and should be provided
+in minutes.
 }
 \examples{
 plan(future::sequential)

@@ -35,7 +35,7 @@ calcRelationships(assignment)
 An object of S4 class \code{Assignment} containing molecular formula assignments.
 }
 \description{
-These methods provide the access to performing the individual steps of the molecular
+These methods provide access to performing the individual steps of the molecular
 formula assignment approach. See Details for more information of when it is best to use these
 instead of \code{assignMFs()}.
 }
@@ -48,7 +48,6 @@ and also enable the possibility of objects to be saved and/or unloaded between t
 steps where needed.
 }
 \examples{
-\dontrun{
 plan(future::sequential)
 p <- assignmentParameters('FIE-HRMS')
 
@@ -59,5 +58,6 @@ mf_assignments <- mf_assignments \%>\%
    calcRelationships() \%>\% 
    addIsoAssign() \%>\% 
    transformationAssign()
-}
+
+mf_assignments
 }

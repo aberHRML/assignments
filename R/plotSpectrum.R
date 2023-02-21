@@ -19,6 +19,7 @@ spectrumPlot <- function(dat,MF){
                    y = `Relative Abundance`,
                    label = Label)) +
     ggplot2::theme_bw() +
+    ggplot2::scale_y_continuous(expand = c(0,0)) +
     ggplot2::theme(panel.border = ggplot2::element_blank(),
           panel.grid = ggplot2::element_blank(),
           axis.line = ggplot2::element_line(),
@@ -32,11 +33,7 @@ spectrumPlot <- function(dat,MF){
     ggplot2::facet_wrap(~Mode,scales = 'free')
 }
 
-#' plotSpectrum
-#' @rdname plotSpectrum
-#' @description Plot a spectrum for a given molecular formula 
-#' @param assignment S4 object of class Assignment
-#' @param MF molecular formula
+#' @rdname plotting 
 #' @importFrom tidyr gather
 #' @importFrom dplyr group_by summarise
 #' @export
@@ -44,7 +41,7 @@ spectrumPlot <- function(dat,MF){
 setGeneric('plotSpectrum',function(assignment,MF)
   standardGeneric('plotSpectrum'))
 
-#' @rdname plotSpectrum
+#' @rdname plotting
 
 setMethod('plotSpectrum',signature = 'Assignment',function(assignment,MF){
   mf <- MF

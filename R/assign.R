@@ -1,13 +1,19 @@
-#' Assign molecular formulas
+#' Perform molecular formula assignment
 #' @rdname assign
-#' @description assign molecular formulas to a set of given m/z.
+#' @description Perform automated molecular formula assignment.
 #' @param feature_data a tibble or an object of S4 class `AnalysisData` or `Analysis` containing the feature intensity matrix of m/z for which to assign molecular formulas. See details.
 #' @param parameters an S4 object of class `AssignmentParamters` containing the parameters for molecular formula assignment
 #' @param verbose should progress output be printed to the console
-#' @param type `pre-treated` or `raw` data on which to perform assignment when argument `feature_data` is of class `Analysis`
+#' @param type `pre-treated` or `raw` data on which to perform assignment when argument `feature_data` is of S4 class `Analysis`
 #' @param ... arguments to pass to the relevant method
 #' @details 
-#' If argument `feature_data` is specified as a tibble, this should be a feature intensity matrix where the columns are the `m/z` features to assign and the rows are the individual observations, with the cells as abundance values.
+#' If argument `feature_data` is specified as a tibble, this should be a feature intensity matrix where 
+#' the columns are the `m/z` features to assign and the rows are the individual observations, with the 
+#' cells as abundance values. he m/z features provided as column names should be in the form of 
+#' <ionisation_mode><m/z>@<retention_time>. Ionisation mode should be given as a prefix n or p for negative 
+#' or positive ionisation modes respectively. Feature m/z should be provided to an accuracy of least 5 decimal 
+#' places. The retention time portion (@<retention_time>) is only required for LC-MS data and should be provided 
+#' in minutes.
 #' @importFrom tibble tibble
 #' @importFrom stringr str_split_fixed
 #' @importFrom cli console_width
