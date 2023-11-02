@@ -1,6 +1,6 @@
 Package: assignments
 Title: Molecular Formula Assignment For High Resolution ESI-MS Based Metabolomics Data
-Version: 1.0.0
+Version: 1.0.1
 Authors@R: person("Jasen", "Finch", email = "jsf9@aber.ac.uk", role = c("aut", "cre"))
 Description: A molecular formula assignment approach for electrospray ionisation high resolution mass spectrometry based metabolomics data.
 Depends: R (>= 3.5.0),
