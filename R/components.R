@@ -102,6 +102,7 @@ calcComponents <- function(graph_nodes,
           filter(Component == .x) %>%
           edges() %>% 
           .$coefficient %>% 
+          abs() %>% 
           mean() %>%
           tibble(Weight = .)
       },graph = graph) %>%
