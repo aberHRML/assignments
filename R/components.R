@@ -48,7 +48,7 @@ clean <- function(graph,adduct_rules_table){
     cleaned_graph <- cleaned_graph %>% 
       bind_graphs() 
   }
-   
+  
   return(cleaned_graph)
 }
 
@@ -60,14 +60,14 @@ nComponents <- function(graph){
 
 componentMetrics <- function(component,max_add_iso_total){
   component %>% 
-  mutate(Size = graph_size(),
-         Nodes = n(),
-         Degree = avg_degree(Nodes,Size),
-         Density = (2 * Size) / (Nodes * (Nodes - 1)),
-         Weight = sum(Weight) / Nodes,
-         AIS = sum(AIS) / max_add_iso_total,
-         `Component Plausibility` = plausibility(Degree,AIS,Weight)
-         )
+    mutate(Size = graph_size(),
+           Nodes = n(),
+           Degree = avg_degree(Nodes,Size),
+           Density = (2 * Size) / (Nodes * (Nodes - 1)),
+           Weight = sum(Weight) / Nodes,
+           AIS = sum(AIS) / max_add_iso_total,
+           `Component Plausibility` = plausibility(Degree,AIS,Weight)
+    )
 }
 
 componentFilters <- function(){
@@ -75,6 +75,38 @@ componentFilters <- function(){
                      'MF Plausibility (%)',
                      'PPM error'),
          Direction = c(rep('max',2),'min'))
+}
+
+#' @importFrom dplyr join_by
+
+deduplicate <- function(graph){
+  dedup_nodes <- graph %>% 
+    activate(nodes) %>%
+    as_tibble() %>%
+    group_split(
+      Component,
+      Feature
+    ) %>% 
+    future_map_dfr(
+      ~.x %>% 
+        arrange(
+          desc(
+            AIS
+          )
+        ) %>% 
+        slice(1)    
+    )
+  
+  graph %>% 
+    activate(nodes) %>% 
+    inner_join(
+      dedup_nodes,
+      by = join_by(
+        name, Feature, RetentionTime,
+        Isotope, Adduct, MF, `Theoretical M`, `Measured M`,
+        `Theoretical m/z`, `Measured m/z`, `PPM error`, 
+        `MF Plausibility (%)`, AIS, ID, Component)
+    )
 }
 
 #' @importFrom tidygraph as_tbl_graph activate morph unmorph graph_size group_components tbl_graph
@@ -88,6 +120,7 @@ calcComponents <- function(graph_nodes,
     activate(nodes) %>%
     left_join(graph_nodes,by = c('name' = 'Name')) %>%
     mutate(Component = group_components()) %>% 
+    deduplicate() %>% 
     clean(adductRules(assignment))
   
   if (nComponents(graph) > 0){
@@ -102,6 +135,7 @@ calcComponents <- function(graph_nodes,
           filter(Component == .x) %>%
           edges() %>% 
           .$coefficient %>% 
+          abs() %>% 
           mean() %>%
           tibble(Weight = .)
       },graph = graph) %>%
