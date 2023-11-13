@@ -1,3 +1,17 @@
+# assignments 1.0.1
+
+* The default ppm threshold has been reduced to 4.
+
+* The importance of the ^37^Cl adduct has been increased in the default negative mode adducts.
+
+* The ^13^C2 isotope has been removed from the default isotopes.
+
+* The default retention time difference limit for relationships has been changed to 2 seconds for RP-LC-HRMS and NP-LC-HRMS.
+
+* The absolute values of correlation coefficients are now used to calculate average component weights.
+
+* Where components contain a feature represented by more than one adduct and isotope combination, only the node with the highest AIS is now retained.
+
 # assignments 1.0.0
 
 * Added a `NEWS.md` file to track changes to the package.
