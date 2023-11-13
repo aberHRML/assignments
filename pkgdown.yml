@@ -3,7 +3,7 @@ pkgdown: 2.0.7
 pkgdown_sha: ~
 articles:
   assignments: assignments.html
-last_built: 2023-02-21T16:03Z
+last_built: 2023-11-13T10:13Z
 urls:
   reference: https://aberhrml.github.io/assignments/reference
   article: https://aberhrml.github.io/assignments/articles

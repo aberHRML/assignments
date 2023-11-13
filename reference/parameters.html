@@ -10,7 +10,7 @@
     
     <a class="navbar-brand me-2" href="../index.html">assignments</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">1.0.0</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">1.0.1</small>
 
     
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -243,14 +243,14 @@
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="co">## Return ppm</span></span></span>
 <span class="r-in"><span><span class="fu">ppm</span><span class="op">(</span><span class="va">assignment_parameters</span><span class="op">)</span></span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [1] 6</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1] 4</span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="co">## Set ppm</span></span></span>
 <span class="r-in"><span><span class="fu">ppm</span><span class="op">(</span><span class="va">assignment_parameters</span><span class="op">)</span> <span class="op">&lt;-</span> <span class="fl">3</span></span></span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="co">## Return isotopes</span></span></span>
 <span class="r-in"><span><span class="fu">isotopes</span><span class="op">(</span><span class="va">assignment_parameters</span><span class="op">)</span></span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [1] "13C"  "18O"  "13C2"</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1] "13C" "18O"</span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="co">## Set isotopes</span></span></span>
 <span class="r-in"><span><span class="fu">isotopes</span><span class="op">(</span><span class="va">assignment_parameters</span><span class="op">)</span> <span class="op">&lt;-</span> <span class="st">'13C'</span></span></span>
@@ -258,7 +258,7 @@
 <span class="r-in"><span><span class="co">## Return adducts</span></span></span>
 <span class="r-in"><span><span class="fu">adducts</span><span class="op">(</span><span class="va">assignment_parameters</span><span class="op">)</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> $n</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [1] "[M-H]1-"    "[M+Cl]1-"   "[M+K-2H]1-" "[M-2H]2-"   "[M+Cl37]1-"</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1] "[M-H]1-"    "[M+Cl]1-"   "[M+Cl37]1-" "[M+K-2H]1-" "[M-2H]2-"  </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> [6] "[2M-H]1-"  </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> $p</span>
@@ -282,19 +282,19 @@
 <span class="r-in"><span><span class="co">## Return adduct rules</span></span></span>
 <span class="r-in"><span><span class="fu">adductRules</span><span class="op">(</span><span class="va">assignment_parameters</span><span class="op">)</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;"># A tibble: 58 × 12</span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>    Name   Charge    xM   Add Nelec AddAt RemAt AddEx RemEx Rule  Default Isoto…¹</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>    <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>   <span style="color: #949494; font-style: italic;">&lt;int&gt;</span> <span style="color: #949494; font-style: italic;">&lt;int&gt;</span> <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> <span style="color: #949494; font-style: italic;">&lt;int&gt;</span> <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span> <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span> <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span> <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span> <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>   <span style="color: #949494; font-style: italic;">&lt;int&gt;</span>   <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 1</span> [M+3N…      3     1 23.0     -<span style="color: #BB0000;">3</span> <span style="color: #BB0000;">NA</span>    <span style="color: #BB0000;">NA</span>    Na3   <span style="color: #BB0000;">NA</span>    HBA2…       0       0</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 2</span> [M+H+…      3     1 15.7     -<span style="color: #BB0000;">3</span> <span style="color: #BB0000;">NA</span>    <span style="color: #BB0000;">NA</span>    Na2H  <span style="color: #BB0000;">NA</span>    HBA2…       0       0</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 3</span> [M+2H…      3     1  8.33    -<span style="color: #BB0000;">3</span> <span style="color: #BB0000;">NA</span>    <span style="color: #BB0000;">NA</span>    NaH2  <span style="color: #BB0000;">NA</span>    HBA2…       0       0</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 4</span> [M+3H…      3     1  1.01    -<span style="color: #BB0000;">3</span> <span style="color: #BB0000;">NA</span>    <span style="color: #BB0000;">NA</span>    H3    <span style="color: #BB0000;">NA</span>    HBA2…       0       0</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 5</span> [2M+3…      2     2 28.0     -<span style="color: #BB0000;">2</span> <span style="color: #BB0000;">NA</span>    <span style="color: #BB0000;">NA</span>    H8O3  <span style="color: #BB0000;">NA</span>    HBA2…       0       0</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 6</span> [M+3A…      2     1 62.5     -<span style="color: #BB0000;">2</span> <span style="color: #BB0000;">NA</span>    <span style="color: #BB0000;">NA</span>    C6H1… <span style="color: #BB0000;">NA</span>    HBA2…       0       0</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 7</span> [M+2A…      2     1 42.0     -<span style="color: #BB0000;">2</span> <span style="color: #BB0000;">NA</span>    <span style="color: #BB0000;">NA</span>    C4H8… <span style="color: #BB0000;">NA</span>    HBA2…       0       0</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 8</span> [M+2N…      2     1 23.0     -<span style="color: #BB0000;">2</span> <span style="color: #BB0000;">NA</span>    <span style="color: #BB0000;">NA</span>    Na2   <span style="color: #BB0000;">NA</span>    HBA2…       1       0</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 9</span> [M+AC…      2     1 21.5     -<span style="color: #BB0000;">2</span> <span style="color: #BB0000;">NA</span>    <span style="color: #BB0000;">NA</span>    C2H5N <span style="color: #BB0000;">NA</span>    HBA2…       0       0</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">10</span> [M+H+…      2     1 20.0     -<span style="color: #BB0000;">2</span> <span style="color: #BB0000;">NA</span>    <span style="color: #BB0000;">NA</span>    KH    <span style="color: #BB0000;">NA</span>    HBA2…       1       0</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;"># … with 48 more rows, and abbreviated variable name ¹​Isotopic</span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>    Name  Charge    xM   Add Nelec AddAt RemAt AddEx RemEx Rule  Default Isotopic</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>    <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>  <span style="color: #949494; font-style: italic;">&lt;int&gt;</span> <span style="color: #949494; font-style: italic;">&lt;int&gt;</span> <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> <span style="color: #949494; font-style: italic;">&lt;int&gt;</span> <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span> <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span> <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span> <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span> <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>   <span style="color: #949494; font-style: italic;">&lt;int&gt;</span>    <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 1</span> [M+3…      3     1 23.0     -<span style="color: #BB0000;">3</span> <span style="color: #BB0000;">NA</span>    <span style="color: #BB0000;">NA</span>    Na3   <span style="color: #BB0000;">NA</span>    HBA2…       0        0</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 2</span> [M+H…      3     1 15.7     -<span style="color: #BB0000;">3</span> <span style="color: #BB0000;">NA</span>    <span style="color: #BB0000;">NA</span>    Na2H  <span style="color: #BB0000;">NA</span>    HBA2…       0        0</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 3</span> [M+2…      3     1  8.33    -<span style="color: #BB0000;">3</span> <span style="color: #BB0000;">NA</span>    <span style="color: #BB0000;">NA</span>    NaH2  <span style="color: #BB0000;">NA</span>    HBA2…       0        0</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 4</span> [M+3…      3     1  1.01    -<span style="color: #BB0000;">3</span> <span style="color: #BB0000;">NA</span>    <span style="color: #BB0000;">NA</span>    H3    <span style="color: #BB0000;">NA</span>    HBA2…       0        0</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 5</span> [2M+…      2     2 28.0     -<span style="color: #BB0000;">2</span> <span style="color: #BB0000;">NA</span>    <span style="color: #BB0000;">NA</span>    H8O3  <span style="color: #BB0000;">NA</span>    HBA2…       0        0</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 6</span> [M+3…      2     1 62.5     -<span style="color: #BB0000;">2</span> <span style="color: #BB0000;">NA</span>    <span style="color: #BB0000;">NA</span>    C6H1… <span style="color: #BB0000;">NA</span>    HBA2…       0        0</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 7</span> [M+2…      2     1 42.0     -<span style="color: #BB0000;">2</span> <span style="color: #BB0000;">NA</span>    <span style="color: #BB0000;">NA</span>    C4H8… <span style="color: #BB0000;">NA</span>    HBA2…       0        0</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 8</span> [M+2…      2     1 23.0     -<span style="color: #BB0000;">2</span> <span style="color: #BB0000;">NA</span>    <span style="color: #BB0000;">NA</span>    Na2   <span style="color: #BB0000;">NA</span>    HBA2…       1        0</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 9</span> [M+A…      2     1 21.5     -<span style="color: #BB0000;">2</span> <span style="color: #BB0000;">NA</span>    <span style="color: #BB0000;">NA</span>    C2H5N <span style="color: #BB0000;">NA</span>    HBA2…       0        0</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">10</span> [M+H…      2     1 20.0     -<span style="color: #BB0000;">2</span> <span style="color: #BB0000;">NA</span>    <span style="color: #BB0000;">NA</span>    KH    <span style="color: #BB0000;">NA</span>    HBA2…       1        0</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;"># ℹ 48 more rows</span></span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="co">## Set adduct rules</span></span></span>
 <span class="r-in"><span><span class="fu">adductRules</span><span class="op">(</span><span class="va">assignment_parameters</span><span class="op">)</span> <span class="op">&lt;-</span> <span class="fu">mzAnnotation</span><span class="fu">::</span><span class="fu"><a href="http://aberhrml.github.io/mzAnnotation/reference/adducts.html" class="external-link">adduct_rules</a></span><span class="op">(</span><span class="op">)</span></span></span>
@@ -319,21 +319,20 @@
 <span class="r-in"><span><span class="co">## Return transformation rules</span></span></span>
 <span class="r-in"><span><span class="fu">transformationRules</span><span class="op">(</span><span class="va">assignment_parameters</span><span class="op">)</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;"># A tibble: 12 × 10</span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>    Name              MF Ch…¹ Diffe…²     C     H     N     O     P     S Default</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>    <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>             <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>     <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> <span style="color: #949494; font-style: italic;">&lt;int&gt;</span> <span style="color: #949494; font-style: italic;">&lt;int&gt;</span> <span style="color: #949494; font-style: italic;">&lt;int&gt;</span> <span style="color: #949494; font-style: italic;">&lt;int&gt;</span> <span style="color: #949494; font-style: italic;">&lt;int&gt;</span> <span style="color: #949494; font-style: italic;">&lt;int&gt;</span>   <span style="color: #949494; font-style: italic;">&lt;int&gt;</span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 1</span> Transamination 1  M - [O…  0.023<span style="text-decoration: underline;">8</span>     0     2     1    -<span style="color: #BB0000;">1</span>     0     0       1</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 2</span> Ammonia ligation  M - [O… -<span style="color: #BB0000;">0.984</span>      0     1     1    -<span style="color: #BB0000;">1</span>     0     0       1</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 3</span> Hydrogenation     M + [H…  2.02       0     2     0     0     0     0       1</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 4</span> Alcohol to carbo… M - [H… 14.0        0    -<span style="color: #BB0000;">2</span>     0     1     0     0       1</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 5</span> Methylation       M - [H… 14.0        1     2     0     0     0     0       1</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 6</span> Transamination 2  M - [H… 15.0        0     1     1     0     0     0       1</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 7</span> Hydroxylation     M - [H… 16.0        0     0     0     1     0     0       1</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 8</span> Hydration         M + [H… 18.0        0     2     0     1     0     0       1</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 9</span> Methyl to carbox… M - [H… 30.0        0    -<span style="color: #BB0000;">1</span>     0     1     0     0       1</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">10</span> Carboxylation     M - [H… 44.0        1     0     0     2     0     0       1</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">11</span> Sulphation        M - [H… 80.0        0    -<span style="color: #BB0000;">1</span>     0     3     0     1       1</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">12</span> Phosphorylation   M - [H… 80.0        0     1     0     3     1     0       1</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;"># … with abbreviated variable names ¹​`MF Change`, ²​Difference</span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>    Name       `MF Change` Difference     C     H     N     O     P     S Default</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>    <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>      <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>            <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> <span style="color: #949494; font-style: italic;">&lt;int&gt;</span> <span style="color: #949494; font-style: italic;">&lt;int&gt;</span> <span style="color: #949494; font-style: italic;">&lt;int&gt;</span> <span style="color: #949494; font-style: italic;">&lt;int&gt;</span> <span style="color: #949494; font-style: italic;">&lt;int&gt;</span> <span style="color: #949494; font-style: italic;">&lt;int&gt;</span>   <span style="color: #949494; font-style: italic;">&lt;int&gt;</span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 1</span> Transamin… M - [O] + …     0.023<span style="text-decoration: underline;">8</span>     0     2     1    -<span style="color: #BB0000;">1</span>     0     0       1</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 2</span> Ammonia l… M - [OH] +…    -<span style="color: #BB0000;">0.984</span>      0     1     1    -<span style="color: #BB0000;">1</span>     0     0       1</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 3</span> Hydrogena… M + [H2]        2.02       0     2     0     0     0     0       1</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 4</span> Alcohol t… M - [H2] +…    14.0        0    -<span style="color: #BB0000;">2</span>     0     1     0     0       1</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 5</span> Methylati… M - [H] + …    14.0        1     2     0     0     0     0       1</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 6</span> Transamin… M - [H] + …    15.0        0     1     1     0     0     0       1</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 7</span> Hydroxyla… M - [H] + …    16.0        0     0     0     1     0     0       1</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 8</span> Hydration  M + [H2O]      18.0        0     2     0     1     0     0       1</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 9</span> Methyl to… M - [H3] +…    30.0        0    -<span style="color: #BB0000;">1</span>     0     1     0     0       1</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">10</span> Carboxyla… M - [H] + …    44.0        1     0     0     2     0     0       1</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">11</span> Sulphation M - [H] + …    80.0        0    -<span style="color: #BB0000;">1</span>     0     3     0     1       1</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">12</span> Phosphory… M - [H] + …    80.0        0     1     0     3     1     0       1</span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="co">## Set transformation rules</span></span></span>
 <span class="r-in"><span><span class="fu">transformationRules</span><span class="op">(</span><span class="va">assignment_parameters</span><span class="op">)</span> <span class="op">&lt;-</span> <span class="fu">mzAnnotation</span><span class="fu">::</span><span class="fu"><a href="http://aberhrml.github.io/mzAnnotation/reference/transformations.html" class="external-link">transformation_rules</a></span><span class="op">(</span><span class="op">)</span></span></span>
