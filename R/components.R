@@ -45,8 +45,15 @@ clean <- function(graph,adduct_rules_table){
   }
   
   if (length(cleaned_graph) > 0){
-    cleaned_graph <- cleaned_graph %>% 
-      bind_graphs() 
+    bound_graphs <- tbl_graph()
+    for (graph in cleaned_graph) {
+      bound_graphs <- bind_graphs(
+        bound_graphs,
+        graph
+      )
+    }
+    
+    cleaned_graph <- bound_graphs
   }
   
   return(cleaned_graph)
