@@ -1,3 +1,7 @@
+# assignments 1.0.2
+
+* add a fix for an error caused by a breaking change in [`tidygraph`](https://tidygraph.data-imaginist.com/index.html) v1.3.0.
+
 # assignments 1.0.1
 
 * The default ppm threshold has been reduced to 4.
